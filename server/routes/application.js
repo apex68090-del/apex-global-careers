@@ -33,11 +33,7 @@ router.use(async (req, res, next) => {
         try {
             if (state === 0) {
                 console.log('🔄 Attempting to reconnect to MongoDB...');
-                await mongoose.connect(process.env.MONGODB_URI, {
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true,
-                    serverSelectionTimeoutMS: 5000
-                });
+                await mongoose.connect(process.env.MONGODB_URI);
                 console.log('✅ MongoDB reconnected successfully');
             }
         } catch (connError) {
@@ -414,6 +410,11 @@ router.get('/status/:email', async (req, res) => {
         
         console.log(`✅ Status found for: ${email} - Status: ${application.status}`);
         
+        // Filter comments to remove system messages for client view
+        const clientComments = (application.comments || []).filter(
+            comment => comment.type === 'admin' // Only show admin comments, hide system messages
+        );
+        
         res.json({ 
             success: true, 
             status: {
@@ -427,7 +428,7 @@ router.get('/status/:email', async (req, res) => {
                     Object.fromEntries(application.documentRejectionCount) : {},
                 hasReuploadRequests: (application.reuploadRequests || []).length > 0,
                 reuploadRequests: application.reuploadRequests || [],
-                comments: application.comments || [],
+                comments: clientComments, // Send filtered comments to client
                 timestamp: application.createdAt,
                 lastUpdated: application.updatedAt,
                 jobOffer: application.jobOffer || null,
@@ -738,7 +739,7 @@ router.get('/admin/application/:email', async (req, res) => {
                 documentRejectionCount: documentRejectionCount,
                 jobOffer: application.jobOffer,
                 contract: application.contract,
-                comments: application.comments,
+                comments: application.comments, // Send all comments to admin
                 reuploadRequests: application.reuploadRequests,
                 createdAt: application.createdAt,
                 updatedAt: application.updatedAt
@@ -904,7 +905,7 @@ router.post('/admin/application/:email/comment', async (req, res) => {
             text: comment,
             timestamp: new Date(),
             user: 'Admin',
-            type: 'admin'
+            type: 'admin' // Mark as admin comment
         });
         
         application.updatedAt = new Date();
@@ -1029,7 +1030,8 @@ router.post('/upload-job-offer/:email', upload.single('jobOffer'), async (req, r
         application.comments.push({
             text: `📄 Job offer letter uploaded: ${file.originalname}`,
             timestamp: new Date(),
-            user: 'Client'
+            user: 'Client',
+            type: 'system'
         });
 
         application.updatedAt = new Date();
@@ -1093,7 +1095,8 @@ router.post('/upload-contract/:email', upload.single('contract'), async (req, re
         application.comments.push({
             text: `📝 Employment contract uploaded: ${file.originalname}`,
             timestamp: new Date(),
-            user: 'Client'
+            user: 'Client',
+            type: 'system'
         });
 
         application.updatedAt = new Date();
