@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Status - Apex Global Careers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .logo h1 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 10px 25px;
+            border-radius: 30px;
+            background: #f8f9fa;
+            color: #7f8c8d;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Upload Counter */
+        .upload-counter {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .upload-counter.warning {
+            background: #e74c3c;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+            }
+        }
+
+        .upload-counter i {
+            font-size: 1.3em;
+        }
+
+        /* Status Checker */
+        .status-checker {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-checker h2 {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .status-checker h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .status-result {
+            margin-top: 30px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        /* Max Uploads Warning */
+        .max-uploads-warning {
+            background: #e74c3c;
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .max-uploads-warning i {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .max-uploads-warning h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .max-uploads-warning p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .btn-contact {
+            background: white;
+            color: #e74c3c;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .btn-contact:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: white;
+            background: transparent;
+            color: white;
+        }
+
+        /* Processed Application Banner */
+        .processed-banner {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            animation: slideDown 0.5s ease;
+        }
+
+        .processed-banner-content {
+            flex: 1;
+        }
+
+        .processed-banner-content h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .processed-banner-content p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .btn-next {
+            background: white;
+            color: #27ae60;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-next:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-next i {
+            font-size: 1.1em;
+        }
+
+        .overall-status-banner {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .status-review {
+            background: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        .status-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .info-item strong {
+            display: block;
+            color: #7f8c8d;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item span {
+            color: #2c3e50;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        /* Progress Tracker - Clickable */
+        .progress-tracker {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .progress-tracker::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .progress-step:hover .step-icon {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        .progress-step.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: 600;
+            color: #7f8c8d;
+            transition: all 0.3s;
+        }
+
+        .progress-step.completed .step-icon {
+            background: #27ae60;
+            border-color: #27ae60;
+            color: white;
+        }
+
+        .progress-step.active .step-icon {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step-label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .progress-step.active .step-label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .progress-step.completed .step-label {
+            color: #27ae60;
+        }
+
+        /* Document Review Section */
+        .review-status-section {
+            margin: 30px 0;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .review-status-section h4 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .review-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #f39c12;
+        }
+
+        .review-item.approved {
+            border-left-color: #27ae60;
+            background: #f0fff4;
+        }
+
+        .review-item.rejected {
+            border-left-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .status-badge {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 12px;
+            margin-top: 5px;
+        }
+
+        .status-badge.approved {
+            background: #27ae60;
+        }
+
+        .status-badge.rejected {
+            background: #e74c3c;
+        }
+
+        .status-badge.pending {
+            background: #f39c12;
+        }
+
+        .review-content {
+            flex: 1;
+        }
+
+        .review-content strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .review-content .status-text {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .rejection-count {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-size: 0.75em;
+            margin-left: 8px;
+        }
+
+        .review-comment {
+            color: #e74c3c;
+            font-size: 0.85em;
+            font-style: italic;
+            background: white;
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 8px;
+        }
+
+        /* Re-upload Section */
+        .reupload-requests-section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 15px;
+        }
+
+        .reupload-requests-section h4 {
+            color: #856404;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2em;
+        }
+
+        .reupload-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #e74c3c;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .reupload-item p {
+            margin: 8px 0;
+            color: #2c3e50;
+        }
+
+        .reupload-item small {
+            color: #7f8c8d;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .reupload-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-reupload {
+            background: #e74c3c;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-reupload:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-edit-service {
+            background: #f39c12;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-edit-service:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        .btn-edit-service i {
+            font-size: 1.1em;
+        }
+
+        .upload-limit-info {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-limit-info i {
+            color: #e74c3c;
+        }
+
+        /* Approved Documents Summary */
+        .approved-summary {
+            margin-top: 15px;
+            padding: 15px;
+            background: #d4edda;
+            color: #155724;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95em;
+        }
+
+        .approved-summary i {
+            font-size: 1.2em;
+        }
+
+        /* Documents List */
+        .documents-list {
+            margin-top: 30px;
+        }
+
+        .documents-list h4 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .document-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s;
+        }
+
+        .document-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .document-item.approved {
+            border-left-color: #27ae60;
+        }
+
+        .document-item.rejected {
+            border-left-color: #e74c3c;
+        }
+
+        .document-item.pending {
+            border-left-color: #f39c12;
+        }
+
+        .status-icon {
+            margin-right: 10px;
+            font-size: 1.1em;
+        }
+
+        .document-info {
+            flex: 1;
+        }
+
+        .document-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .document-files {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .document-note {
+            color: #e74c3c;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .upload-number {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-left: 10px;
+        }
+
+        /* Comments Section */
+        .comment-section {
+            margin-top: 30px;
+        }
+
+        .comment-section h4 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .comment-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .comment-item p {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .comment-item small {
+            color: #7f8c8d;
+            display: block;
+        }
+
+        /* Notifications */
+        .notification {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-align: center;
+            animation: slideDown 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .notification.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .notification.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Loading and Error States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            border-left: 4px solid #e74c3c;
+        }
+
+        /* Back Button */
+        .back-button {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn-back {
+            background: white;
+            color: #2c3e50;
+            padding: 12px 25px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-back:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateX(-5px);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .status-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .review-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-tracker {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .progress-tracker::before {
+                display: none;
+            }
+            
+            .step-icon {
+                margin: 0 auto;
+            }
+
+            .reupload-actions {
+                flex-direction: column;
+            }
+
+            .reupload-actions a,
+            .reupload-actions button {
+                width: 100%;
+            }
+
+            .processed-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .btn-next {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1><i class="fas fa-globe-africa" style="margin-right: 10px;"></i>Apex Global Careers</h1>
+                <p class="tagline">Track Your Application Status</p>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <a href="/" class="nav-tab">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="/apply" class="nav-tab">
+                    <i class="fas fa-file-alt"></i> New Application
+                </a>
+                <a href="/reupload" class="nav-tab">
+                    <i class="fas fa-upload"></i> Re-upload
+                </a>
+                <a href="/editing" class="nav-tab">
+                    <i class="fas fa-pen-fancy"></i> Editing Service
+                </a>
+                <a href="/progress" class="nav-tab active">
+                    <i class="fas fa-search"></i> Check Status
+                </a>
+                <a href="/next-steps.html" class="nav-tab" id="nextStepsNav" style="display: none;">
+                    <i class="fas fa-arrow-right"></i> Next Steps
+                </a>
+            </div>
+        </header>
+
+        <main>
+            <div class="status-checker">
+                <h2><i class="fas fa-search" style="margin-right: 10px; color: #667eea;"></i>Check Application Status</h2>
+                
+                <div class="search-box">
+                    <input type="email" id="statusEmail" placeholder="Enter your email address" required>
+                    <button id="checkStatusBtn" class="btn-primary">
+                        <i class="fas fa-search"></i> Check Status
+                    </button>
+                </div>
+
+                <div id="statusResult" class="status-result" style="display: none;">
+                    <div class="status-card">
+                        <!-- Overall Status Banner -->
+                        <div id="overallStatusBanner" class="overall-status-banner"></div>
+
+                        <!-- Processed Application Banner with Next Button -->
+                        <div id="processedBanner" class="processed-banner" style="display: none;">
+                            <div class="processed-banner-content">
+                                <h3><i class="fas fa-check-circle"></i> Application Processed!</h3>
+                                <p>Your application has been processed successfully. Click the button below to proceed with uploading your signed documents.</p>
+                            </div>
+                            <a href="/next-steps.html" id="nextStepsBtn" class="btn-next">
+                                <i class="fas fa-arrow-right"></i> Next: Upload Documents
+                            </a>
+                        </div>
+
+                        <!-- Upload Counter -->
+                        <div id="uploadCounter" class="upload-counter" style="display: none;"></div>
+
+                        <!-- Max Uploads Warning -->
+                        <div id="maxUploadsWarning" class="max-uploads-warning" style="display: none;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Maximum Upload Attempts Reached</h3>
+                            <p>You have used all 3 upload attempts. Please wait 48 hours or contact our support team for assistance.</p>
+                            <a href="mailto:support@apexglobalcareers.com" class="btn-contact">
+                                <i class="fas fa-envelope"></i> Contact Support
+                            </a>
+                        </div>
+
+                        <h3 style="margin-bottom: 20px;">📋 Application Details</h3>
+                        <div class="status-info">
+                            <div class="info-item">
+                                <strong>Full Name</strong>
+                                <span id="statusName"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Email</strong>
+                                <span id="statusEmailDisplay"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Phone</strong>
+                                <span id="statusPhone"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Age</strong>
+                                <span id="statusAge"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Gender</strong>
+                                <span id="statusGender"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Marital Status</strong>
+                                <span id="statusMarital"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Country</strong>
+                                <span id="statusCountry"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Visa Type</strong>
+                                <span id="statusVisaType"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Submitted</strong>
+                                <span id="statusDate"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Last Updated</strong>
+                                <span id="statusUpdated"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Document Review Status -->
+                        <div id="documentReviewStatus" class="review-status-section">
+                            <h4><i class="fas fa-check-circle" style="color: #667eea;"></i> Document Review Status</h4>
+                            <div id="reviewStatusList" class="review-grid"></div>
+                        </div>
+
+                        <!-- Re-upload Requests Section -->
+                        <div id="reuploadRequests" class="reupload-requests-section" style="display: none;">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Action Required: Re-upload Documents</h4>
+                            <div id="reuploadRequestsList"></div>
+                            
+                            <!-- Re-upload Actions -->
+                            <div id="reuploadActions" class="reupload-actions">
+                                <a href="/reupload.html" id="reuploadLink" class="btn-reupload">
+                                    <i class="fas fa-upload"></i> Re-upload Documents
+                                </a>
+                                <a href="/editing.html" class="btn-edit-service">
+                                    <i class="fas fa-pen-fancy"></i> Professional Editing ($25)
+                                </a>
+                            </div>
+                            
+                            <!-- Upload Limit Info -->
+                            <div id="uploadLimitInfo" class="upload-limit-info" style="display: none;">
+                                <i class="fas fa-info-circle"></i>
+                                <span id="uploadLimitText"></span>
+                            </div>
+                        </div>
+
+                        <!-- Progress Tracker - Clickable -->
+                        <h4 style="margin-top: 30px;"><i class="fas fa-chart-line" style="margin-right: 10px; color: #667eea;"></i>Application Progress</h4>
+                        <div class="progress-tracker">
+                            <a href="#" class="progress-step" id="stepReceived" onclick="return false;">
+                                <div class="step-icon">1</div>
+                                <span class="step-label">Documents Received</span>
+                            </a>
+                            <a href="#" class="progress-step" id="stepReview" onclick="return false;">
+                                <div class="step-icon">2</div>
+                                <span class="step-label">Under Review</span>
+                            </a>
+                            <a href="#" class="progress-step" id="stepApproved" onclick="return false;">
+                                <div class="step-icon">3</div>
+                                <span class="step-label">Documents Approved</span>
+                            </a>
+                            <a href="/next-steps.html" class="progress-step" id="stepProcessed" onclick="return navigateToNextSteps(event);">
+                                <div class="step-icon">4</div>
+                                <span class="step-label">Processed</span>
+                            </a>
+                        </div>
+
+                        <!-- Uploaded Documents -->
+                        <div class="documents-list">
+                            <h4><i class="fas fa-file-alt" style="margin-right: 10px; color: #667eea;"></i>Uploaded Documents</h4>
+                            <div id="uploadedDocs"></div>
+                        </div>
+
+                        <!-- Admin Comments -->
+                        <div id="adminComments" class="comment-section">
+                            <h4><i class="fas fa-comments" style="margin-right: 10px; color: #667eea;"></i>Admin Comments</h4>
+                            <div id="commentsList"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                <div id="loadingMessage" class="loading" style="display: none;">
+                    <i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>Checking status...
+                </div>
+
+                <!-- Back to Home Button -->
+                <div class="back-button">
+                    <a href="/" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Apex Global Careers. All rights reserved. | No upfront payments - Pay after you earn</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkStatusBtn = document.getElementById('checkStatusBtn');
+            
+            // Get email from URL if present
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailFromUrl = urlParams.get('email');
+            if (emailFromUrl) {
+                document.getElementById('statusEmail').value = emailFromUrl;
+                checkStatus();
+            }
+            
+            if (checkStatusBtn) {
+                checkStatusBtn.addEventListener('click', checkStatus);
+            }
+
+            document.getElementById('statusEmail').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkStatus();
+                }
+            });
+
+            // Check if user has already started next steps
+            const nextStepsStatus = localStorage.getItem('nextSteps_' + emailFromUrl);
+            if (nextStepsStatus) {
+                showNextStepsNav();
+            }
+        });
+
+        // Function to navigate to next steps with email
+        function navigateToNextSteps(event) {
+            event.preventDefault();
+            const email = document.getElementById('statusEmail').value.trim();
+            if (email) {
+                window.location.href = `/next-steps.html?email=${encodeURIComponent(email)}`;
+            } else {
+                showError('Please enter your email first');
+            }
+            return false;
+        }
+
+        // Show next steps in navigation
+        function showNextStepsNav() {
+            const nextStepsNav = document.getElementById('nextStepsNav');
+            if (nextStepsNav) {
+                nextStepsNav.style.display = 'flex';
+            }
+        }
+
+        async function checkStatus() {
+            const email = document.getElementById('statusEmail').value.trim();
+            const statusResult = document.getElementById('statusResult');
+            const errorMessage = document.getElementById('errorMessage');
+            const loadingMessage = document.getElementById('loadingMessage');
+
+            if (!email) {
+                showError('Please enter your email address');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Please enter a valid email address');
+                return;
+            }
+
+            loadingMessage.style.display = 'block';
+            statusResult.style.display = 'none';
+            errorMessage.style.display = 'none';
+
+            try {
+                const response = await fetch(`/api/application/status/${encodeURIComponent(email)}`);
+                const result = await response.json();
+
+                loadingMessage.style.display = 'none';
+
+                if (response.ok && result.success) {
+                    displayStatus(result.status);
+                    errorMessage.style.display = 'none';
+                } else {
+                    showError(result.error || 'Application not found. Please check your email or submit a new application.');
+                }
+            } catch (error) {
+                loadingMessage.style.display = 'none';
+                showError('Failed to check status. Please try again later.');
+                console.error('Status check error:', error);
+            }
+        }
+
+        function displayStatus(data) {
+            console.log('Status Data Received:', data); // Debug
+            
+            // Extract data from the correct paths based on backend structure
+            const personalInfo = data.personalInfo || {};
+            const uploadInfo = data.uploadInfo || {};
+            const applicationStatus = data.applicationStatus || 'unknown';
+            const documentReviews = data.documentReviews || {}; // Admin's actual reviews
+            const reuploadRequests = data.reuploadRequests || [];
+            const comments = data.comments || [];
+            const uploadHistory = uploadInfo.uploadHistory || [];
+            
+            // Upload count from uploadInfo
+            const uploadCount = uploadInfo.currentUploadCount || 1;
+            const remainingUploads = uploadInfo.remainingUploads || (3 - uploadCount);
+            
+            // Personal Information
+            document.getElementById('statusName').textContent = personalInfo.fullName || 'N/A';
+            document.getElementById('statusEmailDisplay').textContent = personalInfo.email || 'N/A';
+            document.getElementById('statusPhone').textContent = personalInfo.phone || 'N/A';
+            document.getElementById('statusAge').textContent = personalInfo.age || 'N/A';
+            document.getElementById('statusGender').textContent = formatGender(personalInfo.gender) || 'N/A';
+            document.getElementById('statusMarital').textContent = formatMaritalStatus(personalInfo.maritalStatus) || 'N/A';
+            document.getElementById('statusCountry').textContent = personalInfo.country || 'N/A';
+            document.getElementById('statusVisaType').textContent = personalInfo.visaType || 'N/A';
+            document.getElementById('statusDate').textContent = data.timestamp ? new Date(data.timestamp).toLocaleDateString() : 'N/A';
+            document.getElementById('statusUpdated').textContent = data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString() : 'N/A';
+
+            // Upload counter
+            const uploadCounter = document.getElementById('uploadCounter');
+            
+            if (remainingUploads > 0) {
+                uploadCounter.style.display = 'flex';
+                uploadCounter.className = remainingUploads === 1 ? 'upload-counter warning' : 'upload-counter';
+                uploadCounter.innerHTML = `
+                    <i class="fas fa-upload"></i>
+                    <span>Upload Attempts: ${uploadCount}/3 (${remainingUploads} remaining)</span>
+                `;
+            } else {
+                uploadCounter.style.display = 'none';
+            }
+
+            // Max uploads warning
+            const maxUploadsWarning = document.getElementById('maxUploadsWarning');
+            if (uploadCount >= 3) {
+                maxUploadsWarning.style.display = 'block';
+            } else {
+                maxUploadsWarning.style.display = 'none';
+            }
+
+            // Overall Status Banner - use applicationStatus
+            displayOverallStatus(applicationStatus);
+
+            // Show processed banner with Next button if status is 'processed'
+            const processedBanner = document.getElementById('processedBanner');
+            const nextStepsBtn = document.getElementById('nextStepsBtn');
+            const nextStepsNav = document.getElementById('nextStepsNav');
+            
+            if (applicationStatus === 'processed') {
+                processedBanner.style.display = 'flex';
+                // Add email to the next steps link
+                nextStepsBtn.href = `/next-steps.html?email=${encodeURIComponent(personalInfo.email)}`;
+                // Also show in navigation
+                if (nextStepsNav) {
+                    nextStepsNav.style.display = 'flex';
+                    nextStepsNav.href = `/next-steps.html?email=${encodeURIComponent(personalInfo.email)}`;
+                }
+            } else {
+                processedBanner.style.display = 'none';
+            }
+
+            // Update progress steps
+            updateProgressSteps(applicationStatus, personalInfo.email);
+
+            // Use the actual document reviews from admin
+            console.log('📋 Admin Document Reviews:', documentReviews);
+            
+            // If documentReviews is empty, we need to infer from other data
+            let reviewsToShow = documentReviews;
+            
+            // If no document reviews from admin, create inferred reviews
+            if (Object.keys(documentReviews).length === 0) {
+                console.log('⚠️ No document reviews from admin, inferring from data...');
+                reviewsToShow = inferDocumentReviews(reuploadRequests, uploadHistory, applicationStatus);
+            }
+            
+            displayDocumentReviews(reviewsToShow);
+            
+            // Display re-upload requests
+            displayReuploadRequests(
+                reuploadRequests, 
+                applicationStatus, 
+                reviewsToShow,
+                uploadCount,
+                remainingUploads,
+                personalInfo.email
+            );
+
+            // Display uploaded documents (from uploadHistory)
+            displayUploadedDocuments(uploadHistory);
+
+            // Display admin comments
+            displayAdminComments(comments);
+
+            // Show messages
+            if (applicationStatus === 'documents-approved') {
+                showNotification('✅ All your documents have been approved! We will contact you soon.', 'success');
+            } else if (applicationStatus === 'changes-required') {
+                showNotification('⚠️ Some documents need your attention. Please check the comments below.', 'warning');
+            } else if (applicationStatus === 'reupload-requested') {
+                showNotification('📤 Please upload new versions of the requested documents.', 'warning');
+            } else if (applicationStatus === 'processed') {
+                showNotification('🎉 Your application has been processed! Click the "Next: Upload Documents" button to proceed.', 'success');
+            }
+
+            document.getElementById('statusResult').style.display = 'block';
+            document.getElementById('statusResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Function to infer document reviews when admin reviews are not available
+        function inferDocumentReviews(reuploadRequests, uploadHistory, applicationStatus) {
+            const reviews = {};
+            
+            // Define all possible document types
+            const documentTypes = ['passport', 'photo', 'cv', 'coverLetter', 'qualifications', 'experience'];
+            
+            // Track which documents were actually uploaded
+            const uploadedDocs = new Set();
+            if (uploadHistory && uploadHistory.length > 0) {
+                // Get the most recent upload (last in the array)
+                const latestUpload = uploadHistory[uploadHistory.length - 1];
+                if (latestUpload && latestUpload.files) {
+                    latestUpload.files.forEach(file => uploadedDocs.add(file));
+                    console.log('📁 Uploaded documents:', Array.from(uploadedDocs));
+                }
+            }
+            
+            // First, mark rejected documents from reupload requests (admin action)
+            reuploadRequests.forEach(request => {
+                if (request.documents && request.status === 'pending') {
+                    request.documents.forEach(docType => {
+                        // Find rejection count for this document
+                        let rejectionCount = 1;
+                        if (request.rejectionCount) {
+                            const found = request.rejectionCount.find(r => r.document === docType);
+                            if (found) rejectionCount = found.count;
+                        }
+                        
+                        reviews[docType] = {
+                            status: 'rejected',
+                            comments: request.message || 'Please update this document',
+                            rejectionCount: rejectionCount,
+                            reviewedAt: request.requestedAt
+                        };
+                        console.log(`❌ Marked ${docType} as rejected (admin action)`);
+                    });
+                }
+            });
+            
+            // If application status is 'documents-approved', mark all uploaded docs as approved (admin action)
+            if (applicationStatus === 'documents-approved') {
+                uploadedDocs.forEach(docType => {
+                    if (!reviews[docType] || reviews[docType].status !== 'rejected') {
+                        reviews[docType] = {
+                            status: 'approved',
+                            comments: null,
+                            rejectionCount: 0
+                        };
+                        console.log(`✅ Marked ${docType} as approved (admin action - status: documents-approved)`);
+                    }
+                });
+            } 
+            // If status is 'review' or 'changes-required' or 'reupload-requested', 
+            // uploaded docs are pending review unless rejected
+            else {
+                uploadedDocs.forEach(docType => {
+                    if (!reviews[docType]) {
+                        reviews[docType] = {
+                            status: 'pending',
+                            comments: null,
+                            rejectionCount: 0
+                        };
+                        console.log(`⏳ Marked ${docType} as pending (awaiting admin review)`);
+                    }
+                });
+            }
+            
+            // Mark all other document types as not uploaded
+            documentTypes.forEach(docType => {
+                if (!reviews[docType]) {
+                    reviews[docType] = {
+                        status: 'pending',
+                        comments: null,
+                        rejectionCount: 0
+                    };
+                }
+            });
+            
+            return reviews;
+        }
+
+        function formatGender(gender) {
+            const formats = {
+                'male': 'Male',
+                'female': 'Female',
+                'other': 'Other',
+                'prefer-not-to-say': 'Prefer not to say'
+            };
+            return formats[gender] || gender || 'N/A';
+        }
+
+        function formatMaritalStatus(status) {
+            const formats = {
+                'single': 'Single',
+                'married': 'Married',
+                'divorced': 'Divorced',
+                'widowed': 'Widowed',
+                'other': 'Other'
+            };
+            return formats[status] || status || 'N/A';
+        }
+
+        function displayOverallStatus(status) {
+            const banner = document.getElementById('overallStatusBanner');
+            let statusText = '';
+            let statusClass = '';
+            let icon = '';
+
+            switch(status) {
+                case 'received':
+                    icon = '📥';
+                    statusText = 'Documents Received - Pending Review';
+                    statusClass = 'status-pending';
+                    break;
+                case 'review':
+                    icon = '🔍';
+                    statusText = 'Under Review - We are checking your documents';
+                    statusClass = 'status-review';
+                    break;
+                case 'documents-approved':
+                    icon = '✅';
+                    statusText = 'All Documents Approved - Moving to next stage';
+                    statusClass = 'status-approved';
+                    break;
+                case 'changes-required':
+                    icon = '⚠️';
+                    statusText = 'Changes Required - Please check document comments';
+                    statusClass = 'status-rejected';
+                    break;
+                case 'reupload-requested':
+                    icon = '📤';
+                    statusText = 'Re-upload Required - Please submit new documents';
+                    statusClass = 'status-rejected';
+                    break;
+                case 'processed':
+                    icon = '🎉';
+                    statusText = 'Application Processed - Proceed to document upload';
+                    statusClass = 'status-approved';
+                    break;
+                default:
+                    icon = '📥';
+                    statusText = 'Application Received';
+                    statusClass = 'status-pending';
+            }
+
+            banner.innerHTML = `<i class="fas ${getIconClass(icon)}"></i> ${statusText}`;
+            banner.className = `overall-status-banner ${statusClass}`;
+        }
+
+        function getIconClass(icon) {
+            const icons = {
+                '📥': 'fa-inbox',
+                '🔍': 'fa-search',
+                '✅': 'fa-check-circle',
+                '⚠️': 'fa-exclamation-triangle',
+                '📤': 'fa-upload',
+                '🎉': 'fa-star'
+            };
+            return icons[icon] || 'fa-info-circle';
+        }
+
+        function updateProgressSteps(status, email) {
+            const steps = {
+                stepReceived: document.getElementById('stepReceived'),
+                stepReview: document.getElementById('stepReview'),
+                stepApproved: document.getElementById('stepApproved'),
+                stepProcessed: document.getElementById('stepProcessed')
+            };
+
+            // Remove all classes first
+            Object.values(steps).forEach(step => {
+                if (step) {
+                    step.classList.remove('completed', 'active', 'disabled');
+                    // Make all steps non-clickable by default
+                    step.onclick = function(e) { e.preventDefault(); return false; };
+                }
+            });
+
+            // Update based on status and make steps clickable when appropriate
+            switch(status) {
+                case 'received':
+                    if (steps.stepReceived) steps.stepReceived.classList.add('active');
+                    break;
+                case 'review':
+                case 'changes-required':
+                case 'reupload-requested':
+                    if (steps.stepReceived) steps.stepReceived.classList.add('completed');
+                    if (steps.stepReview) steps.stepReview.classList.add('active');
+                    break;
+                case 'documents-approved':
+                    if (steps.stepReceived) steps.stepReceived.classList.add('completed');
+                    if (steps.stepReview) steps.stepReview.classList.add('completed');
+                    if (steps.stepApproved) steps.stepApproved.classList.add('active');
+                    break;
+                case 'processed':
+                    if (steps.stepReceived) steps.stepReceived.classList.add('completed');
+                    if (steps.stepReview) steps.stepReview.classList.add('completed');
+                    if (steps.stepApproved) steps.stepApproved.classList.add('completed');
+                    if (steps.stepProcessed) {
+                        steps.stepProcessed.classList.add('completed');
+                        // Make processed step clickable
+                        steps.stepProcessed.onclick = function(e) {
+                            e.preventDefault();
+                            if (email) {
+                                window.location.href = `/next-steps.html?email=${encodeURIComponent(email)}`;
+                            } else {
+                                showError('Please check your status first');
+                            }
+                            return false;
+                        };
+                    }
+                    break;
+                default:
+                    if (steps.stepReceived) steps.stepReceived.classList.add('active');
+            }
+        }
+
+        function displayDocumentReviews(reviews) {
+            const reviewList = document.getElementById('reviewStatusList');
+            
+            const documentTypes = {
+                'passport': 'Passport',
+                'photo': 'Passport Photo',
+                'cv': 'CV/Resume',
+                'coverLetter': 'Cover Letter',
+                'qualifications': 'Qualifications',
+                'experience': 'Experience Letters'
+            };
+            
+            let html = '';
+            
+            Object.entries(documentTypes).forEach(([key, label]) => {
+                const review = reviews[key] || { status: 'pending', comments: null, rejectionCount: 0 };
+                const statusClass = review.status === 'approved' ? 'approved' :
+                                   review.status === 'rejected' ? 'rejected' : 'pending';
+                const statusText = review.status === 'approved' ? '✅ Approved' :
+                                  review.status === 'rejected' ? '❌ Needs Revision' : '⏳ Pending Review';
+                const statusColor = review.status === 'approved' ? '#27ae60' :
+                                   review.status === 'rejected' ? '#e74c3c' : '#f39c12';
+                
+                const rejectionCount = review.rejectionCount && review.rejectionCount > 0 ? 
+                    `<span class="rejection-count">Attempt ${review.rejectionCount}/3</span>` : '';
+                
+                html += `
+                    <div class="review-item ${statusClass}">
+                        <div class="status-badge ${statusClass}"></div>
+                        <div class="review-content">
+                            <strong>${label} ${rejectionCount}</strong>
+                            <div class="status-text" style="color: ${statusColor};">${statusText}</div>
+                            ${review.comments ? `<div class="review-comment">📝 ${review.comments}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            reviewList.innerHTML = html;
+        }
+
+        function displayReuploadRequests(requests, currentStatus, documentReviews, uploadCount, remainingUploads, email) {
+            const reuploadSection = document.getElementById('reuploadRequests');
+            const reuploadList = document.getElementById('reuploadRequestsList');
+            const uploadLimitInfo = document.getElementById('uploadLimitInfo');
+            const uploadLimitText = document.getElementById('uploadLimitText');
+            const reuploadLink = document.getElementById('reuploadLink');
+            
+            // If status is not requiring re-upload, hide section
+            if (currentStatus !== 'changes-required' && currentStatus !== 'reupload-requested') {
+                reuploadSection.style.display = 'none';
+                return;
+            }
+
+            // Get list of rejected documents
+            const rejectedDocs = Object.keys(documentReviews).filter(
+                doc => documentReviews[doc]?.status === 'rejected'
+            );
+            
+            // If no rejected documents, hide re-upload section
+            if (rejectedDocs.length === 0) {
+                reuploadSection.style.display = 'none';
+                return;
+            }
+            
+            // Update reupload link to point to dedicated reupload page with email
+            if (reuploadLink && email) {
+                reuploadLink.href = `/reupload.html?email=${encodeURIComponent(email)}`;
+            }
+            
+            // Show upload limit info
+            if (remainingUploads > 0) {
+                uploadLimitInfo.style.display = 'flex';
+                uploadLimitText.textContent = `You have ${remainingUploads} upload attempt${remainingUploads > 1 ? 's' : ''} remaining. Maximum 3 attempts allowed.`;
+            } else {
+                uploadLimitInfo.style.display = 'none';
+            }
+            
+            // Filter pending requests
+            const pendingRequests = (requests || []).filter(r => r.status === 'pending');
+            
+            if (pendingRequests.length > 0) {
+                let html = '';
+                pendingRequests.forEach((req, index) => {
+                    const docNames = req.documents.map(d => formatDocName(d)).join(', ');
+                    
+                    // Find max rejection count for display
+                    let maxRejection = 1;
+                    if (req.rejectionCount && req.rejectionCount.length > 0) {
+                        maxRejection = Math.max(...req.rejectionCount.map(r => r.count));
+                    }
+                    
+                    html += `
+                        <div class="reupload-item">
+                            <p><strong>Action Required</strong></p>
+                            <p>${req.message || 'Please update the following documents'}</p>
+                            <p><small>⚠️ Attempt ${maxRejection}/3</small></p>
+                            <p><small>📄 Documents needing attention: ${docNames}</small></p>
+                            <p><small>📅 Requested: ${new Date(req.requestedAt).toLocaleDateString()}</small></p>
+                        </div>
+                    `;
+                });
+                
+                reuploadSection.style.display = 'block';
+                reuploadList.innerHTML = html;
+            } else {
+                // Even without pending requests, if there are rejected docs, show a generic message
+                if (rejectedDocs.length > 0) {
+                    const docNames = rejectedDocs.map(d => formatDocName(d)).join(', ');
+                    reuploadSection.style.display = 'block';
+                    reuploadList.innerHTML = `
+                        <div class="reupload-item">
+                            <p><strong>Documents Need Attention</strong></p>
+                            <p>The following documents were rejected. Please upload new versions.</p>
+                            <p><small>📄 ${docNames}</small></p>
+                        </div>
+                    `;
+                } else {
+                    reuploadSection.style.display = 'none';
+                }
+            }
+        }
+
+        function displayUploadedDocuments(uploadHistory) {
+            const docsList = document.getElementById('uploadedDocs');
+            docsList.innerHTML = '';
+            
+            if (!uploadHistory || uploadHistory.length === 0) {
+                docsList.innerHTML = '<p style="text-align: center; color: #7f8c8d; padding: 20px;">No upload history available.</p>';
+                return;
+            }
+            
+            // Display each upload attempt
+            uploadHistory.forEach((attempt, index) => {
+                const attemptDiv = document.createElement('div');
+                attemptDiv.className = 'document-item';
+                attemptDiv.style.borderLeftColor = '#3498db';
+                
+                const uploadNumber = index + 1;
+                const date = new Date(attempt.timestamp).toLocaleDateString();
+                const files = attempt.files ? attempt.files.join(', ') : 'No files listed';
+                
+                attemptDiv.innerHTML = `
+                    <div class="status-icon">📤</div>
+                    <div class="document-info">
+                        <div class="document-name">Upload Attempt #${uploadNumber}</div>
+                        <div class="document-files">${date}</div>
+                        <div class="document-note">Files: ${files}</div>
+                    </div>
+                `;
+                docsList.appendChild(attemptDiv);
+            });
+        }
+
+        function displayAdminComments(comments) {
+            const commentsList = document.getElementById('commentsList');
+            
+            if (!comments || comments.length === 0) {
+                commentsList.innerHTML = '<p style="text-align: center; color: #7f8c8d; padding: 20px;">No comments yet.</p>';
+                return;
+            }
+            
+            let html = '';
+            comments.forEach(comment => {
+                html += `
+                    <div class="comment-item">
+                        <p>${comment.text}</p>
+                        <small>
+                            <i class="far fa-clock"></i> ${new Date(comment.timestamp).toLocaleString()} - ${comment.admin || 'Admin'}
+                        </small>
+                    </div>
+                `;
+            });
+            
+            commentsList.innerHTML = html;
+        }
+
+        function formatDocName(key) {
+            const names = {
+                'passport': 'Passport',
+                'photo': 'Passport Photo',
+                'cv': 'CV/Resume',
+                'coverLetter': 'Cover Letter',
+                'qualifications': 'Qualifications',
+                'experience': 'Experience Letters'
+            };
+            return names[key] || key;
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            errorDiv.style.display = 'block';
+            document.getElementById('statusResult').style.display = 'none';
+        }
+
+        function showNotification(message, type) {
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            let icon = '';
+            if (type === 'success') icon = '✅';
+            else if (type === 'warning') icon = '⚠️';
+            else if (type === 'error') icon = '❌';
+            
+            notification.innerHTML = `${icon} ${message}`;
+            
+            const statusCard = document.querySelector('.status-card');
+            if (statusCard) {
+                statusCard.insertBefore(notification, statusCard.firstChild);
+            }
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

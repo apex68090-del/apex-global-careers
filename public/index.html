@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Global Careers - New Application</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .logo h1 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            color: #95a5a6;
+            position: relative;
+        }
+
+        .step.active {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .step.active::before {
+            content: '';
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+
+        /* Form Styles */
+        .upload-form {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .form-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Phone input with country code hint */
+        .phone-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .country-code-hint {
+            position: absolute;
+            left: 12px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .country-code-hint.detected {
+            color: #27ae60;
+            font-weight: 500;
+        }
+        
+        #phone {
+            padding-left: 60px;
+        }
+        
+        /* Subtle highlight for auto-selected country */
+        #country.auto-selected {
+            border-color: #27ae60;
+            background-color: #f0fff4;
+            transition: all 0.3s ease;
+        }
+
+        /* Document Cards */
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .document-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .document-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .doc-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .doc-icon {
+            font-size: 1.5em;
+        }
+
+        .doc-header h3 {
+            color: #2c3e50;
+            font-size: 1.2em;
+            flex: 1;
+        }
+
+        .required-badge, .optional-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .required-badge {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .optional-badge {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .doc-desc {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            position: relative;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            width: 0;
+            height: 0;
+            opacity: 0;
+        }
+
+        .file-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border: 2px dashed #bdc3c7;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-label:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .upload-icon {
+            font-size: 1.2em;
+        }
+
+        .file-name {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #27ae60;
+        }
+
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Status Check Section */
+        .status-check-section {
+            margin-top: 40px;
+            padding: 40px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf5 100%);
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .status-check-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .status-check-section p {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            font-size: 1.1em;
+        }
+
+        .status-input-group {
+            display: flex;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .status-input-group input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .status-input-group input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .btn-status {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1em;
+        }
+
+        .btn-status:hover {
+            background: #34495e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 62, 80, 0.3);
+        }
+
+        #statusMessage {
+            margin-top: 15px;
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        /* Upload Status */
+        .upload-status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .upload-status.success {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .upload-status.error {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .upload-status.loading {
+            display: block;
+            background: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            font-size: 0.9em;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .documents-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn-primary {
+                max-width: 100%;
+            }
+            
+            .status-input-group {
+                flex-direction: column;
+            }
+            
+            .status-check-section {
+                padding: 20px;
+            }
+            
+            .status-check-section h3 {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .upload-form, .status-check-section {
+            animation: slideIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1><i class="fas fa-globe-africa" style="margin-right: 10px;"></i>Apex Global Careers</h1>
+                <p class="tagline">Your Gateway to International Opportunities</p>
+            </div>
+            <div class="progress-indicator">
+                <span class="step active">1. Personal Info</span>
+                <span class="step">2. Upload Documents</span>
+                <span class="step">3. Submit</span>
+            </div>
+        </header>
+
+        <main>
+            <form id="uploadForm" class="upload-form">
+                <div class="form-section">
+                    <h2><i class="fas fa-user" style="color: #667eea; margin-right: 10px;"></i>Personal Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <div class="phone-input-wrapper">
+                                <span class="country-code-hint" id="countryCodeHint">+</span>
+                                <input type="tel" id="phone" name="phone" placeholder="1234567890" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Age *</label>
+                            <input type="number" id="age" name="age" min="18" max="100" placeholder="18-100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender *</label>
+                            <select id="gender" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not-to-say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="maritalStatus">Marital Status *</label>
+                            <select id="maritalStatus" name="maritalStatus" required>
+                                <option value="">Select Marital Status</option>
+                                <option value="single">Single</option>
+                                <option value="married">Married</option>
+                                <option value="divorced">Divorced</option>
+                                <option value="widowed">Widowed</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="country">Country of Residence *</label>
+                            <select id="country" name="country" required>
+                                <option value="">Select Country</option>
+                                <optgroup label="Africa">
+                                    <option value="DZ" data-code="213">Algeria (+213)</option>
+                                    <option value="AO" data-code="244">Angola (+244)</option>
+                                    <option value="BJ" data-code="229">Benin (+229)</option>
+                                    <option value="BW" data-code="267">Botswana (+267)</option>
+                                    <option value="BF" data-code="226">Burkina Faso (+226)</option>
+                                    <option value="BI" data-code="257">Burundi (+257)</option>
+                                    <option value="CV" data-code="238">Cabo Verde (+238)</option>
+                                    <option value="CM" data-code="237">Cameroon (+237)</option>
+                                    <option value="CF" data-code="236">Central African Republic (+236)</option>
+                                    <option value="TD" data-code="235">Chad (+235)</option>
+                                    <option value="KM" data-code="269">Comoros (+269)</option>
+                                    <option value="CG" data-code="242">Congo (+242)</option>
+                                    <option value="CD" data-code="243">Congo, Democratic Republic (+243)</option>
+                                    <option value="CI" data-code="225">Côte d'Ivoire (+225)</option>
+                                    <option value="DJ" data-code="253">Djibouti (+253)</option>
+                                    <option value="EG" data-code="20">Egypt (+20)</option>
+                                    <option value="GQ" data-code="240">Equatorial Guinea (+240)</option>
+                                    <option value="ER" data-code="291">Eritrea (+291)</option>
+                                    <option value="SZ" data-code="268">Eswatini (+268)</option>
+                                    <option value="ET" data-code="251">Ethiopia (+251)</option>
+                                    <option value="GA" data-code="241">Gabon (+241)</option>
+                                    <option value="GM" data-code="220">Gambia (+220)</option>
+                                    <option value="GH" data-code="233">Ghana (+233)</option>
+                                    <option value="GN" data-code="224">Guinea (+224)</option>
+                                    <option value="GW" data-code="245">Guinea-Bissau (+245)</option>
+                                    <option value="KE" data-code="254">Kenya (+254)</option>
+                                    <option value="LS" data-code="266">Lesotho (+266)</option>
+                                    <option value="LR" data-code="231">Liberia (+231)</option>
+                                    <option value="LY" data-code="218">Libya (+218)</option>
+                                    <option value="MG" data-code="261">Madagascar (+261)</option>
+                                    <option value="MW" data-code="265">Malawi (+265)</option>
+                                    <option value="ML" data-code="223">Mali (+223)</option>
+                                    <option value="MR" data-code="222">Mauritania (+222)</option>
+                                    <option value="MU" data-code="230">Mauritius (+230)</option>
+                                    <option value="MA" data-code="212">Morocco (+212)</option>
+                                    <option value="MZ" data-code="258">Mozambique (+258)</option>
+                                    <option value="NA" data-code="264">Namibia (+264)</option>
+                                    <option value="NE" data-code="227">Niger (+227)</option>
+                                    <option value="NG" data-code="234">Nigeria (+234)</option>
+                                    <option value="RW" data-code="250">Rwanda (+250)</option>
+                                    <option value="ST" data-code="239">São Tomé and Príncipe (+239)</option>
+                                    <option value="SN" data-code="221">Senegal (+221)</option>
+                                    <option value="SC" data-code="248">Seychelles (+248)</option>
+                                    <option value="SL" data-code="232">Sierra Leone (+232)</option>
+                                    <option value="SO" data-code="252">Somalia (+252)</option>
+                                    <option value="ZA" data-code="27">South Africa (+27)</option>
+                                    <option value="SS" data-code="211">South Sudan (+211)</option>
+                                    <option value="SD" data-code="249">Sudan (+249)</option>
+                                    <option value="TZ" data-code="255">Tanzania (+255)</option>
+                                    <option value="TG" data-code="228">Togo (+228)</option>
+                                    <option value="TN" data-code="216">Tunisia (+216)</option>
+                                    <option value="UG" data-code="256">Uganda (+256)</option>
+                                    <option value="ZM" data-code="260">Zambia (+260)</option>
+                                    <option value="ZW" data-code="263">Zimbabwe (+263)</option>
+                                </optgroup>
+                                <optgroup label="Asia">
+                                    <option value="AF" data-code="93">Afghanistan (+93)</option>
+                                    <option value="AM" data-code="374">Armenia (+374)</option>
+                                    <option value="AZ" data-code="994">Azerbaijan (+994)</option>
+                                    <option value="BH" data-code="973">Bahrain (+973)</option>
+                                    <option value="BD" data-code="880">Bangladesh (+880)</option>
+                                    <option value="BT" data-code="975">Bhutan (+975)</option>
+                                    <option value="BN" data-code="673">Brunei (+673)</option>
+                                    <option value="KH" data-code="855">Cambodia (+855)</option>
+                                    <option value="CN" data-code="86">China (+86)</option>
+                                    <option value="GE" data-code="995">Georgia (+995)</option>
+                                    <option value="IN" data-code="91">India (+91)</option>
+                                    <option value="ID" data-code="62">Indonesia (+62)</option>
+                                    <option value="IR" data-code="98">Iran (+98)</option>
+                                    <option value="IQ" data-code="964">Iraq (+964)</option>
+                                    <option value="IL" data-code="972">Israel (+972)</option>
+                                    <option value="JP" data-code="81">Japan (+81)</option>
+                                    <option value="JO" data-code="962">Jordan (+962)</option>
+                                    <option value="KZ" data-code="7">Kazakhstan (+7)</option>
+                                    <option value="KW" data-code="965">Kuwait (+965)</option>
+                                    <option value="KG" data-code="996">Kyrgyzstan (+996)</option>
+                                    <option value="LA" data-code="856">Laos (+856)</option>
+                                    <option value="LB" data-code="961">Lebanon (+961)</option>
+                                    <option value="MY" data-code="60">Malaysia (+60)</option>
+                                    <option value="MV" data-code="960">Maldives (+960)</option>
+                                    <option value="MN" data-code="976">Mongolia (+976)</option>
+                                    <option value="MM" data-code="95">Myanmar (+95)</option>
+                                    <option value="NP" data-code="977">Nepal (+977)</option>
+                                    <option value="KP" data-code="850">North Korea (+850)</option>
+                                    <option value="OM" data-code="968">Oman (+968)</option>
+                                    <option value="PK" data-code="92">Pakistan (+92)</option>
+                                    <option value="PS" data-code="970">Palestine (+970)</option>
+                                    <option value="PH" data-code="63">Philippines (+63)</option>
+                                    <option value="QA" data-code="974">Qatar (+974)</option>
+                                    <option value="SA" data-code="966">Saudi Arabia (+966)</option>
+                                    <option value="SG" data-code="65">Singapore (+65)</option>
+                                    <option value="KR" data-code="82">South Korea (+82)</option>
+                                    <option value="LK" data-code="94">Sri Lanka (+94)</option>
+                                    <option value="SY" data-code="963">Syria (+963)</option>
+                                    <option value="TW" data-code="886">Taiwan (+886)</option>
+                                    <option value="TJ" data-code="992">Tajikistan (+992)</option>
+                                    <option value="TH" data-code="66">Thailand (+66)</option>
+                                    <option value="TL" data-code="670">Timor-Leste (+670)</option>
+                                    <option value="TR" data-code="90">Turkey (+90)</option>
+                                    <option value="TM" data-code="993">Turkmenistan (+993)</option>
+                                    <option value="AE" data-code="971">UAE (+971)</option>
+                                    <option value="UZ" data-code="998">Uzbekistan (+998)</option>
+                                    <option value="VN" data-code="84">Vietnam (+84)</option>
+                                    <option value="YE" data-code="967">Yemen (+967)</option>
+                                </optgroup>
+                                <optgroup label="Europe">
+                                    <option value="AL" data-code="355">Albania (+355)</option>
+                                    <option value="AD" data-code="376">Andorra (+376)</option>
+                                    <option value="AT" data-code="43">Austria (+43)</option>
+                                    <option value="BY" data-code="375">Belarus (+375)</option>
+                                    <option value="BE" data-code="32">Belgium (+32)</option>
+                                    <option value="BA" data-code="387">Bosnia and Herzegovina (+387)</option>
+                                    <option value="BG" data-code="359">Bulgaria (+359)</option>
+                                    <option value="HR" data-code="385">Croatia (+385)</option>
+                                    <option value="CY" data-code="357">Cyprus (+357)</option>
+                                    <option value="CZ" data-code="420">Czech Republic (+420)</option>
+                                    <option value="DK" data-code="45">Denmark (+45)</option>
+                                    <option value="EE" data-code="372">Estonia (+372)</option>
+                                    <option value="FI" data-code="358">Finland (+358)</option>
+                                    <option value="FR" data-code="33">France (+33)</option>
+                                    <option value="DE" data-code="49">Germany (+49)</option>
+                                    <option value="GR" data-code="30">Greece (+30)</option>
+                                    <option value="HU" data-code="36">Hungary (+36)</option>
+                                    <option value="IS" data-code="354">Iceland (+354)</option>
+                                    <option value="IE" data-code="353">Ireland (+353)</option>
+                                    <option value="IT" data-code="39">Italy (+39)</option>
+                                    <option value="LV" data-code="371">Latvia (+371)</option>
+                                    <option value="LI" data-code="423">Liechtenstein (+423)</option>
+                                    <option value="LT" data-code="370">Lithuania (+370)</option>
+                                    <option value="LU" data-code="352">Luxembourg (+352)</option>
+                                    <option value="MT" data-code="356">Malta (+356)</option>
+                                    <option value="MD" data-code="373">Moldova (+373)</option>
+                                    <option value="MC" data-code="377">Monaco (+377)</option>
+                                    <option value="ME" data-code="382">Montenegro (+382)</option>
+                                    <option value="NL" data-code="31">Netherlands (+31)</option>
+                                    <option value="MK" data-code="389">North Macedonia (+389)</option>
+                                    <option value="NO" data-code="47">Norway (+47)</option>
+                                    <option value="PL" data-code="48">Poland (+48)</option>
+                                    <option value="PT" data-code="351">Portugal (+351)</option>
+                                    <option value="RO" data-code="40">Romania (+40)</option>
+                                    <option value="RU" data-code="7">Russia (+7)</option>
+                                    <option value="SM" data-code="378">San Marino (+378)</option>
+                                    <option value="RS" data-code="381">Serbia (+381)</option>
+                                    <option value="SK" data-code="421">Slovakia (+421)</option>
+                                    <option value="SI" data-code="386">Slovenia (+386)</option>
+                                    <option value="ES" data-code="34">Spain (+34)</option>
+                                    <option value="SE" data-code="46">Sweden (+46)</option>
+                                    <option value="CH" data-code="41">Switzerland (+41)</option>
+                                    <option value="UA" data-code="380">Ukraine (+380)</option>
+                                    <option value="GB" data-code="44">United Kingdom (+44)</option>
+                                    <option value="VA" data-code="379">Vatican City (+379)</option>
+                                </optgroup>
+                                <optgroup label="North America">
+                                    <option value="CA" data-code="1">Canada (+1)</option>
+                                    <option value="MX" data-code="52">Mexico (+52)</option>
+                                    <option value="US" data-code="1">United States (+1)</option>
+                                </optgroup>
+                                <optgroup label="South America">
+                                    <option value="AR" data-code="54">Argentina (+54)</option>
+                                    <option value="BO" data-code="591">Bolivia (+591)</option>
+                                    <option value="BR" data-code="55">Brazil (+55)</option>
+                                    <option value="CL" data-code="56">Chile (+56)</option>
+                                    <option value="CO" data-code="57">Colombia (+57)</option>
+                                    <option value="EC" data-code="593">Ecuador (+593)</option>
+                                    <option value="GY" data-code="592">Guyana (+592)</option>
+                                    <option value="PY" data-code="595">Paraguay (+595)</option>
+                                    <option value="PE" data-code="51">Peru (+51)</option>
+                                    <option value="SR" data-code="597">Suriname (+597)</option>
+                                    <option value="UY" data-code="598">Uruguay (+598)</option>
+                                    <option value="VE" data-code="58">Venezuela (+58)</option>
+                                </optgroup>
+                                <optgroup label="Oceania">
+                                    <option value="AU" data-code="61">Australia (+61)</option>
+                                    <option value="FJ" data-code="679">Fiji (+679)</option>
+                                    <option value="NZ" data-code="64">New Zealand (+64)</option>
+                                    <option value="PG" data-code="675">Papua New Guinea (+675)</option>
+                                </optgroup>
+                                <optgroup label="Other">
+                                    <option value="Other">Other (Not Listed)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="visaType">Visa Type *</label>
+                            <select id="visaType" name="visaType" required>
+                                <option value="">Select Visa Type</option>
+                                <option value="work">Work Visa</option>
+                                <option value="student">Student Visa</option>
+                                <option value="tourist">Tourist Visa</option>
+                                <option value="business">Business Visa</option>
+                                <option value="family">Family Sponsorship</option>
+                                <option value="permanent-resident">Permanent Resident</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-file-alt" style="color: #667eea; margin-right: 10px;"></i>Required Documents</h2>
+                    <p class="section-note">Please upload clear, colored scans of all documents (PDF, JPG, PNG accepted, max 10MB each)</p>
+                    
+                    <div class="documents-grid">
+                        <div class="document-card">
+                            <div class="doc-header">
+                                <span class="doc-icon">📄</span>
+                                <h3>Passport</h3>
+                                <span class="required-badge">Required</span>
+                            </div>
+                            <p class="doc-desc">Valid passport (all pages with stamps)</p>
+                            <div class="file-upload-area" data-for="passport">
+                                <input type="file" id="passport" name="passport" accept=".pdf,.jpg,.jpeg,.png" required>
+                                <label for="passport" class="file-label">
+                                    <span class="upload-icon">📎</span>
+                                    <span class="upload-text">Choose file</span>
+                                </label>
+                                <span class="file-name"></span>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-header">
+                                <span class="doc-icon">📸</span>
+                                <h3>Passport Photo</h3>
+                                <span class="required-badge">Required</span>
+                            </div>
+                            <p class="doc-desc">Recent passport-sized photograph (white background)</p>
+                            <div class="file-upload-area" data-for="photo">
+                                <input type="file" id="photo" name="photo" accept=".jpg,.jpeg,.png" required>
+                                <label for="photo" class="file-label">
+                                    <span class="upload-icon">📎</span>
+                                    <span class="upload-text">Choose file</span>
+                                </label>
+                                <span class="file-name"></span>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-header">
+                                <span class="doc-icon">📝</span>
+                                <h3>CV/Resume</h3>
+                                <span class="required-badge">Required</span>
+                            </div>
+                            <p class="doc-desc">Updated CV in Europass format (if applicable)</p>
+                            <div class="file-upload-area" data-for="cv">
+                                <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+                                <label for="cv" class="file-label">
+                                    <span class="upload-icon">📎</span>
+                                    <span class="upload-text">Choose file</span>
+                                </label>
+                                <span class="file-name"></span>
+                            </div>
+                        </div>
+
+                        <!-- FIXED: Cover Letter changed from Optional to Required -->
+                        <div class="document-card">
+                            <div class="doc-header">
+                                <span class="doc-icon">✉️</span>
+                                <h3>Cover Letter</h3>
+                                <span class="required-badge">Required</span>
+                            </div>
+                            <p class="doc-desc">Explanation of purpose for travel</p>
+                            <div class="file-upload-area" data-for="coverLetter">
+                                <input type="file" id="coverLetter" name="coverLetter" accept=".pdf,.doc,.docx" required>
+                                <label for="coverLetter" class="file-label">
+                                    <span class="upload-icon">📎</span>
+                                    <span class="upload-text">Choose file</span>
+                                </label>
+                                <span class="file-name"></span>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-header">
+                                <span class="doc-icon">🎓</span>
+                                <h3>Qualifications</h3>
+                                <span class="required-badge">Required</span>
+                            </div>
+                            <p class="doc-desc">Degrees, diplomas, certificates (max 5 files)</p>
+                            <div class="file-upload-area" data-for="qualifications">
+                                <input type="file" id="qualifications" name="qualifications" accept=".pdf,.jpg,.jpeg,.png" multiple required>
+                                <label for="qualifications" class="file-label">
+                                    <span class="upload-icon">📎</span>
+                                    <span class="upload-text">Choose files</span>
+                                </label>
+                                <span class="file-name"></span>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-header">
+                                <span class="doc-icon">💼</span>
+                                <h3>Experience Letters</h3>
+                                <span class="optional-badge">Optional</span>
+                            </div>
+                            <p class="doc-desc">Previous employment certificates (max 5 files)</p>
+                            <div class="file-upload-area" data-for="experience">
+                                <input type="file" id="experience" name="experience" accept=".pdf,.jpg,.jpeg,.png" multiple>
+                                <label for="experience" class="file-label">
+                                    <span class="upload-icon">📎</span>
+                                    <span class="upload-text">Choose files</span>
+                                </label>
+                                <span class="file-name"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-upload" style="margin-right: 8px;"></i>Submit New Application
+                    </button>
+                </div>
+            </form>
+
+            <!-- Status Check Section -->
+            <div class="status-check-section">
+                <i class="fas fa-search" style="font-size: 3em; color: #667eea; margin-bottom: 15px;"></i>
+                <h3>Already Applied?</h3>
+                <p>Enter your email address to check your application status instantly</p>
+                <div class="status-input-group">
+                    <input type="email" id="statusEmail" placeholder="your@email.com">
+                    <button onclick="checkApplicationStatus()" class="btn-status">
+                        <i class="fas fa-search"></i> Check Status
+                    </button>
+                </div>
+                <div id="statusMessage"></div>
+            </div>
+
+            <div id="uploadStatus" class="upload-status"></div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Apex Global Careers. All rights reserved. | No upfront payments - Pay after you earn</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadForm = document.getElementById('uploadForm');
+            const phoneInput = document.getElementById('phone');
+            const countrySelect = document.getElementById('country');
+            const countryCodeHint = document.getElementById('countryCodeHint');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Create a map of country codes to country values
+            const countryCodeMap = new Map();
+            
+            // Populate the map from all options with data-code attribute
+            document.querySelectorAll('#country option[data-code]').forEach(option => {
+                const code = option.getAttribute('data-code');
+                const value = option.value;
+                
+                if (!countryCodeMap.has(code)) {
+                    countryCodeMap.set(code, []);
+                }
+                countryCodeMap.get(code).push({
+                    value: value,
+                    element: option
+                });
+            });
+
+            // Handle phone input changes - silently auto-select country
+            phoneInput.addEventListener('input', function(e) {
+                let phoneNumber = this.value.replace(/\D/g, ''); // Remove non-digits
+                
+                // Try to detect country code from the beginning of the number
+                let detectedCountries = null;
+                let matchedCode = '';
+                
+                // Check for 1-4 digit country codes (most are 1-3 digits)
+                for (let i = 1; i <= 4; i++) {
+                    const potentialCode = phoneNumber.substring(0, i);
+                    if (countryCodeMap.has(potentialCode)) {
+                        detectedCountries = countryCodeMap.get(potentialCode);
+                        matchedCode = potentialCode;
+                        break;
+                    }
+                }
+                
+                // Update the country code hint color
+                if (matchedCode) {
+                    countryCodeHint.textContent = '+' + matchedCode;
+                    countryCodeHint.classList.add('detected');
+                } else {
+                    countryCodeHint.textContent = '+';
+                    countryCodeHint.classList.remove('detected');
+                }
+                
+                // If we detected a single country, silently auto-select it
+                if (detectedCountries && detectedCountries.length === 1) {
+                    // Remove any previous auto-selected styling
+                    countrySelect.classList.remove('auto-selected');
+                    
+                    // Set the value
+                    countrySelect.value = detectedCountries[0].value;
+                    
+                    // Add subtle highlight to show it was auto-selected
+                    if (countrySelect.value) {
+                        countrySelect.classList.add('auto-selected');
+                        
+                        // Remove the highlight after 2 seconds
+                        setTimeout(() => {
+                            countrySelect.classList.remove('auto-selected');
+                        }, 2000);
+                    }
+                }
+            });
+
+            // Handle file input display
+            document.querySelectorAll('input[type="file"]').forEach(input => {
+                input.addEventListener('change', function(e) {
+                    const fileName = this.files.length > 0 
+                        ? (this.files.length === 1 
+                            ? this.files[0].name 
+                            : `${this.files.length} files selected`)
+                        : '';
+                    
+                    const fileNameSpan = this.closest('.file-upload-area').querySelector('.file-name');
+                    if (fileNameSpan) {
+                        fileNameSpan.textContent = fileName;
+                    }
+                });
+            });
+
+            // Handle form submission
+            if (uploadForm) {
+                uploadForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    // Validate age
+                    const age = document.getElementById('age').value;
+                    if (age < 18 || age > 100) {
+                        alert('Please enter a valid age between 18 and 100');
+                        return;
+                    }
+
+                    // Validate phone number has country code
+                    const phone = phoneInput.value.replace(/\D/g, '');
+                    if (phone.length < 8) {
+                        alert('Please enter a valid phone number with country code');
+                        return;
+                    }
+
+                    // Validate required files
+                    const requiredFiles = ['passport', 'photo', 'cv', 'coverLetter', 'qualifications'];
+                    let missingFiles = [];
+                    
+                    requiredFiles.forEach(fileName => {
+                        const fileInput = document.getElementById(fileName);
+                        if (!fileInput.files || fileInput.files.length === 0) {
+                            missingFiles.push(fileName);
+                        }
+                    });
+                    
+                    if (missingFiles.length > 0) {
+                        const fileNames = {
+                            'passport': 'Passport',
+                            'photo': 'Passport Photo',
+                            'cv': 'CV/Resume',
+                            'coverLetter': 'Cover Letter',
+                            'qualifications': 'Qualifications'
+                        };
+                        
+                        const missingNames = missingFiles.map(f => fileNames[f] || f).join(', ');
+                        alert(`Please upload all required documents: ${missingNames}`);
+                        return;
+                    }
+
+                    const formData = new FormData(this);
+                    
+                    const statusDiv = document.getElementById('uploadStatus');
+                    
+                    // Disable submit button to prevent double submission
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+                    
+                    try {
+                        statusDiv.className = 'upload-status loading';
+                        statusDiv.textContent = 'Uploading your application...';
+                        statusDiv.style.display = 'block';
+
+                        console.log('📤 Submitting application...');
+                        
+                        const response = await fetch('/api/application/upload', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        console.log('📥 Response status:', response.status);
+                        
+                        // Check if response is OK before parsing JSON
+                        if (!response.ok) {
+                            const text = await response.text();
+                            console.error('❌ Error response:', text);
+                            throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                        }
+                        
+                        const result = await response.json();
+                        console.log('📦 Response:', result);
+
+                        if (result.success) {
+                            statusDiv.className = 'upload-status success';
+                            statusDiv.textContent = '✅ New application submitted successfully! You can track your application status.';
+                            uploadForm.reset();
+                            
+                            // Clear file names
+                            document.querySelectorAll('.file-name').forEach(span => {
+                                span.textContent = '';
+                            });
+
+                            // Reset country code hint
+                            countryCodeHint.textContent = '+';
+                            countryCodeHint.classList.remove('detected');
+                            countrySelect.classList.remove('auto-selected');
+
+                            // Show success message and scroll to status check
+                            setTimeout(() => {
+                                document.getElementById('statusEmail').focus();
+                            }, 2000);
+                        } else {
+                            throw new Error(result.error || 'Upload failed');
+                        }
+                    } catch (error) {
+                        console.error('❌ Upload error:', error);
+                        statusDiv.className = 'upload-status error';
+                        statusDiv.textContent = '❌ Error: ' + error.message;
+                    } finally {
+                        // Re-enable submit button
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-upload"></i> Submit New Application';
+                    }
+                });
+            }
+
+            // Add focus/blur effects for better UX
+            phoneInput.addEventListener('focus', function() {
+                if (!this.value) {
+                    this.placeholder = 'Enter number without +';
+                }
+            });
+
+            phoneInput.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.placeholder = '1234567890';
+                }
+            });
+
+            // Remove auto-selected class when user manually changes country
+            countrySelect.addEventListener('change', function() {
+                this.classList.remove('auto-selected');
+            });
+        });
+
+        // Status check function
+        function checkApplicationStatus() {
+            const email = document.getElementById('statusEmail').value.trim();
+            const statusMessage = document.getElementById('statusMessage');
+            
+            if (!email) {
+                statusMessage.style.color = '#e74c3c';
+                statusMessage.textContent = '❌ Please enter your email address';
+                return;
+            }
+            
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                statusMessage.style.color = '#e74c3c';
+                statusMessage.textContent = '❌ Please enter a valid email address';
+                return;
+            }
+            
+            // Redirect to progress page with email
+            window.location.href = '/progress?email=' + encodeURIComponent(email);
+        }
+
+        // Allow Enter key in status email input
+        document.getElementById('statusEmail')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkApplicationStatus();
+            }
+        });
+    </script>
+</body>
+</html>

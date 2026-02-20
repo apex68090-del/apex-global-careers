@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Re-upload Documents - Apex Global Careers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .logo h1 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 10px 25px;
+            border-radius: 30px;
+            background: #f8f9fa;
+            color: #7f8c8d;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-tab i {
+            font-size: 1.1em;
+        }
+
+        /* Main Content */
+        .reupload-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Warning Banner */
+        .warning-banner {
+            background: #fff3cd;
+            border: 2px solid #ffeeba;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .warning-banner i {
+            font-size: 3em;
+            color: #856404;
+        }
+
+        .warning-content {
+            flex: 1;
+        }
+
+        .warning-content h3 {
+            color: #856404;
+            margin-bottom: 5px;
+            font-size: 1.3em;
+        }
+
+        .warning-content p {
+            color: #856404;
+            opacity: 0.9;
+        }
+
+        /* Upload Counter */
+        .upload-counter {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .upload-counter.warning {
+            background: #e74c3c;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+            }
+        }
+
+        /* Max Uploads Warning */
+        .max-uploads-warning {
+            background: #e74c3c;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .max-uploads-warning i {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .max-uploads-warning h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .max-uploads-warning p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .btn-contact {
+            background: white;
+            color: #e74c3c;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .btn-contact:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: white;
+            background: transparent;
+            color: white;
+        }
+
+        /* Email Info - Only personal info shown */
+        .email-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .email-info i {
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .email-info-content {
+            flex: 1;
+        }
+
+        .email-info-content strong {
+            display: block;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .email-info-content span {
+            color: #7f8c8d;
+            font-size: 0.95em;
+        }
+
+        /* Documents Grid - Only rejected documents */
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .document-card {
+            background: #fff5f5;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e74c3c;
+            position: relative;
+            animation: borderPulse 2s infinite;
+        }
+
+        @keyframes borderPulse {
+            0% {
+                border-color: #e74c3c;
+            }
+            50% {
+                border-color: #c0392b;
+            }
+            100% {
+                border-color: #e74c3c;
+            }
+        }
+
+        .document-card::before {
+            content: '⚠️ NEEDS RE-UPLOAD';
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            padding: 4px 15px;
+            border-radius: 50px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .doc-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .doc-icon {
+            font-size: 2em;
+        }
+
+        .doc-header h3 {
+            color: #2c3e50;
+            font-size: 1.3em;
+            flex: 1;
+        }
+
+        .rejection-count {
+            background: #e74c3c;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .doc-desc {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .admin-comment {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .admin-comment small {
+            color: #7f8c8d;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            position: relative;
+            margin-top: 15px;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            border: 2px dashed #e74c3c;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-label:hover {
+            border-color: #c0392b;
+            background: #fff0f0;
+        }
+
+        .upload-icon {
+            font-size: 1.3em;
+            color: #e74c3c;
+        }
+
+        .file-name {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #27ae60;
+        }
+
+        /* Editing Service Offer */
+        .editing-offer {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .editing-offer-content {
+            flex: 1;
+        }
+
+        .editing-offer h4 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .editing-offer p {
+            opacity: 0.9;
+        }
+
+        .btn-edit-service {
+            background: white;
+            color: #e67e22;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid transparent;
+        }
+
+        .btn-edit-service:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: white;
+            background: transparent;
+            color: white;
+        }
+
+        /* Submit Button */
+        .form-actions {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Upload Status */
+        .upload-status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .upload-status.success {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .upload-status.error {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Back Button */
+        .back-button {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn-back {
+            background: white;
+            color: #2c3e50;
+            padding: 12px 25px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-back:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateX(-5px);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .documents-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .warning-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .editing-offer {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1><i class="fas fa-globe-africa" style="margin-right: 10px;"></i>Apex Global Careers</h1>
+                <p class="tagline">Document Re-upload Portal</p>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <a href="/" class="nav-tab">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="/apply" class="nav-tab">
+                    <i class="fas fa-file-alt"></i> New Application
+                </a>
+                <a href="/reupload" class="nav-tab active">
+                    <i class="fas fa-upload"></i> Re-upload
+                </a>
+                <a href="/editing" class="nav-tab">
+                    <i class="fas fa-pen-fancy"></i> Editing Service
+                </a>
+                <a href="/progress" class="nav-tab">
+                    <i class="fas fa-search"></i> Check Status
+                </a>
+            </div>
+        </header>
+
+        <main>
+            <div class="reupload-container">
+                <!-- Email Verification Section -->
+                <div id="emailVerificationSection">
+                    <h2 style="margin-bottom: 20px;">Verify Your Email</h2>
+                    <p style="color: #7f8c8d; margin-bottom: 20px;">Enter your email to see which documents need re-upload</p>
+                    
+                    <div style="display: flex; gap: 10px; max-width: 500px; margin: 0 auto;">
+                        <input type="email" id="verifyEmail" placeholder="your@email.com" style="flex: 1; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1em;">
+                        <button onclick="verifyEmail()" class="btn-submit" style="padding: 15px 30px;">
+                            <i class="fas fa-search"></i> Verify
+                        </button>
+                    </div>
+                    <div id="verifyError" style="color: #e74c3c; margin-top: 10px; text-align: center;"></div>
+                </div>
+
+                <!-- Re-upload Form (hidden initially) -->
+                <div id="reuploadForm" style="display: none;">
+                    <!-- Warning Banner -->
+                    <div class="warning-banner">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="warning-content">
+                            <h3>⚠️ Action Required: Document Re-upload</h3>
+                            <p>The following documents were rejected and need your attention. Please upload new versions that meet the requirements.</p>
+                        </div>
+                    </div>
+
+                    <!-- Upload Counter -->
+                    <div id="uploadCounter" class="upload-counter" style="display: none;"></div>
+
+                    <!-- Max Uploads Warning -->
+                    <div id="maxUploadsWarning" class="max-uploads-warning" style="display: none;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Maximum Upload Attempts Reached</h3>
+                        <p>You have used all 3 upload attempts. Please wait 48 hours or contact our support team for assistance.</p>
+                        <a href="mailto:support@apexglobalcareers.com" class="btn-contact">
+                            <i class="fas fa-envelope"></i> Contact Support
+                        </a>
+                    </div>
+
+                    <!-- Email Info (only personal info shown) -->
+                    <div class="email-info">
+                        <i class="fas fa-envelope"></i>
+                        <div class="email-info-content">
+                            <strong>Re-uploading for:</strong>
+                            <span id="displayEmail"></span>
+                        </div>
+                    </div>
+
+                    <form id="reuploadFormElement">
+                        <!-- ADDED: Hidden fields for all required personal information -->
+                        <input type="hidden" id="fullName" name="fullName">
+                        <input type="hidden" id="phone" name="phone">
+                        <input type="hidden" id="age" name="age">
+                        <input type="hidden" id="gender" name="gender">
+                        <input type="hidden" id="maritalStatus" name="maritalStatus">
+                        <input type="hidden" id="country" name="country">
+                        <input type="hidden" id="visaType" name="visaType">
+                        <input type="hidden" id="email" name="email">
+                        <input type="hidden" name="mode" value="reupload">
+
+                        <!-- Documents Grid - Only rejected documents will be populated here -->
+                        <h3 style="margin-bottom: 20px;">📄 Documents Needing Re-upload</h3>
+                        <div id="rejectedDocsGrid" class="documents-grid">
+                            <!-- Will be populated dynamically -->
+                        </div>
+
+                        <!-- Editing Service Offer -->
+                        <div class="editing-offer">
+                            <div class="editing-offer-content">
+                                <h4><i class="fas fa-pen-fancy"></i> Need Professional Help?</h4>
+                                <p>Let our expert editors polish your documents for just $25 (CV) or $20 (Cover Letter). 24-hour turnaround!</p>
+                            </div>
+                            <a href="/editing" class="btn-edit-service">
+                                <i class="fas fa-edit"></i> Learn More
+                            </a>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit" id="submitBtn">
+                                <i class="fas fa-upload"></i> Upload Replaced Documents
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="uploadStatus" class="upload-status"></div>
+                </div>
+
+                <!-- Back Button -->
+                <div class="back-button">
+                    <a href="/" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Apex Global Careers. All rights reserved. | No upfront payments - Pay after you earn</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentApplication = null;
+        let rejectedDocs = [];
+
+        // Check for email in URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email');
+            if (email) {
+                document.getElementById('verifyEmail').value = email;
+                verifyEmail();
+            }
+        });
+
+        async function verifyEmail() {
+            const email = document.getElementById('verifyEmail').value.trim();
+            const verifyError = document.getElementById('verifyError');
+            
+            if (!email) {
+                verifyError.textContent = 'Please enter your email address';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/application/status/${encodeURIComponent(email)}`);
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    currentApplication = result.status;
+                    
+                    // Get only rejected documents
+                    rejectedDocs = Object.keys(currentApplication.documentReviews || {}).filter(
+                        doc => currentApplication.documentReviews[doc]?.status === 'rejected'
+                    );
+
+                    if (rejectedDocs.length === 0) {
+                        verifyError.textContent = 'No documents need re-upload at this time. All your documents are approved!';
+                        return;
+                    }
+
+                    // Show re-upload form
+                    document.getElementById('emailVerificationSection').style.display = 'none';
+                    document.getElementById('reuploadForm').style.display = 'block';
+                    
+                    // FIX: Populate all hidden fields with personal information
+                    const personalInfo = currentApplication.personalInfo || {};
+                    document.getElementById('email').value = email;
+                    document.getElementById('displayEmail').textContent = email;
+                    document.getElementById('fullName').value = personalInfo.fullName || '';
+                    document.getElementById('phone').value = personalInfo.phone || '';
+                    document.getElementById('age').value = personalInfo.age || '';
+                    document.getElementById('gender').value = personalInfo.gender || '';
+                    document.getElementById('maritalStatus').value = personalInfo.maritalStatus || '';
+                    document.getElementById('country').value = personalInfo.country || '';
+                    document.getElementById('visaType').value = personalInfo.visaType || '';
+
+                    // FIX: Get upload count from uploadInfo (updated to match backend structure)
+                    const uploadInfo = currentApplication.uploadInfo || {};
+                    const uploadCount = uploadInfo.currentUploadCount || 1;
+
+                    // Display upload counter
+                    displayUploadCounter(uploadCount);
+                    
+                    // Check if max uploads reached
+                    if (uploadCount >= 3) {
+                        showMaxUploadsWarning();
+                    } else {
+                        // Display rejected documents
+                        displayRejectedDocuments();
+                    }
+
+                } else {
+                    verifyError.textContent = 'Application not found. Please check your email.';
+                }
+            } catch (error) {
+                verifyError.textContent = 'Error verifying email. Please try again.';
+                console.error('Verification error:', error);
+            }
+        }
+
+        // FIX: Updated to accept uploadCount parameter
+        function displayUploadCounter(uploadCount) {
+            const remainingUploads = 3 - uploadCount;
+            const counter = document.getElementById('uploadCounter');
+            
+            if (remainingUploads > 0) {
+                counter.style.display = 'flex';
+                counter.className = remainingUploads === 1 ? 'upload-counter warning' : 'upload-counter';
+                counter.innerHTML = `
+                    <i class="fas fa-upload"></i>
+                    <span>Upload Attempts: ${uploadCount}/3 (${remainingUploads} remaining)</span>
+                `;
+            }
+        }
+
+        function showMaxUploadsWarning() {
+            document.getElementById('maxUploadsWarning').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('rejectedDocsGrid').innerHTML = '';
+        }
+
+        function displayRejectedDocuments() {
+            const grid = document.getElementById('rejectedDocsGrid');
+            grid.innerHTML = '';
+
+            rejectedDocs.forEach(docKey => {
+                const review = currentApplication.documentReviews[docKey];
+                const rejectionCount = review.rejectionCount || 1;
+                
+                const docCard = createDocumentCard(docKey, review, rejectionCount);
+                grid.appendChild(docCard);
+            });
+        }
+
+        function createDocumentCard(docKey, review, rejectionCount) {
+            const docInfo = getDocumentInfo(docKey);
+            const div = document.createElement('div');
+            div.className = 'document-card';
+            div.id = `doc-${docKey}`;
+
+            div.innerHTML = `
+                <div class="doc-header">
+                    <span class="doc-icon">${docInfo.icon}</span>
+                    <h3>${docInfo.name}</h3>
+                    <span class="rejection-count">Attempt ${rejectionCount}/3</span>
+                </div>
+                <p class="doc-desc">${docInfo.desc}</p>
+                ${review.comments ? `
+                    <div class="admin-comment">
+                        <strong>Admin Comment:</strong>
+                        <p style="margin-top: 5px;">${review.comments}</p>
+                        <small>${new Date(review.reviewedAt).toLocaleDateString()}</small>
+                    </div>
+                ` : ''}
+                <div class="file-upload-area">
+                    <input type="file" id="file-${docKey}" name="${docKey}" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                    <label for="file-${docKey}" class="file-label">
+                        <span class="upload-icon">📎</span>
+                        <span>Choose new file</span>
+                    </label>
+                    <span class="file-name" id="fileName-${docKey}"></span>
+                </div>
+            `;
+
+            // Add file change handler
+            const fileInput = div.querySelector(`#file-${docKey}`);
+            fileInput.addEventListener('change', function(e) {
+                const fileName = this.files.length > 0 ? this.files[0].name : '';
+                document.getElementById(`fileName-${docKey}`).textContent = fileName;
+            });
+
+            return div;
+        }
+
+        function getDocumentInfo(key) {
+            const info = {
+                'passport': {
+                    name: 'Passport',
+                    icon: '📄',
+                    desc: 'Valid passport (all pages with stamps)'
+                },
+                'photo': {
+                    name: 'Passport Photo',
+                    icon: '📸',
+                    desc: 'Recent passport-sized photograph (white background)'
+                },
+                'cv': {
+                    name: 'CV/Resume',
+                    icon: '📝',
+                    desc: 'Updated CV in Europass format'
+                },
+                'coverLetter': {
+                    name: 'Cover Letter',
+                    icon: '✉️',
+                    desc: 'Explanation of purpose for travel'
+                },
+                'qualifications': {
+                    name: 'Qualifications',
+                    icon: '🎓',
+                    desc: 'Degrees, diplomas, certificates'
+                },
+                'experience': {
+                    name: 'Experience Letters',
+                    icon: '💼',
+                    desc: 'Previous employment certificates'
+                }
+            };
+            return info[key] || { name: key, icon: '📄', desc: '' };
+        }
+
+        // Handle form submission
+        document.getElementById('reuploadFormElement').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const statusDiv = document.getElementById('uploadStatus');
+            const formData = new FormData(this);
+
+            // Validate that all required files are selected
+            let allFilesSelected = true;
+            rejectedDocs.forEach(docKey => {
+                const fileInput = document.getElementById(`file-${docKey}`);
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    allFilesSelected = false;
+                    fileInput.closest('.file-upload-area').querySelector('.file-label').style.borderColor = '#e74c3c';
+                }
+            });
+
+            if (!allFilesSelected) {
+                statusDiv.className = 'upload-status error';
+                statusDiv.textContent = '❌ Please select new files for all rejected documents';
+                statusDiv.style.display = 'block';
+                return;
+            }
+
+            // Disable button
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            statusDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/application/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    statusDiv.className = 'upload-status success';
+                    statusDiv.textContent = '✅ Documents re-uploaded successfully! They will be reviewed again.';
+                    
+                    // Clear form
+                    document.querySelectorAll('.file-name').forEach(span => {
+                        span.textContent = '';
+                    });
+                    
+                    // Redirect to progress page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '/progress?email=' + encodeURIComponent(document.getElementById('email').value);
+                    }, 2000);
+                } else {
+                    throw new Error(result.error || 'Upload failed');
+                }
+            } catch (error) {
+                statusDiv.className = 'upload-status error';
+                statusDiv.textContent = '❌ Error: ' + error.message;
+                statusDiv.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-upload"></i> Upload Replaced Documents';
+            }
+        });
+    </script>
+</body>
+</html>

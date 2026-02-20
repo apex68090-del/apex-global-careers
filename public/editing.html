@@ -1,0 +1,2820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Editing Service - Apex Global Careers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(45deg);
+            animation: logoSpin 10s linear infinite;
+        }
+
+        .logo-icon i {
+            transform: rotate(-45deg);
+            color: white;
+            font-size: 30px;
+        }
+
+        @keyframes logoSpin {
+            0% { transform: rotate(45deg); }
+            100% { transform: rotate(405deg); }
+        }
+
+        .logo-text h1 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 15px;
+        }
+
+        .nav-tab {
+            padding: 12px 25px;
+            border-radius: 30px;
+            background: #f8f9fa;
+            color: #7f8c8d;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 0.95em;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-tab i {
+            font-size: 1.1em;
+        }
+
+        /* Main Content */
+        .editing-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .service-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .service-header h2 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .service-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .service-header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Status Banner */
+        .status-banner {
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 15px;
+            display: none;
+            align-items: center;
+            gap: 20px;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-banner.pending {
+            background: #fff3cd;
+            border: 2px solid #ffeeba;
+            color: #856404;
+        }
+
+        .status-banner.editing {
+            background: #cce5ff;
+            border: 2px solid #b8daff;
+            color: #004085;
+        }
+
+        .status-banner.ready {
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .status-banner.completed {
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .status-banner i {
+            font-size: 2.5em;
+        }
+
+        .status-content {
+            flex: 1;
+        }
+
+        .status-content h4 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .status-content p {
+            opacity: 0.9;
+        }
+
+        /* Document Display */
+        .documents-preview {
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .document-preview-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #3498db;
+        }
+
+        .document-preview-item.edited {
+            border-left-color: #27ae60;
+        }
+
+        .document-preview-item.paid {
+            border-left-color: #27ae60;
+            background: #f0fff4;
+        }
+
+        .document-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .document-info i {
+            font-size: 1.5em;
+            color: #667eea;
+        }
+
+        .document-details {
+            flex: 1;
+        }
+
+        .document-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .document-meta {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-top: 3px;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-view {
+            background: #3498db;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .btn-view:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-download {
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-download:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .btn-pay {
+            background: #f39c12;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            font-size: 1.1em;
+        }
+
+        .btn-pay:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        /* Payment Method Cards */
+        .payment-method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .payment-method-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .payment-method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .payment-method-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f4ff, #ffffff);
+            box-shadow: 0 10px 25px rgba(102,126,234,0.2);
+        }
+
+        .payment-method-card.eversend.selected {
+            border-color: #2196F3;
+        }
+
+        .payment-method-card.western-union.selected {
+            border-color: #FF5722;
+        }
+
+        .method-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .method-icon.eversend {
+            color: #2196F3;
+        }
+
+        .method-icon.western-union {
+            color: #FF5722;
+        }
+
+        .payment-method-card h4 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .payment-method-card p {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        /* Payment Section */
+        .payment-section {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            margin: 30px 0;
+            display: none;
+        }
+
+        .payment-section h3 {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .payment-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .payment-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 60px;
+            right: 60px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 1;
+        }
+
+        .payment-step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: 700;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+
+        .payment-step.active .step-circle {
+            background: #27ae60;
+            border-color: #27ae60;
+            transform: scale(1.1);
+        }
+
+        .payment-step.completed .step-circle {
+            background: #27ae60;
+            border-color: #27ae60;
+        }
+
+        .step-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .payment-step.active .step-label {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        /* Eversend Phone Number Display */
+        .eversend-phone {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #ffeaa7;
+            margin: 15px 0;
+            letter-spacing: 2px;
+        }
+
+        /* Payment Details Cards */
+        .payment-details-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px dashed #ffeaa7;
+            margin-bottom: 30px;
+        }
+
+        .account-number {
+            font-size: 2em;
+            font-weight: 800;
+            color: #ffeaa7;
+            margin: 15px 0;
+            letter-spacing: 2px;
+            word-break: break-all;
+        }
+
+        .account-name {
+            font-size: 1.3em;
+            background: rgba(0,0,0,0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        /* Instructions Boxes */
+        .instructions-box {
+            background: rgba(33, 150, 243, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .instructions-box.western-union {
+            background: rgba(255, 87, 34, 0.1);
+            border-left-color: #FF5722;
+        }
+
+        .instructions-box h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #2196F3;
+        }
+
+        .instructions-box.western-union h4 {
+            color: #FF5722;
+        }
+
+        .instructions-box ol,
+        .instructions-box ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .instructions-box li {
+            margin-bottom: 8px;
+        }
+
+        .instructions-box strong {
+            color: #2196F3;
+        }
+
+        .instructions-box.western-union strong {
+            color: #FF5722;
+        }
+
+        .transaction-example {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .transaction-example i {
+            color: #4CAF50;
+            font-size: 1.5em;
+        }
+
+        /* Sender Details Form */
+        .sender-details-form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .sender-details-form h4 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .sender-details-form input,
+        .sender-details-form select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1em;
+        }
+
+        .sender-details-form input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .sender-details-form input:focus,
+        .sender-details-form select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* File Upload for Receipt */
+        .receipt-upload-area {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .receipt-upload-area:hover {
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .receipt-upload-area input[type="file"] {
+            display: none;
+        }
+
+        .receipt-upload-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .receipt-file-name {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #27ae60;
+        }
+
+        .payment-form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .payment-form input,
+        .payment-form textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        .payment-form input::placeholder,
+        .payment-form textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .payment-form button {
+            width: 100%;
+            padding: 15px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-form button:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .payment-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 0.9em;
+            border-left: 4px solid #f39c12;
+        }
+
+        .payment-info i {
+            color: #f39c12;
+            margin-right: 8px;
+        }
+
+        /* Quick Info Banner */
+        .quick-info {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.3);
+        }
+
+        .quick-info-content {
+            flex: 1;
+        }
+
+        .quick-info-content h4 {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quick-info-content p {
+            opacity: 0.95;
+            font-size: 1.1em;
+        }
+
+        .quick-info-btn {
+            background: white;
+            color: #e67e22;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid transparent;
+            font-size: 1.1em;
+        }
+
+        .quick-info-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: white;
+            background: transparent;
+            color: white;
+        }
+
+        /* Pricing Cards */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-15px);
+            border-color: #667eea;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .pricing-card.popular {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: scale(1.05);
+            z-index: 2;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9em;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .pricing-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .pricing-card.popular .pricing-icon {
+            color: white;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .price {
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .features {
+            list-style: none;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .features li {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features i {
+            color: #27ae60;
+            font-size: 1.2em;
+        }
+
+        .pricing-card.popular .features i {
+            color: white;
+        }
+
+        .btn-order {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .pricing-card.popular .btn-order {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-order:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Request Form */
+        .request-form {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 50px;
+            margin-top: 50px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .request-form.hidden {
+            display: none;
+        }
+
+        .request-form h3 {
+            font-size: 2em;
+            margin-bottom: 40px;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Document Upload Card */
+        .document-upload-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .document-upload-card.required {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .document-upload-card h4 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-upload-area {
+            position: relative;
+            border: 2px dashed #bdc3c7;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload-area:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-icon {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #27ae60;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Form Message */
+        .form-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .form-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .form-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .form-message.info {
+            background: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+            display: block;
+        }
+
+        /* Current Request Info */
+        .current-request-info {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .current-request-info h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .request-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .request-detail-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .request-detail-item strong {
+            display: block;
+            color: #7f8c8d;
+            font-size: 0.8em;
+            margin-bottom: 3px;
+        }
+
+        .request-detail-item span {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* No Request Actions */
+        .no-request-actions {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin: 70px 0;
+        }
+
+        .faq-section h3 {
+            font-size: 2.2em;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #2c3e50;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .faq-item {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-question {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .faq-answer {
+            color: #7f8c8d;
+            padding-left: 30px;
+            line-height: 1.6;
+        }
+
+        /* Back Button */
+        .back-button {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .btn-back {
+            background: white;
+            color: #2c3e50;
+            padding: 15px 35px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-back:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateX(-5px);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            margin: 60px 0;
+        }
+
+        .how-it-works h3 {
+            font-size: 2.2em;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .step h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .step p {
+            color: #7f8c8d;
+            font-size: 0.95em;
+        }
+
+        /* Notification System */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .notification {
+            min-width: 320px;
+            max-width: 400px;
+            padding: 16px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: auto;
+            border-left: 4px solid #10b981;
+            animation: slideIn 0.3s forwards;
+        }
+
+        .notification.success {
+            border-left-color: #10b981;
+        }
+
+        .notification.error {
+            border-left-color: #ef4444;
+        }
+
+        .notification.warning {
+            border-left-color: #f59e0b;
+        }
+
+        .notification.info {
+            border-left-color: #3b82f6;
+        }
+
+        .notification-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .success .notification-icon {
+            background: #10b981;
+            color: white;
+        }
+
+        .error .notification-icon {
+            background: #ef4444;
+            color: white;
+        }
+
+        .warning .notification-icon {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .info .notification-icon {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .notification-close {
+            cursor: pointer;
+            color: #9ca3af;
+            font-size: 20px;
+            font-weight: 500;
+            padding: 0 4px;
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .notification-close:hover {
+            color: #4b5563;
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .notification.hide {
+            animation: slideOut 0.3s forwards;
+        }
+
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(16, 185, 129, 0.3);
+            border-radius: 0 0 0 12px;
+            animation: progress 3s linear forwards;
+        }
+
+        @keyframes progress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Token Info Style */
+        .token-info {
+            background: #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .token-info i {
+            color: #27ae60;
+            font-size: 1.2em;
+        }
+        
+        .expiry-warning {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+        /* Pending Transaction Badge */
+        .pending-badge {
+            background: #f39c12;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            margin: 10px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+            
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .quick-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .document-preview-item {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .document-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .request-details {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-steps {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .payment-steps::before {
+                display: none;
+            }
+
+            .notification-container {
+                left: 20px;
+                right: 20px;
+            }
+            
+            .notification {
+                min-width: auto;
+                width: 100%;
+            }
+
+            .payment-method-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-pen-fancy"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Apex Global Careers</h1>
+                    <p class="tagline">Professional Document Editing Services</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <a href="/" class="nav-tab">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="/apply" class="nav-tab">
+                    <i class="fas fa-file-alt"></i> New Application
+                </a>
+                <a href="/reupload" class="nav-tab">
+                    <i class="fas fa-upload"></i> Re-upload
+                </a>
+                <a href="/editing" class="nav-tab active">
+                    <i class="fas fa-pen-fancy"></i> Editing Services
+                </a>
+                <a href="/progress" class="nav-tab">
+                    <i class="fas fa-search"></i> Check Status
+                </a>
+            </div>
+        </header>
+
+        <main>
+            <div class="editing-container">
+                <div class="service-header">
+                    <h2><i class="fas fa-pen-fancy"></i> Document Editing Service</h2>
+                    <p>Upload your documents for professional editing. Pay after editing, download after verification!</p>
+                </div>
+
+                <!-- Status Banner (hidden by default) -->
+                <div id="statusBanner" class="status-banner" style="display: none;"></div>
+
+                <!-- Current Request Info (hidden by default) -->
+                <div id="currentRequestInfo" class="current-request-info" style="display: none;">
+                    <h4><i class="fas fa-info-circle"></i> You have an active editing request</h4>
+                    <div class="request-details" id="requestDetails"></div>
+                </div>
+
+                <!-- No Request Actions (hidden by default) -->
+                <div id="noRequestActions" class="no-request-actions" style="display: none;">
+                    <button onclick="showRequestForm()" class="btn-order" style="width: auto; padding: 12px 30px;">
+                        <i class="fas fa-plus-circle"></i> Start New Editing Request
+                    </button>
+                </div>
+
+                <!-- Payment Section (hidden by default) - UPDATED with Eversend & Western Union -->
+                <div id="paymentSection" class="payment-section">
+                    <h3><i class="fas fa-money-bill-wave"></i> Complete Your Payment</h3>
+                    
+                    <!-- Payment Steps Visual -->
+                    <div class="payment-steps">
+                        <div class="payment-step active" id="step1">
+                            <div class="step-circle">1</div>
+                            <span class="step-label">Choose Payment Method</span>
+                        </div>
+                        <div class="payment-step" id="step2">
+                            <div class="step-circle">2</div>
+                            <span class="step-label">Send Payment</span>
+                        </div>
+                        <div class="payment-step" id="step3">
+                            <div class="step-circle">3</div>
+                            <span class="step-label">Submit Details</span>
+                        </div>
+                        <div class="payment-step" id="step4">
+                            <div class="step-circle">4</div>
+                            <span class="step-label">Admin Verifies</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method Selection -->
+                    <div class="payment-method-grid">
+                        <!-- Eversend Card -->
+                        <div class="payment-method-card eversend" id="method-eversend" onclick="selectPaymentMethod('eversend')">
+                            <div class="method-icon eversend">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <h4>Eversend</h4>
+                            <p>Mobile money • Instant transfers</p>
+                        </div>
+
+                        <!-- Western Union Card -->
+                        <div class="payment-method-card western-union" id="method-western-union" onclick="selectPaymentMethod('western-union')">
+                            <div class="method-icon western-union">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <h4>Western Union</h4>
+                            <p>Global money transfer • MTCN tracking</p>
+                        </div>
+                    </div>
+
+                    <!-- Eversend Payment Details (hidden by default) - UPDATED with phone number -->
+                    <div id="eversendDetails" style="display: none;">
+                        <div class="payment-details-card">
+                            <p><i class="fas fa-phone-alt"></i> Eversend Payment Details:</p>
+                            <div class="eversend-phone">0716658248</div>
+                            <div class="account-name">Apex Global Careers Ltd</div>
+                            <p style="margin-top: 15px; font-size: 0.9em; opacity: 0.8;">Amount: $<span id="eversendAmount">30</span></p>
+                        </div>
+
+                        <div class="instructions-box">
+                            <h4><i class="fas fa-mobile-alt"></i> How to pay using Eversend:</h4>
+                            <ol>
+                                <li><strong>Open Eversend app</strong> on your phone</li>
+                                <li>Select <strong>"Send Money"</strong> → Choose <strong>Kenya</strong> as destination</li>
+                                <li>Select <strong>"Mobile Money"</strong> or <strong>"M-Pesa"</strong></li>
+                                <li>Enter recipient phone number: <strong>0716658248</strong></li>
+                                <li>Enter recipient name: <strong>Apex Global Careers Ltd</strong></li>
+                                <li>Enter amount: <strong>$30</strong></li>
+                                <li>Complete transaction and copy the <strong>Transaction Reference/ID</strong></li>
+                            </ol>
+                            
+                            <div class="transaction-example">
+                                <i class="fas fa-check-circle"></i>
+                                <span><strong>Transaction ID example:</strong> EVTXN_8f7d3h2k9j4n1m5b</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Western Union Payment Details (hidden by default) - UPDATED amount -->
+                    <div id="westernUnionDetails" style="display: none;">
+                        <div class="payment-details-card">
+                            <p><i class="fas fa-university"></i> Western Union Payment Details:</p>
+                            <div class="account-number">Apex Global Careers Ltd</div>
+                            <div class="account-name">Nairobi, Kenya</div>
+                            <p style="margin-top: 15px; font-size: 0.9em; opacity: 0.8;">Amount: $<span id="wuAmount">30</span></p>
+                        </div>
+
+                        <div class="instructions-box western-union">
+                            <h4><i class="fas fa-landmark"></i> How to pay using Western Union:</h4>
+                            <ol>
+                                <li>Visit any <strong>Western Union agent location</strong> or use the app</li>
+                                <li>Fill out the send form with recipient details:
+                                    <ul style="margin-top: 5px;">
+                                        <li><strong>First Name:</strong> Apex Global</li>
+                                        <li><strong>Last Name:</strong> Careers Ltd</li>
+                                        <li><strong>Country:</strong> Kenya</li>
+                                        <li><strong>City:</strong> Nairobi</li>
+                                    </ul>
+                                </li>
+                                <li>Amount to send: <strong>$30</strong></li>
+                                <li>After sending, you'll receive:
+                                    <ul>
+                                        <li><strong>MTCN (Money Transfer Control Number)</strong> - 10-digit number</li>
+                                    </ul>
+                                </li>
+                                <li><strong>IMPORTANT:</strong> Upload a photo/scan of your payment receipt below</li>
+                            </ol>
+                            
+                            <div class="transaction-example">
+                                <i class="fas fa-check-circle"></i>
+                                <span><strong>MTCN example:</strong> 123-456-7890</span>
+                            </div>
+                        </div>
+
+                        <!-- Receipt Upload for Western Union -->
+                        <div class="receipt-upload-area" id="receiptUploadArea" onclick="document.getElementById('receiptFile').click()">
+                            <i class="fas fa-cloud-upload-alt receipt-upload-icon"></i>
+                            <p>Click to upload your Western Union receipt</p>
+                            <small>PDF, JPG, PNG (Max 10MB)</small>
+                            <input type="file" id="receiptFile" accept=".pdf,.jpg,.jpeg,.png" onchange="handleReceiptUpload(this)">
+                            <div id="receiptFileName" class="receipt-file-name"></div>
+                        </div>
+                    </div>
+
+                    <!-- Sender Details Form (for both methods) -->
+                    <div id="senderDetailsForm" class="sender-details-form" style="display: none;">
+                        <h4><i class="fas fa-user"></i> Your Details (Required for verification)</h4>
+                        <div class="form-row">
+                            <input type="text" id="senderName" placeholder="Your Full Name *">
+                            <input type="tel" id="senderPhone" placeholder="Your Phone Number *">
+                        </div>
+                        <div class="form-row">
+                            <select id="senderCountry">
+                                <option value="">Select Your Country *</option>
+                                <option value="US">United States</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="CA">Canada</option>
+                                <option value="AU">Australia</option>
+                                <option value="KE">Kenya</option>
+                                <option value="UG">Uganda</option>
+                                <option value="TZ">Tanzania</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <input type="text" id="transactionReference" placeholder="Transaction Reference (Optional)">
+                        </div>
+                    </div>
+
+                    <!-- Payment Form -->
+                    <div class="payment-form">
+                        <p style="margin-bottom: 20px; text-align: center; font-weight: 600;">
+                            Enter your Transaction ID / MTCN below
+                        </p>
+                        <input type="text" id="transactionId" placeholder="e.g. EVTXN_8f7d3h2k9j4n1m5b or 123-456-7890">
+                        <textarea id="paymentNotes" placeholder="Additional notes (optional)" rows="2"></textarea>
+                        
+                        <!-- Hidden field for selected payment method -->
+                        <input type="hidden" id="selectedPaymentMethod" value="">
+                        
+                        <button onclick="submitPayment()" id="paymentBtn">
+                            <i class="fas fa-check-circle"></i> Submit Payment Details
+                        </button>
+                        
+                        <!-- Payment Info Box -->
+                        <div class="payment-info">
+                            <i class="fas fa-info-circle"></i> 
+                            <strong>What happens after you submit?</strong>
+                            <ol style="margin-top: 10px; margin-left: 20px;">
+                                <li>Admin will verify your payment (usually within 24 hours)</li>
+                                <li>You'll receive an email when payment is verified</li>
+                                <li>Return here to download your edited documents</li>
+                                <li>Download links expire in 1 hour for security</li>
+                            </ol>
+                        </div>
+                        
+                        <p style="margin-top: 15px; font-size: 0.9em; opacity: 0.7; text-align: center;">
+                            <i class="fas fa-clock"></i> Please allow up to 24 hours for verification
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Quick Info Banner - Updated -->
+                <div class="quick-info">
+                    <div class="quick-info-content">
+                        <h4><i class="fas fa-gem"></i> Simple 4-Step Process</h4>
+                        <p>1. Upload documents → 2. We edit → 3. You pay via Eversend/Western Union → 4. Admin verifies → You download</p>
+                    </div>
+                    <a href="#statusCheck" class="quick-info-btn">
+                        <i class="fas fa-arrow-down"></i> Check Status
+                    </a>
+                </div>
+
+                <!-- Pricing Cards -->
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="pricing-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3>CV Editing</h3>
+                        <div class="price">$20</div>
+                        <ul class="features">
+                            <li><i class="fas fa-check-circle"></i> Professional formatting</li>
+                            <li><i class="fas fa-check-circle"></i> ATS-optimized layout</li>
+                            <li><i class="fas fa-check-circle"></i> Grammar & spell check</li>
+                            <li><i class="fas fa-check-circle"></i> 24-hour turnaround</li>
+                        </ul>
+                        <button class="btn-order" onclick="selectService('cv')">
+                            Select Package
+                        </button>
+                    </div>
+
+                    <div class="pricing-card popular">
+                        <div class="popular-badge">BEST VALUE</div>
+                        <div class="pricing-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h3>CV + Cover Letter</h3>
+                        <div class="price">$30</div>
+                        <ul class="features">
+                            <li><i class="fas fa-check-circle"></i> Complete CV editing</li>
+                            <li><i class="fas fa-check-circle"></i> Professional cover letter</li>
+                            <li><i class="fas fa-check-circle"></i> Tailored to job description</li>
+                            <li><i class="fas fa-check-circle"></i> 48-hour turnaround</li>
+                            <li><i class="fas fa-check-circle"></i> Free consultation call</li>
+                        </ul>
+                        <button class="btn-order" onclick="selectService('both')">
+                            Select Package
+                        </button>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-icon">
+                            <i class="fas fa-envelope-open-text"></i>
+                        </div>
+                        <h3>Cover Letter Only</h3>
+                        <div class="price">$20</div>
+                        <ul class="features">
+                            <li><i class="fas fa-check-circle"></i> Professional cover letter</li>
+                            <li><i class="fas fa-check-circle"></i> Customized to your field</li>
+                            <li><i class="fas fa-check-circle"></i> Grammar & spell check</li>
+                            <li><i class="fas fa-check-circle"></i> 24-hour turnaround</li>
+                        </ul>
+                        <button class="btn-order" onclick="selectService('cover')">
+                            Select Package
+                        </button>
+                    </div>
+                </div>
+
+                <!-- How It Works - Updated -->
+                <div class="how-it-works">
+                    <h3>How It Works</h3>
+                    <div class="steps-grid">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <h4>Choose Package</h4>
+                            <p>Select the editing package that best suits your needs</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <h4>Upload Documents</h4>
+                            <p>Upload your CV and/or Cover Letter for editing</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <h4>We Edit Your Documents</h4>
+                            <p>Our experts professionally edit your documents</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <h4>Pay via Eversend/Western Union</h4>
+                            <p>Send payment, submit transaction details, admin verifies, then download</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request Form - Hidden when there's an active request -->
+                <div id="requestForm" class="request-form">
+                    <h3><i class="fas fa-edit"></i> Upload for Editing</h3>
+                    
+                    <form id="editingRequestForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Full Name *</label>
+                                <input type="text" id="fullName" placeholder="John Doe" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Email Address *</label>
+                                <input type="email" id="email" placeholder="john@example.com" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Phone Number *</label>
+                                <input type="tel" id="phone" placeholder="+254 700 000 000" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Service Type *</label>
+                                <select id="serviceType" required>
+                                    <option value="">Select Package</option>
+                                    <option value="cv">📄 CV Editing ($20)</option>
+                                    <option value="cover">✉️ Cover Letter Editing ($20)</option>
+                                    <option value="both">🔥 CV + Cover Letter ($30) - BEST VALUE</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label>Upload Documents for Editing *</label>
+                                <div id="documentUploads"></div>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label>Specific Instructions (Optional)</label>
+                                <textarea id="instructions" placeholder="Tell us about the job you're applying for, specific requirements, or any changes you'd like us to make..."></textarea>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <button type="submit" class="btn-submit" id="submitBtn">
+                                    <i class="fas fa-cloud-upload-alt"></i> Upload for Editing
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div id="formMessage" class="form-message"></div>
+                </div>
+
+                <!-- Status Check Section -->
+                <div id="statusCheck" class="status-check-section" style="margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #f5f7fa 0%, #e9edf5 100%); border-radius: 15px; text-align: center;">
+                    <i class="fas fa-search" style="font-size: 3em; color: #667eea; margin-bottom: 15px;"></i>
+                    <h3 style="margin-bottom: 15px;">Check Your Editing Status</h3>
+                    <p style="margin-bottom: 20px;">Enter your email to check the status of your editing request</p>
+                    <div style="display: flex; gap: 10px; max-width: 500px; margin: 0 auto;">
+                        <input type="email" id="statusEmail" placeholder="your@email.com" style="flex: 1; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px;">
+                        <button onclick="checkEditStatus(event)" id="statusCheckBtn" style="background: #2c3e50; color: white; padding: 15px 30px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-search"></i> Continue
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FAQ Section - Updated -->
+                <div class="faq-section">
+                    <h3>Frequently Asked Questions</h3>
+                    <div class="faq-grid">
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i class="fas fa-question-circle"></i> When do I pay?
+                            </div>
+                            <div class="faq-answer">
+                                You pay AFTER we edit your documents. Send payment via Eversend or Western Union, submit your transaction details, admin verifies, then you download.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i class="fas fa-question-circle"></i> How long does verification take?
+                            </div>
+                            <div class="faq-answer">
+                                Admin typically verifies payments within 24 hours. You'll receive an email once verified.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i class="fas fa-question-circle"></i> How do I pay with Eversend?
+                            </div>
+                            <div class="faq-answer">
+                                Open Eversend app → Send to Kenya → Enter phone number: 0716658248 → Enter amount ($30) → Copy Transaction ID → Paste it above.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <i class="fas fa-question-circle"></i> How do I pay with Western Union?
+                            </div>
+                            <div class="faq-answer">
+                                Visit Western Union agent → Send $30 to Apex Global Careers Ltd in Nairobi, Kenya → Get MTCN number → Upload receipt and submit MTCN above.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back Button -->
+                <div class="back-button">
+                    <a href="/" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Apex Global Careers. Pay After Editing | 100% Satisfaction Guaranteed</p>
+        </footer>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <script>
+        // ============================================
+        // NOTIFICATION SYSTEM
+        // ============================================
+        class NotificationManager {
+            constructor() {
+                this.container = document.getElementById('notificationContainer');
+            }
+
+            show(message, options = {}) {
+                const {
+                    type = 'success',
+                    title = 'Success',
+                    duration = 4000,
+                    showIcon = true,
+                    showProgress = true
+                } = options;
+
+                const notification = this.createNotification(message, type, title, showIcon);
+                
+                if (showProgress) {
+                    this.addProgressBar(notification, duration);
+                }
+
+                this.container.appendChild(notification);
+
+                if (duration > 0) {
+                    setTimeout(() => {
+                        this.dismiss(notification);
+                    }, duration);
+                }
+
+                return notification;
+            }
+
+            createNotification(message, type, title, showIcon) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+
+                const iconMap = {
+                    success: '✓',
+                    error: '✗',
+                    warning: '!',
+                    info: 'i'
+                };
+
+                notification.innerHTML = `
+                    ${showIcon ? `
+                        <div class="notification-icon ${type}">
+                            ${iconMap[type] || 'i'}
+                        </div>
+                    ` : ''}
+                    <div class="notification-content">
+                        <div class="notification-title">${title}</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
+                    <span class="notification-close" onclick="this.parentElement.classList.add('hide'); setTimeout(() => this.parentElement.remove(), 300);">×</span>
+                `;
+
+                return notification;
+            }
+
+            addProgressBar(notification, duration) {
+                const progress = document.createElement('div');
+                progress.className = 'notification-progress';
+                progress.style.animationDuration = `${duration}ms`;
+                notification.appendChild(progress);
+                notification.style.position = 'relative';
+                notification.style.overflow = 'hidden';
+            }
+
+            dismiss(notification) {
+                notification.classList.add('hide');
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 300);
+            }
+        }
+
+        // Initialize notification manager
+        const notificationManager = new NotificationManager();
+
+        // Helper functions
+        function showSuccess(message, title = 'Success') {
+            notificationManager.show(message, { type: 'success', title });
+        }
+
+        function showError(message, title = 'Error') {
+            notificationManager.show(message, { type: 'error', title, duration: 5000 });
+        }
+
+        function showWarning(message, title = 'Warning') {
+            notificationManager.show(message, { type: 'warning', title, duration: 5000 });
+        }
+
+        function showInfo(message, title = 'Information') {
+            notificationManager.show(message, { type: 'info', title });
+        }
+
+        // ============================================
+        // MAIN APPLICATION CODE - FIXED PRICING
+        // ============================================
+        let currentServiceType = '';
+        let uploadedFiles = { cv: null, cover: null };
+        let currentEditingData = null;
+        let downloadToken = null;
+        let selectedPaymentMethod = '';
+        let paymentReceiptFile = null;
+
+        // Function to select service - FIXED with correct prices
+        function selectService(service) {
+            currentServiceType = service;
+            document.getElementById('serviceType').value = service;
+            updateDocumentUploads();
+            document.getElementById('requestForm').scrollIntoView({ behavior: 'smooth' });
+            
+            // Set amount based on service type
+            let amount = service === 'cv' ? 20 : service === 'cover' ? 20 : 30;
+            document.getElementById('eversendAmount').textContent = amount;
+            document.getElementById('wuAmount').textContent = amount;
+            document.querySelectorAll('.amount-display').forEach(el => el.textContent = amount);
+            
+            showSuccess(`${service === 'cv' ? 'CV' : service === 'cover' ? 'Cover Letter' : 'CV + Cover Letter'} package selected`, 'Package Selected');
+        }
+
+        // Select payment method
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            document.getElementById('selectedPaymentMethod').value = method;
+            
+            // Reset all cards
+            document.querySelectorAll('.payment-method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Highlight selected card
+            document.getElementById(`method-${method}`).classList.add('selected');
+            
+            // Hide all payment details
+            document.getElementById('eversendDetails').style.display = 'none';
+            document.getElementById('westernUnionDetails').style.display = 'none';
+            document.getElementById('senderDetailsForm').style.display = 'none';
+            
+            // Show relevant payment details
+            if (method === 'eversend') {
+                document.getElementById('eversendDetails').style.display = 'block';
+                document.getElementById('senderDetailsForm').style.display = 'block';
+            } else if (method === 'western-union') {
+                document.getElementById('westernUnionDetails').style.display = 'block';
+                document.getElementById('senderDetailsForm').style.display = 'block';
+            }
+            
+            showInfo(`Selected payment method: ${method === 'eversend' ? 'Eversend' : 'Western Union'}`);
+        }
+
+        // Handle receipt upload for Western Union
+        function handleReceiptUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            // Validate file type
+            const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                showWarning('Please upload PDF or image files only');
+                input.value = '';
+                return;
+            }
+
+            // Validate file size (10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                showWarning('File size must be less than 10MB');
+                input.value = '';
+                return;
+            }
+
+            paymentReceiptFile = file;
+            document.getElementById('receiptFileName').innerHTML = `<i class="fas fa-check-circle"></i> ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            showSuccess('Receipt uploaded successfully');
+        }
+
+        // Update document upload fields based on service type
+        function updateDocumentUploads() {
+            const container = document.getElementById('documentUploads');
+            const serviceType = document.getElementById('serviceType').value;
+            
+            let html = '';
+            
+            if (serviceType === 'cv' || serviceType === 'both') {
+                html += `
+                    <div class="document-upload-card required" id="cvUpload">
+                        <h4><i class="fas fa-file-alt"></i> CV / Resume</h4>
+                        <div class="file-upload-area">
+                            <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+                            <p>Click to upload your CV</p>
+                            <small>PDF, DOC, DOCX (Max 10MB)</small>
+                            <input type="file" id="cvFile" name="cv" accept=".pdf,.doc,.docx" ${serviceType === 'cv' ? 'required' : ''}>
+                            <div id="cvFileName" class="file-name"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (serviceType === 'cover' || serviceType === 'both') {
+                html += `
+                    <div class="document-upload-card ${serviceType === 'cover' ? 'required' : ''}" id="coverUpload">
+                        <h4><i class="fas fa-envelope-open-text"></i> Cover Letter</h4>
+                        <div class="file-upload-area">
+                            <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+                            <p>Click to upload your Cover Letter</p>
+                            <small>PDF, DOC, DOCX (Max 10MB)</small>
+                            <input type="file" id="coverFile" name="cover" accept=".pdf,.doc,.docx" ${serviceType === 'cover' ? 'required' : ''}>
+                            <div id="coverFileName" class="file-name"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+            
+            // Add event listeners for file inputs
+            if (document.getElementById('cvFile')) {
+                document.getElementById('cvFile').addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        document.getElementById('cvFileName').innerHTML = `<i class="fas fa-file"></i> ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                        uploadedFiles.cv = file;
+                        showSuccess(`CV "${file.name}" selected`, 'File Selected');
+                    }
+                });
+            }
+            
+            if (document.getElementById('coverFile')) {
+                document.getElementById('coverFile').addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        document.getElementById('coverFileName').innerHTML = `<i class="fas fa-file"></i> ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                        uploadedFiles.cover = file;
+                        showSuccess(`Cover Letter "${file.name}" selected`, 'File Selected');
+                    }
+                });
+            }
+        }
+
+        // Listen for service type changes - FIXED with correct prices
+        document.getElementById('serviceType').addEventListener('change', function() {
+            updateDocumentUploads();
+            let amount = this.value === 'cv' ? 20 : this.value === 'cover' ? 20 : 30;
+            document.getElementById('eversendAmount').textContent = amount;
+            document.getElementById('wuAmount').textContent = amount;
+            document.querySelectorAll('.amount-display').forEach(el => el.textContent = amount);
+        });
+
+        // Show request form
+        function showRequestForm() {
+            document.getElementById('requestForm').classList.remove('hidden');
+            document.getElementById('currentRequestInfo').style.display = 'none';
+            document.getElementById('statusBanner').style.display = 'none';
+            document.getElementById('paymentSection').style.display = 'none';
+            document.getElementById('noRequestActions').style.display = 'none';
+            
+            // Scroll to form
+            document.getElementById('requestForm').scrollIntoView({ behavior: 'smooth' });
+            showInfo('Fill out the form to start a new editing request');
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('editingRequestForm').reset();
+            uploadedFiles = { cv: null, cover: null };
+            document.getElementById('documentUploads').innerHTML = '';
+            document.getElementById('formMessage').className = 'form-message';
+            document.getElementById('formMessage').innerHTML = '';
+            document.getElementById('formMessage').style.display = 'none';
+        }
+
+        // Update payment steps based on status
+        function updatePaymentSteps(status, paymentStatus) {
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+            const step4 = document.getElementById('step4');
+            
+            // Reset all
+            [step1, step2, step3, step4].forEach(step => {
+                step.classList.remove('active', 'completed');
+            });
+            
+            if (status === 'editing_completed' && paymentStatus !== 'submitted' && paymentStatus !== 'paid') {
+                step1.classList.add('active');
+                step2.classList.remove('active', 'completed');
+            } else if (paymentStatus === 'submitted') {
+                step1.classList.add('completed');
+                step2.classList.add('completed');
+                step3.classList.add('active');
+            } else if (paymentStatus === 'paid') {
+                step1.classList.add('completed');
+                step2.classList.add('completed');
+                step3.classList.add('completed');
+                step4.classList.add('active');
+            }
+        }
+
+        // Generate download token after payment verification
+        async function generateDownloadToken(email) {
+            try {
+                const response = await fetch(`/api/editing/generate-download-token/${encodeURIComponent(email)}`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    downloadToken = result.token;
+                    console.log('✅ Download token generated, expires in:', result.expiresIn);
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Error generating download token:', error);
+                return false;
+            }
+        }
+
+        // Check edit status
+        async function checkEditStatus(event) {
+            const email = document.getElementById('statusEmail').value.trim();
+            if (!email) {
+                showWarning('Please enter your email address');
+                return;
+            }
+            
+            // Show loading state
+            const checkBtn = document.getElementById('statusCheckBtn');
+            const originalText = checkBtn.innerHTML;
+            checkBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+            checkBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`/api/editing/status/${encodeURIComponent(email)}`);
+                
+                let result;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    result = { error: 'Invalid response from server' };
+                }
+                
+                if (response.ok && result.success) {
+                    currentEditingData = result.status;
+                    
+                    // Update payment steps
+                    updatePaymentSteps(result.status.status, result.status.paymentStatus);
+                    
+                    // If payment is verified, get download token
+                    if (result.status.paymentStatus === 'paid') {
+                        await generateDownloadToken(email);
+                    }
+                    
+                    displayEditStatus(result.status);
+                    
+                    // Hide the request form since they have an active request
+                    document.getElementById('requestForm').classList.add('hidden');
+                    document.getElementById('noRequestActions').style.display = 'none';
+                    
+                    // Show current request info
+                    showCurrentRequestInfo(result.status);
+                    
+                    showSuccess('Status retrieved successfully');
+                } else {
+                    // No existing editing request - show message and form
+                    document.getElementById('requestForm').classList.remove('hidden');
+                    document.getElementById('currentRequestInfo').style.display = 'none';
+                    document.getElementById('paymentSection').style.display = 'none';
+                    
+                    // Clear any previous data
+                    currentEditingData = null;
+                    downloadToken = null;
+                    
+                    // Show message in banner
+                    const banner = document.getElementById('statusBanner');
+                    banner.className = 'status-banner pending';
+                    banner.innerHTML = `
+                        <i class="fas fa-info-circle"></i>
+                        <div class="status-content">
+                            <h4>No Active Request</h4>
+                            <p>No editing request found for ${email}. You can start a new one below.</p>
+                        </div>
+                    `;
+                    banner.style.display = 'flex';
+                    
+                    // Show start new button
+                    document.getElementById('noRequestActions').style.display = 'block';
+                    
+                    // Pre-fill email in form
+                    document.getElementById('email').value = email;
+                    
+                    showInfo('No active request found. You can start a new one.');
+                }
+            } catch (error) {
+                console.error('Error checking status:', error);
+                
+                const banner = document.getElementById('statusBanner');
+                banner.className = 'status-banner pending';
+                banner.innerHTML = `
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div class="status-content">
+                        <h4>Error Checking Status</h4>
+                        <p>There was a problem checking your status. Please try again.</p>
+                    </div>
+                `;
+                banner.style.display = 'flex';
+                
+                showError('Failed to check status. Please try again.');
+            } finally {
+                // Restore button
+                checkBtn.innerHTML = originalText;
+                checkBtn.disabled = false;
+            }
+        }
+
+        // Show current request info
+        function showCurrentRequestInfo(data) {
+            const infoDiv = document.getElementById('currentRequestInfo');
+            const detailsDiv = document.getElementById('requestDetails');
+            
+            const packageName = data.serviceType === 'cv' ? 'CV Editing' : 
+                               data.serviceType === 'cover' ? 'Cover Letter Editing' : 
+                               'CV + Cover Letter Bundle';
+            
+            let statusText = '';
+            if (data.status === 'pending') statusText = '⏳ Pending';
+            else if (data.status === 'editing_in_progress') statusText = '✏️ In Progress';
+            else if (data.status === 'editing_completed') {
+                if (data.paymentStatus === 'submitted') {
+                    statusText = '⏳ Payment Pending Verification';
+                } else {
+                    statusText = '✅ Ready for Payment';
+                }
+            }
+            else if (data.status === 'editing_paid') statusText = '💰 Paid';
+            else statusText = data.status;
+            
+            detailsDiv.innerHTML = `
+                <div class="request-detail-item">
+                    <strong>Package</strong>
+                    <span>${packageName}</span>
+                </div>
+                <div class="request-detail-item">
+                    <strong>Status</strong>
+                    <span>${statusText}</span>
+                </div>
+                <div class="request-detail-item">
+                    <strong>Amount</strong>
+                    <span>$${data.amount || '0'}</span>
+                </div>
+                <div class="request-detail-item">
+                    <strong>Submitted</strong>
+                    <span>${new Date(data.createdAt).toLocaleDateString()}</span>
+                </div>
+            `;
+            
+            infoDiv.style.display = 'block';
+        }
+
+        // Display edit status
+        function displayEditStatus(data) {
+            const banner = document.getElementById('statusBanner');
+
+            if (data.status === 'pending') {
+                banner.className = 'status-banner pending';
+                banner.innerHTML = `
+                    <i class="fas fa-clock"></i>
+                    <div class="status-content">
+                        <h4>⏳ Editing Pending</h4>
+                        <p>Your documents are in queue. We'll start editing soon.</p>
+                        <p><strong>We'll notify you at:</strong> ${data.personalInfo.email}</p>
+                    </div>
+                `;
+            } 
+            else if (data.status === 'editing_in_progress') {
+                banner.className = 'status-banner editing';
+                banner.innerHTML = `
+                    <i class="fas fa-pen-fancy"></i>
+                    <div class="status-content">
+                        <h4>✏️ Editing in Progress</h4>
+                        <p>Your documents are being edited by our experts.</p>
+                        <p><strong>We'll notify you when complete.</strong></p>
+                    </div>
+                `;
+            } 
+            else if (data.status === 'editing_completed') {
+                // Check if payment is already submitted
+                if (data.paymentStatus === 'submitted') {
+                    banner.className = 'status-banner ready';
+                    banner.innerHTML = `
+                        <i class="fas fa-clock"></i>
+                        <div class="status-content">
+                            <h4>⏳ Payment Pending Verification</h4>
+                            <p>Your transaction ID has been submitted. Admin will verify your payment shortly.</p>
+                            <p><strong>Transaction ID:</strong> ${data.pendingTransaction?.id || 'Submitted'}</p>
+                            <p>You'll be able to download once payment is verified.</p>
+                        </div>
+                    `;
+                } else {
+                    // Show payment form
+                    banner.className = 'status-banner ready';
+                    banner.innerHTML = `
+                        <i class="fas fa-check-circle"></i>
+                        <div class="status-content">
+                            <h4>📄 Editing Complete - Ready for Payment</h4>
+                            <p>Your documents have been edited. Please follow the steps below to complete payment and download.</p>
+                            <div class="documents-preview">
+                                <p><strong>Files ready for download after payment:</strong></p>
+                                ${data.hasFiles?.cv ? '<p>📄 CV (Final Version)</p>' : ''}
+                                ${data.hasFiles?.cover ? '<p>📄 Cover Letter (Final Version)</p>' : ''}
+                            </div>
+                            <button onclick="showPaymentSection()" class="btn-pay" style="margin-top: 20px;">
+                                <i class="fas fa-money-bill-wave"></i> Proceed to Payment ($${data.amount || '0'})
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('paymentSection').style.display = 'none';
+                
+            } 
+            else if (data.status === 'editing_paid' && data.paymentStatus === 'paid') {
+                // Show download buttons with token
+                let docsHtml = '';
+                
+                if (data.hasFiles?.cv && downloadToken) {
+                    docsHtml += `
+                        <div class="document-preview-item paid">
+                            <div class="document-info">
+                                <i class="fas fa-check-circle" style="color: #27ae60;"></i>
+                                <div class="document-details">
+                                    <div class="document-name">CV (Full Version)</div>
+                                    <div class="document-meta">Payment verified - Download link expires in 1 hour</div>
+                                </div>
+                            </div>
+                            <div class="document-actions">
+                                <a href="/api/editing/download/${downloadToken}/cv" class="btn-download">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (data.hasFiles?.cover && downloadToken) {
+                    docsHtml += `
+                        <div class="document-preview-item paid">
+                            <div class="document-info">
+                                <i class="fas fa-check-circle" style="color: #27ae60;"></i>
+                                <div class="document-details">
+                                    <div class="document-name">Cover Letter (Full Version)</div>
+                                    <div class="document-meta">Payment verified - Download link expires in 1 hour</div>
+                                </div>
+                            </div>
+                            <div class="document-actions">
+                                <a href="/api/editing/download/${downloadToken}/cover" class="btn-download">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                banner.className = 'status-banner completed';
+                banner.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <div class="status-content">
+                        <h4>✅ Payment Verified - Ready to Download</h4>
+                        <p>Thank you! Your payment has been verified. Your edited documents are ready for download.</p>
+                        <div class="token-info">
+                            <i class="fas fa-clock"></i>
+                            <span><strong>Download links expire in 1 hour</strong> for security. Please download your files now.</span>
+                        </div>
+                        <div class="documents-preview">
+                            ${docsHtml || '<p>No documents available</p>'}
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('paymentSection').style.display = 'none';
+            }
+            
+            banner.style.display = 'flex';
+            banner.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Show payment section
+        function showPaymentSection() {
+            document.getElementById('paymentSection').style.display = 'block';
+            document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
+            
+            // Update payment steps
+            updatePaymentSteps('editing_completed', 'pending');
+            
+            showInfo('Please select a payment method and complete the steps below');
+        }
+
+        // Submit payment for verification - UPDATED for Eversend & Western Union with correct amount
+        async function submitPayment() {
+            const transactionId = document.getElementById('transactionId').value.trim();
+            const paymentMethod = document.getElementById('selectedPaymentMethod').value;
+            const paymentNotes = document.getElementById('paymentNotes').value.trim();
+            
+            if (!transactionId) {
+                showWarning('Please enter your transaction ID');
+                return;
+            }
+            
+            if (!paymentMethod) {
+                showWarning('Please select a payment method');
+                return;
+            }
+            
+            const email = document.getElementById('statusEmail').value.trim();
+            if (!email) {
+                showWarning('Please enter your email first');
+                return;
+            }
+            
+            if (!currentEditingData) {
+                showWarning('Please check your status first');
+                return;
+            }
+            
+            // Validate sender details for both methods
+            const senderName = document.getElementById('senderName').value.trim();
+            const senderPhone = document.getElementById('senderPhone').value.trim();
+            const senderCountry = document.getElementById('senderCountry').value;
+            
+            if (!senderName || !senderPhone || !senderCountry) {
+                showWarning('Please fill in all sender details');
+                return;
+            }
+            
+            // For Western Union, validate receipt
+            if (paymentMethod === 'western-union' && !paymentReceiptFile) {
+                showWarning('Please upload your Western Union receipt');
+                return;
+            }
+            
+            const paymentBtn = document.getElementById('paymentBtn');
+            
+            try {
+                paymentBtn.disabled = true;
+                paymentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+                
+                const formData = new FormData();
+                formData.append('transactionId', transactionId);
+                formData.append('paymentMethod', paymentMethod);
+                formData.append('senderName', senderName);
+                formData.append('senderPhone', senderPhone);
+                formData.append('senderCountry', senderCountry);
+                formData.append('transactionReference', document.getElementById('transactionReference').value.trim());
+                formData.append('notes', paymentNotes);
+                formData.append('amount', currentEditingData.amount || 30); // Use the actual amount from the request
+                
+                if (paymentReceiptFile) {
+                    formData.append('paymentReceipt', paymentReceiptFile);
+                }
+                
+                const response = await fetch(`/api/editing/submit-payment/${encodeURIComponent(email)}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                let result;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    result = { error: 'Invalid server response' };
+                }
+                
+                if (response.ok && result.success) {
+                    showSuccess('Payment information submitted. Admin will verify your payment shortly.');
+                    
+                    // Clear form
+                    document.getElementById('transactionId').value = '';
+                    document.getElementById('paymentNotes').value = '';
+                    document.getElementById('senderName').value = '';
+                    document.getElementById('senderPhone').value = '';
+                    document.getElementById('senderCountry').value = '';
+                    document.getElementById('transactionReference').value = '';
+                    document.getElementById('receiptFileName').innerHTML = '';
+                    paymentReceiptFile = null;
+                    
+                    // Reset payment method selection
+                    document.querySelectorAll('.payment-method-card').forEach(card => {
+                        card.classList.remove('selected');
+                    });
+                    document.getElementById('eversendDetails').style.display = 'none';
+                    document.getElementById('westernUnionDetails').style.display = 'none';
+                    document.getElementById('senderDetailsForm').style.display = 'none';
+                    selectedPaymentMethod = '';
+                    
+                    // Refresh status
+                    setTimeout(() => checkEditStatus(), 2000);
+                } else {
+                    showError(result.error || 'Failed to submit payment');
+                }
+            } catch (error) {
+                showError('Error submitting payment');
+                console.error(error);
+            } finally {
+                paymentBtn.disabled = false;
+                paymentBtn.innerHTML = '<i class="fas fa-check-circle"></i> Submit Payment Details';
+            }
+        }
+
+        // Form submission - FIXED with correct prices
+        document.getElementById('editingRequestForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formMessage = document.getElementById('formMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const serviceType = document.getElementById('serviceType').value;
+            const instructions = document.getElementById('instructions').value;
+            
+            // Validate service type
+            if (!serviceType) {
+                showWarning('Please select a service package');
+                return;
+            }
+            
+            // Validate based on service type
+            if (serviceType === 'cv' || serviceType === 'both') {
+                if (!uploadedFiles.cv) {
+                    showWarning('Please upload your CV');
+                    return;
+                }
+            }
+            if (serviceType === 'cover' || serviceType === 'both') {
+                if (!uploadedFiles.cover) {
+                    showWarning('Please upload your Cover Letter');
+                    return;
+                }
+            }
+            
+            // Set amount based on service type
+            let amount = serviceType === 'cv' ? 20 : serviceType === 'cover' ? 20 : 30;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            
+            const formData = new FormData();
+            formData.append('fullName', fullName);
+            formData.append('email', email);
+            formData.append('phone', phone);
+            formData.append('serviceType', serviceType);
+            formData.append('instructions', instructions);
+            formData.append('amount', amount);
+            
+            if (uploadedFiles.cv) {
+                formData.append('cv', uploadedFiles.cv);
+            }
+            if (uploadedFiles.cover) {
+                formData.append('cover', uploadedFiles.cover);
+            }
+            
+            try {
+                const response = await fetch('/api/editing/request', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                let result;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    result = { error: 'Server returned an invalid response' };
+                }
+                
+                if (response.ok && result.success) {
+                    formMessage.className = 'form-message success';
+                    formMessage.innerHTML = `
+                        <i class="fas fa-check-circle"></i> 
+                        Documents uploaded successfully! We'll notify you at ${email} when editing is complete.
+                    `;
+                    formMessage.style.display = 'block';
+                    
+                    showSuccess('Documents uploaded successfully! We\'ll notify you when editing is complete.');
+                    
+                    // Reset form
+                    resetForm();
+                    
+                    // Pre-fill status email and check status
+                    document.getElementById('statusEmail').value = email;
+                    setTimeout(() => checkEditStatus(), 1500);
+                } else {
+                    // Check for specific error messages
+                    if (result.error && result.error.includes('already exists')) {
+                        formMessage.className = 'form-message info';
+                        formMessage.innerHTML = `
+                            <i class="fas fa-info-circle"></i> 
+                            You already have an editing request. 
+                            <a href="#statusCheck" onclick="document.getElementById('statusEmail').value='${email}';checkEditStatus()">Check its status</a>
+                        `;
+                        formMessage.style.display = 'block';
+                        
+                        showInfo('You already have an editing request. Check its status.');
+                    } else {
+                        throw new Error(result.error || 'Upload failed');
+                    }
+                }
+            } catch (error) {
+                formMessage.className = 'form-message error';
+                formMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + error.message;
+                formMessage.style.display = 'block';
+                
+                showError(error.message);
+                console.error('Upload error:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload for Editing';
+            }
+        });
+
+        // Check for email in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const emailParam = urlParams.get('email');
+        if (emailParam) {
+            document.getElementById('statusEmail').value = emailParam;
+            setTimeout(() => checkEditStatus(), 500);
+        }
+
+        // Service from URL
+        const serviceParam = urlParams.get('service');
+        if (serviceParam) {
+            selectService(serviceParam);
+        }
+
+        // Enter key for status check
+        document.getElementById('statusEmail').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkEditStatus(e);
+            }
+        });
+    </script>
+</body>
+</html>
