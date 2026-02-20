@@ -1,0 +1,13 @@
+# render.yaml
+services:
+  - type: web
+    name: apex-global-careers
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
