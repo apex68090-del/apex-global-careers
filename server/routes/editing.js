@@ -54,9 +54,10 @@ const storage = multer.diskStorage({
     }
 });
 
+// ⚡ UPDATED: Increased file size limit from 10MB to 50MB for mobile photos
 const upload = multer({ 
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 },
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
     fileFilter: (req, file, cb) => {
         const allowedTypes = /pdf|jpg|jpeg|png|doc|docx/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -136,6 +137,15 @@ router.post('/request', upload.fields([
 
     } catch (error) {
         console.error('❌ Editing request error:', error);
+        
+        // Check for file size error
+        if (error.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ 
+                success: false,
+                error: 'File too large. Maximum file size is 50MB. Please compress your images before uploading.' 
+            });
+        }
+        
         res.status(500).json({ error: 'Failed to submit editing request' });
     }
 });
@@ -253,6 +263,15 @@ router.post('/submit-payment/:email', upload.single('paymentReceipt'), async (re
 
     } catch (error) {
         console.error('Error submitting payment:', error);
+        
+        // Check for file size error
+        if (error.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ 
+                success: false,
+                error: 'File too large. Maximum file size is 50MB. Please compress your images before uploading.' 
+            });
+        }
+        
         res.status(500).json({ error: 'Failed to submit payment' });
     }
 });
@@ -373,6 +392,15 @@ router.post('/upload-edited/:email', upload.fields([
         res.json({ success: true, status: metadata.status });
     } catch (error) {
         console.error('❌ Error uploading edited documents:', error);
+        
+        // Check for file size error
+        if (error.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ 
+                success: false,
+                error: 'File too large. Maximum file size is 50MB. Please compress your images before uploading.' 
+            });
+        }
+        
         res.status(500).json({ error: 'Failed to upload edited documents' });
     }
 });

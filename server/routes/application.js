@@ -48,7 +48,7 @@ router.use(async (req, res, next) => {
     next();
 });
 
-// Configure multer for file uploads
+// Configure multer for file uploads - UPDATED to 50MB limit
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const email = req.body.email || 'temp';
@@ -76,9 +76,10 @@ const storage = multer.diskStorage({
     }
 });
 
+// ⚡ UPDATED: Increased file size limit from 10MB to 50MB for mobile photos
 const upload = multer({ 
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 },
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
     fileFilter: (req, file, cb) => {
         const allowedTypes = /pdf|jpg|jpeg|png|doc|docx/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -356,6 +357,14 @@ router.post('/upload', upload.fields([
 
     } catch (error) {
         console.error('❌ Upload error:', error);
+        
+        // Check for file size error
+        if (error.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ 
+                success: false,
+                error: 'File too large. Maximum file size is 50MB. Please compress your images before uploading.' 
+            });
+        }
         
         // Check for MongoDB timeout error
         if (error.name === 'MongooseError' && error.message.includes('timed out')) {
@@ -1114,6 +1123,14 @@ router.post('/upload-job-offer/:email', upload.single('jobOffer'), async (req, r
     } catch (error) {
         console.error('❌ Error uploading job offer:', error);
         
+        // Check for file size error
+        if (error.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ 
+                success: false,
+                error: 'File too large. Maximum file size is 50MB.' 
+            });
+        }
+        
         if (error.name === 'MongooseError' && error.message.includes('timed out')) {
             return res.status(503).json({ 
                 success: false,
@@ -1178,6 +1195,14 @@ router.post('/upload-contract/:email', upload.single('contract'), async (req, re
 
     } catch (error) {
         console.error('❌ Error uploading contract:', error);
+        
+        // Check for file size error
+        if (error.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ 
+                success: false,
+                error: 'File too large. Maximum file size is 50MB.' 
+            });
+        }
         
         if (error.name === 'MongooseError' && error.message.includes('timed out')) {
             return res.status(503).json({ 
