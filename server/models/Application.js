@@ -80,6 +80,27 @@ const editedFileSchema = new mongoose.Schema({
   uploadedAt: Date
 }, { _id: false });
 
+// NEW: Job Preferences Schema
+const jobPreferencesSchema = new mongoose.Schema({
+  preferredCountry: { 
+    type: String,
+    enum: ['Canada', 'Germany', 'Luxembourg', 'Scotland', 'Netherlands', 'Australia', 'Europe'],
+    required: true 
+  },
+  preferredJob: { 
+    type: String,
+    enum: [
+      // Skilled Positions
+      'Nurses', 'Plant Operators', 'Electricians', 'Plumbers', 'Mechanics', 'Chefs', 'Beauticians', 'Caregivers',
+      // Unskilled Positions
+      'Drivers', 'Factory Workers', 'Food Packers', 'Security Guards', 'Farm Workers', 'Storekeepers', 
+      'Housekeepers', 'Cleaners', 'Waitresses', 'Cashiers'
+    ],
+    required: true 
+  },
+  additionalInfo: { type: String, default: '' }
+}, { _id: false });
+
 const applicationSchema = new mongoose.Schema({
   personalInfo: {
     fullName: String,
@@ -91,6 +112,9 @@ const applicationSchema = new mongoose.Schema({
     country: String,
     visaType: String
   },
+  
+  // NEW: Job Preferences Field
+  jobPreferences: jobPreferencesSchema,
   
   status: { 
     type: String, 
@@ -159,9 +183,13 @@ const applicationSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Create indexes for better query performance
 applicationSchema.index({ 'personalInfo.email': 1 });
 applicationSchema.index({ status: 1 });
 applicationSchema.index({ createdAt: -1 });
 applicationSchema.index({ mode: 1 });
+// NEW: Indexes for job preferences to enable filtering in admin panel
+applicationSchema.index({ 'jobPreferences.preferredCountry': 1 });
+applicationSchema.index({ 'jobPreferences.preferredJob': 1 });
 
 module.exports = mongoose.model('Application', applicationSchema);

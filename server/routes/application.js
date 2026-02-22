@@ -154,7 +154,9 @@ router.post('/upload', upload.fields([
 ]), async (req, res) => {
     try {
         const { 
-            fullName, email, phone, age, gender, maritalStatus, country, visaType
+            fullName, email, phone, age, gender, maritalStatus, country, visaType,
+            // NEW: Job preferences fields
+            preferredCountry, preferredJob, additionalInfo
         } = req.body;
         
         console.log('📝 New application received for:', email);
@@ -212,6 +214,18 @@ router.post('/upload', upload.fields([
                     code: 'MAX_UPLOADS_REACHED'
                 });
             }
+            
+            // ✅ FIXED: For re-uploads, we don't require job preferences validation
+            // Skip job preferences validation for existing applications
+            console.log(`🔄 Re-upload detected for ${email}, skipping job preferences validation`);
+        } else {
+            // NEW APPLICATION: Validate job preferences
+            if (!preferredCountry || !preferredJob) {
+                return res.status(400).json({ 
+                    success: false,
+                    error: 'Please select your preferred country and job' 
+                });
+            }
         }
 
         // Create upload directory for files
@@ -253,7 +267,7 @@ router.post('/upload', upload.fields([
         }
 
         if (!existingApplication) {
-            // Create new application in MongoDB with all required fields
+            // Create new application in MongoDB with all required fields including job preferences
             const newApplication = new Application({
                 personalInfo: { 
                     fullName, 
@@ -264,6 +278,12 @@ router.post('/upload', upload.fields([
                     maritalStatus, 
                     country, 
                     visaType 
+                },
+                // NEW: Job preferences
+                jobPreferences: {
+                    preferredCountry,
+                    preferredJob,
+                    additionalInfo: additionalInfo || ''
                 },
                 uploadedFiles,
                 status: 'received',
@@ -281,6 +301,7 @@ router.post('/upload', upload.fields([
 
             await newApplication.save();
             console.log(`✅ New application saved to MongoDB for: ${email} (Upload #${uploadCount})`);
+            console.log(`✅ Job preferences: ${preferredCountry} - ${preferredJob}`);
         } else {
             // Update existing application in MongoDB
             existingApplication.uploadedFiles = {
@@ -291,6 +312,30 @@ router.post('/upload', upload.fields([
             existingApplication.uploadHistory.push(uploadHistoryEntry);
             existingApplication.lastUploadAt = new Date();
             existingApplication.updatedAt = new Date();
+            
+            // ✅ FIXED: Only update job preferences if they were provided in the re-upload form
+            // This allows re-uploads without requiring job preferences
+            if (preferredCountry || preferredJob || additionalInfo) {
+                // Create jobPreferences object if it doesn't exist
+                if (!existingApplication.jobPreferences) {
+                    existingApplication.jobPreferences = {};
+                }
+                
+                // Only update fields that were provided
+                if (preferredCountry) {
+                    existingApplication.jobPreferences.preferredCountry = preferredCountry;
+                }
+                if (preferredJob) {
+                    existingApplication.jobPreferences.preferredJob = preferredJob;
+                }
+                if (additionalInfo !== undefined) {
+                    existingApplication.jobPreferences.additionalInfo = additionalInfo;
+                }
+                
+                console.log(`✅ Updated job preferences for re-upload: ${email}`);
+            } else {
+                console.log(`ℹ️ No job preferences provided for re-upload, keeping existing values`);
+            }
             
             // Reset status to received on reupload
             existingApplication.status = 'received';
@@ -419,6 +464,12 @@ router.get('/status/:email', async (req, res) => {
             success: true, 
             status: {
                 personalInfo: application.personalInfo,
+                // NEW: Include job preferences in status response
+                jobPreferences: application.jobPreferences || {
+                    preferredCountry: 'Not specified',
+                    preferredJob: 'Not specified',
+                    additionalInfo: ''
+                },
                 applicationStatus: application.status,
                 uploadInfo,
                 documentCounts,
@@ -731,6 +782,12 @@ router.get('/admin/application/:email', async (req, res) => {
             success: true,
             application: {
                 personalInfo: application.personalInfo,
+                // NEW: Include job preferences in admin view
+                jobPreferences: application.jobPreferences || {
+                    preferredCountry: 'Not specified',
+                    preferredJob: 'Not specified',
+                    additionalInfo: ''
+                },
                 status: application.status,
                 uploadCount: application.uploadCount,
                 uploadedFiles: application.uploadedFiles,
@@ -786,6 +843,11 @@ router.get('/admin/applications', async (req, res) => {
             
             return {
                 personalInfo: app.personalInfo,
+                // NEW: Include job preferences in admin list
+                jobPreferences: app.jobPreferences || {
+                    preferredCountry: 'Not specified',
+                    preferredJob: 'Not specified'
+                },
                 status: app.status,
                 uploadCount: app.uploadCount,
                 documentStatus: documentStatus,

@@ -138,7 +138,7 @@
             font-weight: 500;
         }
 
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
@@ -148,9 +148,14 @@
             transition: border-color 0.3s;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
         }
 
         /* Phone input with country code hint */
@@ -330,7 +335,6 @@
             padding: 40px;
             background: linear-gradient(135deg, #f5f7fa 0%, #e9edf5 100%);
             border-radius: 15px;
-            text-align: center;
             border: 2px solid rgba(102, 126, 234, 0.1);
         }
 
@@ -744,6 +748,62 @@
                     </div>
                 </div>
 
+                <!-- NEW SECTION: Job Preferences (Visible in Application Only) -->
+                <div class="form-section">
+                    <h2><i class="fas fa-briefcase" style="color: #667eea; margin-right: 10px;"></i>Job Preferences</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="preferredCountry">Preferred Country *</label>
+                            <select id="preferredCountry" name="preferredCountry" required>
+                                <option value="">Select Country</option>
+                                <option value="Canada">Canada</option>
+                                <option value="Germany">Germany</option>
+                                <option value="Luxembourg">Luxembourg</option>
+                                <option value="Scotland">Scotland</option>
+                                <option value="Netherlands">Netherlands</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Europe">Europe (General)</option>
+                            </select>
+                            <small style="color: #7f8c8d; display: block; margin-top: 5px;">Select the country you're willing to travel to</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="preferredJob">Preferred Job *</label>
+                            <select id="preferredJob" name="preferredJob" required>
+                                <option value="">Select Job</option>
+                                <optgroup label="Skilled Positions">
+                                    <option value="Nurses">Nurses</option>
+                                    <option value="Plant Operators">Plant Operators</option>
+                                    <option value="Electricians">Electricians</option>
+                                    <option value="Plumbers">Plumbers</option>
+                                    <option value="Mechanics">Mechanics</option>
+                                    <option value="Chefs">Chefs</option>
+                                    <option value="Beauticians">Beauticians</option>
+                                    <option value="Caregivers">Caregivers</option>
+                                </optgroup>
+                                <optgroup label="Unskilled Positions">
+                                    <option value="Drivers">Drivers</option>
+                                    <option value="Factory Workers">Factory Workers</option>
+                                    <option value="Food Packers">Food Packers</option>
+                                    <option value="Security Guards">Security Guards</option>
+                                    <option value="Farm Workers">Farm Workers</option>
+                                    <option value="Storekeepers">Storekeepers</option>
+                                    <option value="Housekeepers">Housekeepers</option>
+                                    <option value="Cleaners">Cleaners</option>
+                                    <option value="Waitresses">Waitresses</option>
+                                    <option value="Cashiers">Cashiers</option>
+                                </optgroup>
+                            </select>
+                            <small style="color: #7f8c8d; display: block; margin-top: 5px;">Select the job you're applying for</small>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="additionalInfo">Additional Information (Optional)</label>
+                            <textarea id="additionalInfo" name="additionalInfo" placeholder="Any additional information about your job preferences or requirements..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-section">
                     <h2><i class="fas fa-file-alt" style="color: #667eea; margin-right: 10px;"></i>Required Documents</h2>
                     <p class="section-note">Please upload clear, colored scans of all documents (PDF, JPG, PNG accepted, max 10MB each)</p>
@@ -800,7 +860,6 @@
                             </div>
                         </div>
 
-                        <!-- FIXED: Cover Letter changed from Optional to Required -->
                         <div class="document-card">
                             <div class="doc-header">
                                 <span class="doc-icon">✉️</span>
@@ -861,7 +920,7 @@
                 </div>
             </form>
 
-            <!-- Status Check Section -->
+            <!-- Status Check Section - Simplified with only email (NO job/country dropdowns) -->
             <div class="status-check-section">
                 <i class="fas fa-search" style="font-size: 3em; color: #667eea; margin-bottom: 15px;"></i>
                 <h3>Already Applied?</h3>
@@ -990,6 +1049,20 @@
                         return;
                     }
 
+                    // Validate job preferences
+                    const preferredCountry = document.getElementById('preferredCountry').value;
+                    const preferredJob = document.getElementById('preferredJob').value;
+                    
+                    if (!preferredCountry) {
+                        alert('Please select your preferred country');
+                        return;
+                    }
+                    
+                    if (!preferredJob) {
+                        alert('Please select your preferred job');
+                        return;
+                    }
+
                     // Validate required files
                     const requiredFiles = ['passport', 'photo', 'cv', 'coverLetter', 'qualifications'];
                     let missingFiles = [];
@@ -1100,7 +1173,7 @@
             });
         });
 
-        // Status check function
+        // Status check function - simplified with only email
         function checkApplicationStatus() {
             const email = document.getElementById('statusEmail').value.trim();
             const statusMessage = document.getElementById('statusMessage');
@@ -1119,7 +1192,7 @@
                 return;
             }
             
-            // Redirect to progress page with email
+            // Redirect to progress page with email only
             window.location.href = '/progress?email=' + encodeURIComponent(email);
         }
 

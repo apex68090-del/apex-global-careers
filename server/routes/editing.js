@@ -46,6 +46,7 @@ const storage = multer.diskStorage({
         else if (file.fieldname === 'cover') prefix = 'original_cover_';
         else if (file.fieldname === 'edited_cv') prefix = 'final_cv_';
         else if (file.fieldname === 'edited_cover') prefix = 'final_cover_';
+        else if (file.fieldname === 'paymentReceipt') prefix = 'payment_receipt_';
         
         const sanitizedName = file.originalname.replace(/[^a-zA-Z0-9.]/g, '_');
         const filename = `${prefix}${timestamp}_${sanitizedName}`;
@@ -92,6 +93,7 @@ router.post('/request', upload.fields([
             instructions: instructions || '',
             originalFiles: {},
             editedFiles: {},
+            paymentReceipts: [], // Array to store payment receipts
             status: 'pending',
             paymentStatus: 'pending',
             createdAt: new Date().toISOString(),
@@ -162,8 +164,8 @@ router.get('/status/:email', (req, res) => {
                     cv: !!(metadata.editedFiles?.cv?.final),
                     cover: !!(metadata.editedFiles?.cover?.final)
                 },
-                // Show if transaction is pending
-                transactionPending: !!metadata.pendingTransaction
+                // Show if payment is pending verification
+                paymentPending: metadata.paymentStatus === 'submitted'
             };
 
             res.json({ success: true, status });
@@ -176,14 +178,23 @@ router.get('/status/:email', (req, res) => {
     }
 });
 
-// Client submits transaction ID (client does this)
-router.post('/submit-payment/:email', async (req, res) => {
+// UPDATED: Client submits payment receipt with payment method
+router.post('/submit-payment/:email', upload.single('paymentReceipt'), async (req, res) => {
     try {
         const { email } = req.params;
-        const { transactionId } = req.body;
+        const { senderName, senderPhone, senderCountry, paymentMethod, notes, transactionReference, amount } = req.body;
+        const receiptFile = req.file;
         
-        if (!transactionId) {
-            return res.status(400).json({ error: 'Transaction ID is required' });
+        if (!receiptFile) {
+            return res.status(400).json({ error: 'Payment receipt is required' });
+        }
+        
+        if (!senderName || !senderPhone || !senderCountry) {
+            return res.status(400).json({ error: 'Sender details are required' });
+        }
+        
+        if (!paymentMethod) {
+            return res.status(400).json({ error: 'Payment method is required' });
         }
         
         const userFolder = path.join(PRIVATE_UPLOAD_PATH, email);
@@ -195,14 +206,39 @@ router.post('/submit-payment/:email', async (req, res) => {
 
         const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
 
-        // Store the transaction ID for admin verification
-        metadata.pendingTransaction = {
-            id: transactionId,
-            submittedAt: new Date().toISOString()
+        // Initialize paymentReceipts array if it doesn't exist
+        if (!metadata.paymentReceipts) {
+            metadata.paymentReceipts = [];
+        }
+
+        // Store the payment receipt for admin verification with payment method
+        const paymentRecord = {
+            receipt: {
+                filename: receiptFile.filename,
+                originalName: receiptFile.originalname,
+                path: receiptFile.path,
+                size: receiptFile.size
+            },
+            paymentMethod: paymentMethod, // 'eversend' or 'western-union'
+            senderDetails: {
+                name: senderName,
+                phone: senderPhone,
+                country: senderCountry
+            },
+            transactionReference: transactionReference || '',
+            notes: notes || '',
+            amount: parseFloat(amount || metadata.amount),
+            submittedAt: new Date().toISOString(),
+            status: 'pending' // pending, verified, rejected
         };
 
+        metadata.paymentReceipts.push(paymentRecord);
+        metadata.paymentStatus = 'submitted';
+        metadata.status = 'payment_pending';
+
+        metadata.comments = metadata.comments || [];
         metadata.comments.push({
-            text: `💰 Payment submitted: Transaction ID: ${transactionId} (pending admin verification)`,
+            text: `💰 Payment receipt submitted via ${paymentMethod === 'eversend' ? 'Eversend/M-Pesa' : 'Western Union'}: ${receiptFile.originalname} (pending admin verification)`,
             timestamp: new Date().toISOString(),
             user: 'Client'
         });
@@ -212,7 +248,7 @@ router.post('/submit-payment/:email', async (req, res) => {
 
         res.json({ 
             success: true, 
-            message: 'Payment information submitted. Awaiting admin verification.'
+            message: 'Payment receipt submitted. Awaiting admin verification.'
         });
 
     } catch (error) {
@@ -255,11 +291,11 @@ router.get('/admin/status/:email', (req, res) => {
                 paymentStatus: metadata.paymentStatus,
                 createdAt: metadata.createdAt,
                 updatedAt: metadata.updatedAt,
-                comments: metadata.comments,
+                comments: metadata.comments || [],
                 originalFiles: metadata.originalFiles || {},
                 editedFiles: metadata.editedFiles || {},
                 files: files,
-                pendingTransaction: metadata.pendingTransaction || null,
+                paymentReceipts: metadata.paymentReceipts || [], // Array of payment receipts with payment method
                 paymentDetails: metadata.paymentDetails || null
             };
 
@@ -341,11 +377,11 @@ router.post('/upload-edited/:email', upload.fields([
     }
 });
 
-// ADMIN verifies payment (admin does this)
+// UPDATED: ADMIN verifies payment using receipt
 router.post('/verify-payment/:email', async (req, res) => {
     try {
         const { email } = req.params;
-        const { transactionId, amount } = req.body;
+        const { receiptIndex, verificationNotes } = req.body;
         
         const metadataPath = path.join(PRIVATE_UPLOAD_PATH, email, 'editing-metadata.json');
 
@@ -355,22 +391,36 @@ router.post('/verify-payment/:email', async (req, res) => {
 
         const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
 
+        // If receiptIndex is provided, verify that specific receipt
+        if (receiptIndex !== undefined && metadata.paymentReceipts && metadata.paymentReceipts[receiptIndex]) {
+            metadata.paymentReceipts[receiptIndex].status = 'verified';
+            metadata.paymentReceipts[receiptIndex].verifiedAt = new Date().toISOString();
+            metadata.paymentReceipts[receiptIndex].verifiedBy = 'Admin';
+            
+            // Get payment method for comment
+            const paymentMethod = metadata.paymentReceipts[receiptIndex].paymentMethod;
+            const methodText = paymentMethod === 'eversend' ? 'Eversend/M-Pesa' : 'Western Union';
+            
+            metadata.comments.push({
+                text: `✅ Payment verified via ${methodText}. Receipt: ${metadata.paymentReceipts[receiptIndex].receipt.originalName}`,
+                timestamp: new Date().toISOString(),
+                admin: 'Admin'
+            });
+        }
+
         metadata.paymentStatus = 'paid';
         metadata.status = 'editing_paid';
         metadata.paymentDetails = {
-            transactionId: transactionId || metadata.pendingTransaction?.id,
-            amount,
-            verifiedAt: new Date().toISOString()
+            verifiedAt: new Date().toISOString(),
+            verifiedBy: 'Admin',
+            notes: verificationNotes || ''
         };
 
         metadata.comments.push({
-            text: `✅ Payment verified by admin: $${amount}. Transaction ID: ${transactionId || metadata.pendingTransaction?.id}`,
+            text: `✅ Payment verified by admin. ${verificationNotes ? `Notes: ${verificationNotes}` : ''}`,
             timestamp: new Date().toISOString(),
             admin: 'Admin'
         });
-
-        // Clear pending transaction
-        delete metadata.pendingTransaction;
 
         metadata.updatedAt = new Date().toISOString();
         fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
@@ -511,6 +561,36 @@ router.get('/admin/all', (req, res) => {
     } catch (error) {
         console.error('Error fetching editing requests:', error);
         res.status(500).json({ error: 'Failed to fetch editing requests' });
+    }
+});
+
+// NEW: Get payment receipts for a specific request
+router.get('/payment-receipts/:email', (req, res) => {
+    try {
+        const { email } = req.params;
+        const metadataPath = path.join(PRIVATE_UPLOAD_PATH, email, 'editing-metadata.json');
+
+        if (!fs.existsSync(metadataPath)) {
+            return res.status(404).json({ error: 'Editing request not found' });
+        }
+
+        const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+        
+        const receipts = (metadata.paymentReceipts || []).map((receipt, index) => ({
+            index,
+            filename: receipt.receipt.originalName,
+            submittedAt: receipt.submittedAt,
+            status: receipt.status,
+            paymentMethod: receipt.paymentMethod,
+            senderName: receipt.senderDetails?.name,
+            amount: receipt.amount,
+            url: `/api/editing/files/${email}/${receipt.receipt.filename}`
+        }));
+
+        res.json({ success: true, receipts });
+    } catch (error) {
+        console.error('Error fetching payment receipts:', error);
+        res.status(500).json({ error: 'Failed to fetch payment receipts' });
     }
 });
 

@@ -409,6 +409,76 @@
             font-weight: 500;
         }
 
+        /* Job Preferences Section */
+        .job-preferences-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf5 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .job-preferences-section h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .job-preferences-section h4 i {
+            color: #667eea;
+        }
+
+        .job-preferences-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .job-info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #764ba2;
+        }
+
+        .job-info-item strong {
+            display: block;
+            color: #7f8c8d;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .job-info-item span {
+            color: #2c3e50;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .additional-info {
+            grid-column: span 2;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .additional-info strong {
+            display: block;
+            color: #7f8c8d;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .additional-info p {
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
         /* Progress Tracker - Clickable */
         .progress-tracker {
             display: flex;
@@ -916,6 +986,14 @@
                 grid-template-columns: 1fr;
             }
             
+            .job-preferences-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .additional-info {
+                grid-column: span 1;
+            }
+            
             .search-box {
                 flex-direction: column;
             }
@@ -1069,6 +1147,25 @@
                             <div class="info-item">
                                 <strong>Last Updated</strong>
                                 <span id="statusUpdated"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- NEW: Job Preferences Section -->
+                        <div id="jobPreferencesSection" class="job-preferences-section" style="display: none;">
+                            <h4><i class="fas fa-briefcase"></i> Job Preferences</h4>
+                            <div class="job-preferences-grid">
+                                <div class="job-info-item">
+                                    <strong>Preferred Country</strong>
+                                    <span id="statusPreferredCountry"></span>
+                                </div>
+                                <div class="job-info-item">
+                                    <strong>Preferred Job</strong>
+                                    <span id="statusPreferredJob"></span>
+                                </div>
+                                <div class="additional-info" id="additionalInfoContainer" style="display: none;">
+                                    <strong>Additional Information</strong>
+                                    <p id="statusAdditionalInfo"></p>
+                                </div>
                             </div>
                         </div>
                         
@@ -1248,6 +1345,7 @@
             
             // Extract data from the correct paths based on backend structure
             const personalInfo = data.personalInfo || {};
+            const jobPreferences = data.jobPreferences || {}; // NEW: Job preferences
             const uploadInfo = data.uploadInfo || {};
             const applicationStatus = data.applicationStatus || 'unknown';
             const documentReviews = data.documentReviews || {}; // Admin's actual reviews
@@ -1270,6 +1368,29 @@
             document.getElementById('statusVisaType').textContent = personalInfo.visaType || 'N/A';
             document.getElementById('statusDate').textContent = data.timestamp ? new Date(data.timestamp).toLocaleDateString() : 'N/A';
             document.getElementById('statusUpdated').textContent = data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString() : 'N/A';
+
+            // NEW: Display Job Preferences if available
+            const jobSection = document.getElementById('jobPreferencesSection');
+            const preferredCountry = document.getElementById('statusPreferredCountry');
+            const preferredJob = document.getElementById('statusPreferredJob');
+            const additionalInfo = document.getElementById('statusAdditionalInfo');
+            const additionalInfoContainer = document.getElementById('additionalInfoContainer');
+            
+            if (jobPreferences && (jobPreferences.preferredCountry || jobPreferences.preferredJob)) {
+                preferredCountry.textContent = jobPreferences.preferredCountry || 'Not specified';
+                preferredJob.textContent = jobPreferences.preferredJob || 'Not specified';
+                
+                if (jobPreferences.additionalInfo && jobPreferences.additionalInfo.trim() !== '') {
+                    additionalInfo.textContent = jobPreferences.additionalInfo;
+                    additionalInfoContainer.style.display = 'block';
+                } else {
+                    additionalInfoContainer.style.display = 'none';
+                }
+                
+                jobSection.style.display = 'block';
+            } else {
+                jobSection.style.display = 'none';
+            }
 
             // Upload counter
             const uploadCounter = document.getElementById('uploadCounter');

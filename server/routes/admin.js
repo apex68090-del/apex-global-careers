@@ -909,7 +909,13 @@ router.get('/application/:email/document-reviews', (req, res) => {
                 editingStatus: metadata.editingStatus || 'not_requested',
                 editedFiles: metadata.editedFiles || {},
                 jobOffer: metadata.jobOffer || null,
-                contract: metadata.contract || null
+                contract: metadata.contract || null,
+                // NEW: Include job preferences in the response
+                jobPreferences: metadata.jobPreferences || {
+                    preferredCountry: 'Not specified',
+                    preferredJob: 'Not specified',
+                    additionalInfo: ''
+                }
             });
         } else {
             res.status(404).json({ error: 'Application not found' });
@@ -917,6 +923,103 @@ router.get('/application/:email/document-reviews', (req, res) => {
     } catch (error) {
         console.error('Error fetching document reviews:', error);
         res.status(500).json({ error: 'Failed to fetch document reviews' });
+    }
+});
+
+// NEW: Endpoint to update job preferences (if needed for admin editing)
+router.post('/application/:email/job-preferences', (req, res) => {
+    try {
+        const { email } = req.params;
+        const { preferredCountry, preferredJob, additionalInfo } = req.body;
+        
+        const clientFolder = path.join(__dirname, '../uploads', email);
+        const metadataPath = path.join(clientFolder, 'metadata.json');
+
+        if (fs.existsSync(metadataPath)) {
+            const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+            
+            if (!metadata.jobPreferences) {
+                metadata.jobPreferences = {};
+            }
+            
+            if (preferredCountry) metadata.jobPreferences.preferredCountry = preferredCountry;
+            if (preferredJob) metadata.jobPreferences.preferredJob = preferredJob;
+            if (additionalInfo !== undefined) metadata.jobPreferences.additionalInfo = additionalInfo;
+            
+            metadata.updatedAt = new Date().toISOString();
+            
+            if (!metadata.comments) metadata.comments = [];
+            metadata.comments.push({
+                text: `✏️ Job preferences updated by admin: ${preferredCountry || ''} ${preferredJob || ''}`.trim(),
+                timestamp: new Date().toISOString(),
+                admin: 'Admin'
+            });
+            
+            fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
+            
+            res.json({ 
+                success: true, 
+                message: 'Job preferences updated successfully',
+                jobPreferences: metadata.jobPreferences
+            });
+        } else {
+            res.status(404).json({ error: 'Application not found' });
+        }
+    } catch (error) {
+        console.error('Error updating job preferences:', error);
+        res.status(500).json({ error: 'Failed to update job preferences' });
+    }
+});
+
+// NEW: Filter applications by job preferences (for admin filtering)
+router.get('/applications/filter', (req, res) => {
+    try {
+        const { country, job } = req.query;
+        const uploadsDir = path.join(__dirname, '../uploads');
+        
+        if (!fs.existsSync(uploadsDir)) {
+            return res.json({ success: true, applications: [] });
+        }
+        
+        const clients = fs.readdirSync(uploadsDir).filter(file => {
+            const filePath = path.join(uploadsDir, file);
+            return fs.statSync(filePath).isDirectory();
+        });
+
+        const applications = [];
+
+        clients.forEach(client => {
+            const metadataPath = path.join(uploadsDir, client, 'metadata.json');
+            if (fs.existsSync(metadataPath)) {
+                const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+                
+                // Apply filters if provided
+                let include = true;
+                
+                if (country && metadata.jobPreferences?.preferredCountry !== country) {
+                    include = false;
+                }
+                
+                if (job && metadata.jobPreferences?.preferredJob !== job) {
+                    include = false;
+                }
+                
+                if (include) {
+                    applications.push({
+                        email: client,
+                        ...metadata,
+                        folder: client
+                    });
+                }
+            }
+        });
+
+        applications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        res.json({ success: true, applications });
+    } catch (error) {
+        console.error('Error filtering applications:', error);
+        res.status(500).json({ error: 'Failed to filter applications' });
     }
 });
 

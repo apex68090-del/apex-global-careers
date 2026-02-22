@@ -688,6 +688,76 @@
             font-size: 1.1em;
         }
 
+        /* NEW: Job Preferences Section */
+        .job-preferences-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf5 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .job-preferences-section h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .job-preferences-section h4 i {
+            color: #667eea;
+        }
+
+        .job-preferences-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .job-info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #764ba2;
+        }
+
+        .job-info-item strong {
+            display: block;
+            color: #7f8c8d;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .job-info-item span {
+            color: #2c3e50;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .additional-info {
+            grid-column: span 2;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .additional-info strong {
+            display: block;
+            color: #7f8c8d;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .additional-info p {
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
         /* Post-Application Section - FIXED for Job Offer and Contract */
         .post-application-section {
             margin: 30px 0;
@@ -777,7 +847,7 @@
             border-radius: 8px;
         }
 
-        /* Edit Service Section */
+        /* Edit Service Section - UPDATED with Payment Receipts */
         .edit-service-section {
             margin: 30px 0;
             padding: 25px;
@@ -964,6 +1034,164 @@
             color: #7f8c8d;
             font-style: italic;
             margin: 20px 0;
+        }
+
+        /* Payment Receipt Section - NEW */
+        .payment-receipt-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #f39c12;
+        }
+
+        .payment-receipt-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .payment-receipt-header i {
+            font-size: 1.5em;
+            color: #f39c12;
+        }
+
+        .payment-receipt-header h4 {
+            color: #2c3e50;
+            font-size: 1.2em;
+        }
+
+        .payment-receipt-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .payment-receipt-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .payment-receipt-card.pending {
+            border-color: #f39c12;
+        }
+
+        .payment-receipt-card.verified {
+            border-color: #27ae60;
+            background: #f0fff4;
+        }
+
+        .payment-receipt-card.rejected {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .receipt-method-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .method-eversend {
+            background: #2196F3;
+            color: white;
+        }
+
+        .method-western-union {
+            background: #FF5722;
+            color: white;
+        }
+
+        .receipt-details {
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .receipt-details p {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .receipt-details i {
+            width: 20px;
+            color: #7f8c8d;
+        }
+
+        .receipt-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-verify-receipt {
+            flex: 1;
+            padding: 8px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-verify-receipt:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .btn-view-receipt {
+            flex: 1;
+            padding: 8px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-view-receipt:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .receipt-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .status-verified {
+            background: #27ae60;
+            color: white;
+        }
+
+        .status-pending {
+            background: #f39c12;
+            color: white;
         }
 
         /* Payment Section */
@@ -1442,6 +1670,14 @@
                 grid-template-columns: 1fr;
             }
 
+            .job-preferences-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .additional-info {
+                grid-column: span 1;
+            }
+
             .notification-container {
                 left: 20px;
                 right: 20px;
@@ -1450,6 +1686,10 @@
             .notification {
                 min-width: auto;
                 width: 100%;
+            }
+
+            .payment-receipt-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1993,11 +2233,11 @@
                 if (app.type === 'editing') {
                     // Editing service display
                     if (app.packageType === 'cv' || app.serviceType === 'cv') {
-                        packageText = 'CV Only ($25)';
+                        packageText = 'CV Only ($20)';
                     } else if (app.packageType === 'cover' || app.serviceType === 'cover') {
                         packageText = 'Cover Letter Only ($20)';
                     } else if (app.packageType === 'both' || app.serviceType === 'both') {
-                        packageText = 'CV + Cover Letter ($40)';
+                        packageText = 'CV + Cover Letter ($30)';
                     }
                     
                     if (app.status === 'pending') {
@@ -2009,6 +2249,9 @@
                     } else if (app.status === 'editing_completed') {
                         statusClass = 'status-editing-ready';
                         statusText = 'Ready for Payment';
+                    } else if (app.status === 'payment_pending') {
+                        statusClass = 'status-pending-payment';
+                        statusText = 'Payment Pending Verification';
                     } else if (app.status === 'editing_paid') {
                         statusClass = 'status-approved';
                         statusText = 'Complete';
@@ -2038,7 +2281,8 @@
                 }
 
                 const paymentStatus = app.paymentStatus || 'pending';
-                const paymentText = paymentStatus === 'paid' ? '✅ Paid' : '⏳ Pending';
+                const paymentText = paymentStatus === 'paid' ? '✅ Paid' : 
+                                   paymentStatus === 'submitted' ? '⏳ Pending Verify' : '⏳ Pending';
 
                 return `
                     <tr>
@@ -2050,7 +2294,7 @@
                         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                         <td>${jobOfferBadge}</td>
                         <td>${contractBadge}</td>
-                        <td><span class="status-badge ${paymentStatus === 'paid' ? 'status-approved' : 'status-received'}">${paymentText}</span></td>
+                        <td><span class="status-badge ${paymentStatus === 'paid' ? 'status-approved' : paymentStatus === 'submitted' ? 'status-pending-payment' : 'status-received'}">${paymentText}</span></td>
                         <td>
                             <button class="action-btn" onclick="viewApplication('${app.personalInfo?.email || app.email}', '${app.type}')">
                                 <i class="fas fa-eye"></i> View
@@ -2100,7 +2344,8 @@
                                 type: 'editing',
                                 mode: 'editing',
                                 originalFiles: result.status.originalFiles || {},
-                                editedFiles: result.status.editedFiles || {}
+                                editedFiles: result.status.editedFiles || {},
+                                paymentReceipts: result.status.paymentReceipts || [] // Include payment receipts
                             };
                         }
                     }
@@ -2125,7 +2370,8 @@
                                     type: 'editing',
                                     mode: 'editing',
                                     originalFiles: editResult.status.originalFiles || {},
-                                    editedFiles: editResult.status.editedFiles || {}
+                                    editedFiles: editResult.status.editedFiles || {},
+                                    paymentReceipts: editResult.status.paymentReceipts || []
                                 };
                             }
                         }
@@ -2306,7 +2552,7 @@
             }
         }
 
-        // Update job offer status - FIXED endpoint
+        // Update job offer status
         async function updateJobOfferStatus(email, status) {
             try {
                 const response = await fetch(`/api/admin/application/${email}/job-offer/status`, {
@@ -2329,7 +2575,7 @@
             }
         }
 
-        // Update contract status - FIXED endpoint
+        // Update contract status
         async function updateContractStatus(email, status) {
             try {
                 const response = await fetch(`/api/admin/application/${email}/contract/status`, {
@@ -2576,32 +2822,24 @@
             }
         }
 
-        // Verify payment
-        async function verifyPayment(email) {
-            const transactionId = document.getElementById('transactionId').value;
-            const amount = document.getElementById('amount').value;
-            const notes = document.getElementById('paymentNotes').value;
-
-            if (!transactionId || !amount) {
-                showWarning('Please fill in transaction ID and amount');
-                return;
-            }
-
+        // NEW: Verify payment receipt
+        async function verifyPaymentReceipt(email, receiptIndex) {
+            const verificationNotes = prompt('Add verification notes (optional):');
+            
             try {
                 const response = await fetch(`/api/editing/verify-payment/${encodeURIComponent(email)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        transactionId, 
-                        amount: parseFloat(amount),
-                        notes 
+                        receiptIndex, 
+                        verificationNotes: verificationNotes || '' 
                     })
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
-                    showSuccess('✅ Payment verified');
+                    showSuccess('✅ Payment verified successfully');
                     await viewApplication(email, 'editing');
                     await loadAllRequests();
                 } else {
@@ -2618,6 +2856,7 @@
             const modal = document.getElementById('applicationModal');
             const content = document.getElementById('modalContent');
             const personalInfo = app.personalInfo || {};
+            const jobPreferences = app.application?.jobPreferences || {};
 
             // Update service badges
             const badgesDiv = document.getElementById('serviceBadges');
@@ -2768,13 +3007,14 @@
                 </div>
             ` : '<div class="no-application-message"><i class="fas fa-info-circle"></i> No visa application found for this client.</div>';
 
-            // EDIT SECTION - for editing service requests
+            // EDIT SECTION - UPDATED with payment receipts
             let editSection = '';
             
             if (app.hasEditing) {
                 const editingData = app.editing;
                 const needsCv = editingData?.serviceType === 'cv' || editingData?.serviceType === 'both';
                 const needsCover = editingData?.serviceType === 'cover' || editingData?.serviceType === 'both';
+                const paymentReceipts = editingData?.paymentReceipts || [];
                 
                 // Check for original files
                 const hasOriginalCv = !!(editingData?.originalFiles?.cv);
@@ -2795,6 +3035,61 @@
                 const totalNeeded = (needsCv ? 1 : 0) + (needsCover ? 1 : 0);
                 const completed = (hasEditedCv ? 1 : 0) + (hasEditedCover ? 1 : 0);
                 const progressPercent = totalNeeded > 0 ? Math.round((completed / totalNeeded) * 100) : 0;
+
+                // Generate payment receipts HTML
+                let paymentReceiptsHtml = '';
+                if (paymentReceipts.length > 0) {
+                    paymentReceiptsHtml = `
+                        <div class="payment-receipt-section">
+                            <div class="payment-receipt-header">
+                                <i class="fas fa-receipt"></i>
+                                <h4>Payment Receipts</h4>
+                                <span class="receipt-status-badge status-${editingData.paymentStatus === 'paid' ? 'verified' : 'pending'}">
+                                    ${editingData.paymentStatus === 'paid' ? '✅ Verified' : '⏳ Pending Verification'}
+                                </span>
+                            </div>
+                            <div class="payment-receipt-grid">
+                                ${paymentReceipts.map((receipt, index) => {
+                                    const methodClass = receipt.paymentMethod === 'eversend' ? 'method-eversend' : 'method-western-union';
+                                    const methodName = receipt.paymentMethod === 'eversend' ? 'Eversend/M-Pesa' : 'Western Union';
+                                    const statusClass = receipt.status === 'verified' ? 'verified' : 'pending';
+                                    
+                                    return `
+                                        <div class="payment-receipt-card ${statusClass}">
+                                            <div class="receipt-method-badge ${methodClass}">
+                                                <i class="fas ${receipt.paymentMethod === 'eversend' ? 'fa-mobile-alt' : 'fa-university'}"></i>
+                                                ${methodName}
+                                            </div>
+                                            <div class="receipt-details">
+                                                <p><i class="fas fa-user"></i> ${receipt.senderDetails?.name || 'N/A'}</p>
+                                                <p><i class="fas fa-phone"></i> ${receipt.senderDetails?.phone || 'N/A'}</p>
+                                                <p><i class="fas fa-globe"></i> ${receipt.senderDetails?.country || 'N/A'}</p>
+                                                <p><i class="fas fa-dollar-sign"></i> $${receipt.amount || editingData?.amount || '0'}</p>
+                                                <p><i class="fas fa-calendar"></i> ${new Date(receipt.submittedAt).toLocaleString()}</p>
+                                                ${receipt.transactionReference ? `<p><i class="fas fa-hashtag"></i> Ref: ${receipt.transactionReference}</p>` : ''}
+                                                ${receipt.notes ? `<p><i class="fas fa-sticky-note"></i> ${receipt.notes}</p>` : ''}
+                                            </div>
+                                            <div class="receipt-actions">
+                                                <a href="/api/editing/files/${personalInfo.email}/${receipt.receipt.filename}" target="_blank" class="btn-view-receipt">
+                                                    <i class="fas fa-eye"></i> View Receipt
+                                                </a>
+                                                ${receipt.status === 'pending' ? `
+                                                    <button class="btn-verify-receipt" onclick="verifyPaymentReceipt('${personalInfo.email}', ${index})">
+                                                        <i class="fas fa-check-circle"></i> Verify
+                                                    </button>
+                                                ` : `
+                                                    <span class="receipt-status-badge status-verified">
+                                                        <i class="fas fa-check"></i> Verified
+                                                    </span>
+                                                `}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
 
                 editSection = `
                     <div class="edit-service-section">
@@ -2823,6 +3118,7 @@
                                         ${editingData?.status === 'pending' ? '⏳ Pending' :
                                           editingData?.status === 'editing_in_progress' ? '✏️ In Progress' :
                                           editingData?.status === 'editing_completed' ? '✅ Ready for Payment' :
+                                          editingData?.status === 'payment_pending' ? '⏳ Payment Pending' :
                                           editingData?.status === 'editing_paid' ? '💰 Paid' : 'Unknown'}
                                     </div>
                                 </div>
@@ -2916,6 +3212,9 @@
                             </div>
                         </div>
 
+                        <!-- Payment Receipts Section -->
+                        ${paymentReceiptsHtml}
+
                         <!-- Status Update and Payment Section -->
                         <div style="margin-top: 30px;">
                             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
@@ -2923,24 +3222,11 @@
                                     <option value="pending" ${editingData?.status === 'pending' ? 'selected' : ''}>Pending Editing</option>
                                     <option value="editing_in_progress" ${editingData?.status === 'editing_in_progress' ? 'selected' : ''}>Editing in Progress</option>
                                     <option value="editing_completed" ${editingData?.status === 'editing_completed' ? 'selected' : ''}>Ready for Payment</option>
+                                    <option value="payment_pending" ${editingData?.status === 'payment_pending' ? 'selected' : ''}>Payment Pending Verification</option>
                                     <option value="editing_paid" ${editingData?.status === 'editing_paid' ? 'selected' : ''}>Payment Verified</option>
                                 </select>
                                 <button class="action-btn" onclick="updateStatus('${personalInfo.email}')">Update Status</button>
                             </div>
-
-                            ${editingData?.status === 'editing_completed' && editingData?.paymentStatus !== 'paid' ? `
-                                <div class="payment-section">
-                                    <h4>Verify Payment</h4>
-                                    <div class="payment-form">
-                                        <input type="text" id="transactionId" placeholder="Transaction ID">
-                                        <input type="number" id="amount" placeholder="Amount" value="${editingData?.amount || ''}">
-                                        <textarea id="paymentNotes" placeholder="Notes (optional)" rows="2"></textarea>
-                                        <button class="btn-payment" onclick="verifyPayment('${personalInfo.email}')">
-                                            Verify Payment
-                                        </button>
-                                    </div>
-                                </div>
-                            ` : ''}
 
                             ${editingData?.paymentStatus === 'paid' ? `
                                 <div style="text-align: center; padding: 20px; background: #d4edda; border-radius: 8px; color: #155724; margin-top: 20px;">
@@ -3090,6 +3376,29 @@
                 </div>
             ` : '<div class="no-application-message"><i class="fas fa-info-circle"></i> No visa application found for this client.</div>';
 
+            // NEW: Job Preferences Section
+            const jobPreferencesSection = app.hasApplication && jobPreferences && (jobPreferences.preferredCountry || jobPreferences.preferredJob) ? `
+                <div class="job-preferences-section">
+                    <h4><i class="fas fa-briefcase"></i> Job Preferences</h4>
+                    <div class="job-preferences-grid">
+                        <div class="job-info-item">
+                            <strong>Preferred Country</strong>
+                            <span>${jobPreferences.preferredCountry || 'Not specified'}</span>
+                        </div>
+                        <div class="job-info-item">
+                            <strong>Preferred Job</strong>
+                            <span>${jobPreferences.preferredJob || 'Not specified'}</span>
+                        </div>
+                        ${jobPreferences.additionalInfo ? `
+                            <div class="additional-info">
+                                <strong>Additional Information</strong>
+                                <p>${jobPreferences.additionalInfo}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            ` : '';
+
             // Personal Information Section (always shown)
             const personalInfoSection = `
                 <h3>Personal Information</h3>
@@ -3164,6 +3473,7 @@
                   postSection}
                 
                 <!-- Always visible sections -->
+                ${jobPreferencesSection}
                 ${personalInfoSection}
                 ${commentsSection}
             `;
