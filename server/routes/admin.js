@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit for mobile photos
     fileFilter: (req, file, cb) => {
         const allowedTypes = /pdf|jpg|jpeg|png|doc|docx/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -60,6 +60,74 @@ router.post('/login', (req, res) => {
         res.status(401).json({ error: 'Invalid credentials' });
     }
 });
+
+// ============================================
+// DEBUG ENDPOINT - ADD THIS TEMPORARILY
+// ============================================
+router.get('/debug/files/:email', (req, res) => {
+    try {
+        const { email } = req.params;
+        const uploadsDir = path.join(__dirname, '../uploads');
+        const userFolder = path.join(uploadsDir, email);
+        
+        console.log(`🔍 Debug: Checking files for ${email}`);
+        
+        if (!fs.existsSync(userFolder)) {
+            // Try to find similar user
+            const users = fs.readdirSync(uploadsDir).filter(f => {
+                return fs.statSync(path.join(uploadsDir, f)).isDirectory();
+            });
+            
+            const similarUser = users.find(user => 
+                user.toLowerCase().includes(email.toLowerCase()) ||
+                email.toLowerCase().includes(user.toLowerCase())
+            );
+            
+            if (similarUser) {
+                const similarFolder = path.join(uploadsDir, similarUser);
+                const files = fs.readdirSync(similarFolder).filter(f => f !== 'metadata.json');
+                
+                return res.json({
+                    success: true,
+                    requestedEmail: email,
+                    foundSimilarUser: similarUser,
+                    files: files,
+                    fileUrls: files.map(f => ({
+                        filename: f,
+                        url: `/api/admin/files/${similarUser}/${f}`
+                    }))
+                });
+            }
+            
+            return res.json({
+                success: false,
+                error: 'User folder not found',
+                requestedEmail: email,
+                availableUsers: users
+            });
+        }
+        
+        const files = fs.readdirSync(userFolder).filter(f => f !== 'metadata.json');
+        
+        res.json({
+            success: true,
+            email: email,
+            folder: userFolder,
+            files: files,
+            fileUrls: files.map(f => ({
+                filename: f,
+                url: `/api/admin/files/${email}/${f}`
+            }))
+        });
+        
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ============================================
+// APPLICATION MANAGEMENT ENDPOINTS
+// ============================================
 
 // Get all applications
 router.get('/applications', (req, res) => {
@@ -132,19 +200,151 @@ router.get('/application/:email', (req, res) => {
     }
 });
 
-// Download/View file
+// ============================================
+// FILE SERVING ENDPOINTS - FIXED WITH EMAIL NORMALIZATION
+// ============================================
+
+// Download/View file with email normalization to handle typos
 router.get('/files/:email/:filename', (req, res) => {
     try {
-        const { email, filename } = req.params;
-        const filePath = path.join(__dirname, '../uploads', email, filename);
+        let { email, filename } = req.params;
         
-        if (fs.existsSync(filePath)) {
-            res.sendFile(filePath);
-        } else {
-            res.status(404).json({ error: 'File not found' });
+        // Normalize email - trim and lowercase
+        email = email.trim().toLowerCase();
+        
+        console.log(`📁 File request: /files/${email}/${filename}`);
+        
+        // Construct paths
+        const uploadsDir = path.join(__dirname, '../uploads');
+        const exactPath = path.join(uploadsDir, email, filename);
+        
+        console.log(`📁 Checking exact path: ${exactPath}`);
+        
+        // First try exact match
+        if (fs.existsSync(exactPath)) {
+            console.log(`✅ File found at exact path`);
+            
+            // Set proper content type based on file extension
+            const ext = path.extname(filename).toLowerCase();
+            const contentTypes = {
+                '.pdf': 'application/pdf',
+                '.jpg': 'image/jpeg',
+                '.jpeg': 'image/jpeg',
+                '.png': 'image/png',
+                '.gif': 'image/gif',
+                '.doc': 'application/msword',
+                '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                '.txt': 'text/plain'
+            };
+            
+            if (contentTypes[ext]) {
+                res.setHeader('Content-Type', contentTypes[ext]);
+            }
+            
+            // For images and PDF, display inline; for others, prompt download
+            if (['.jpg', '.jpeg', '.png', '.gif', '.pdf'].includes(ext)) {
+                res.setHeader('Content-Disposition', 'inline');
+            } else {
+                res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(filename)}"`);
+            }
+            
+            return res.sendFile(exactPath);
         }
+        
+        // If exact match fails, check if the uploads directory exists
+        if (!fs.existsSync(uploadsDir)) {
+            console.error(`❌ Uploads directory not found: ${uploadsDir}`);
+            return res.status(404).json({ error: 'Uploads directory not found' });
+        }
+        
+        // Check if the exact email folder exists
+        const exactFolder = path.join(uploadsDir, email);
+        if (!fs.existsSync(exactFolder)) {
+            console.log(`❌ Exact folder not found for: ${email}`);
+            
+            // Get all available users
+            const users = fs.readdirSync(uploadsDir).filter(f => {
+                const filePath = path.join(uploadsDir, f);
+                return fs.statSync(filePath).isDirectory();
+            });
+            
+            console.log(`📁 Available users:`, users);
+            
+            // Try to find a close match (case-insensitive, ignore special characters)
+            const similarUser = users.find(user => 
+                user.toLowerCase() === email.toLowerCase() ||
+                user.replace(/[._-]/g, '').toLowerCase() === email.replace(/[._-]/g, '').toLowerCase() ||
+                user.split('@')[0].toLowerCase() === email.split('@')[0].toLowerCase()
+            );
+            
+            if (similarUser) {
+                console.log(`✅ Found similar user: ${similarUser}`);
+                const similarPath = path.join(uploadsDir, similarUser, filename);
+                
+                if (fs.existsSync(similarPath)) {
+                    console.log(`✅ File found in similar user folder`);
+                    
+                    // Set proper content type based on file extension
+                    const ext = path.extname(filename).toLowerCase();
+                    const contentTypes = {
+                        '.pdf': 'application/pdf',
+                        '.jpg': 'image/jpeg',
+                        '.jpeg': 'image/jpeg',
+                        '.png': 'image/png',
+                        '.gif': 'image/gif',
+                        '.doc': 'application/msword',
+                        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        '.txt': 'text/plain'
+                    };
+                    
+                    if (contentTypes[ext]) {
+                        res.setHeader('Content-Type', contentTypes[ext]);
+                    }
+                    
+                    // For images and PDF, display inline; for others, prompt download
+                    if (['.jpg', '.jpeg', '.png', '.gif', '.pdf'].includes(ext)) {
+                        res.setHeader('Content-Disposition', 'inline');
+                    } else {
+                        res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(filename)}"`);
+                    }
+                    
+                    return res.sendFile(similarPath);
+                } else {
+                    console.log(`❌ File not found in similar user folder`);
+                    // List files in similar user folder
+                    const similarFolder = path.join(uploadsDir, similarUser);
+                    const files = fs.readdirSync(similarFolder).filter(f => f !== 'metadata.json');
+                    console.log(`📁 Files in ${similarUser}:`, files);
+                    
+                    return res.status(404).json({ 
+                        error: 'File not found',
+                        requested: filename,
+                        similarUser: similarUser,
+                        availableFiles: files
+                    });
+                }
+            }
+            
+            return res.status(404).json({ 
+                error: 'User folder not found',
+                requestedEmail: email,
+                availableUsers: users
+            });
+        }
+        
+        // If we get here, folder exists but file doesn't
+        const files = fs.readdirSync(exactFolder).filter(f => f !== 'metadata.json');
+        console.log(`📁 Files in ${email}:`, files);
+        
+        res.status(404).json({ 
+            error: 'File not found',
+            requested: filename,
+            availableFiles: files
+        });
+        
     } catch (error) {
-        res.status(500).json({ error: 'Failed to retrieve file' });
+        console.error('❌ Error serving file:', error);
+        res.status(500).json({ error: 'Failed to retrieve file', details: error.message });
     }
 });
 
@@ -910,7 +1110,6 @@ router.get('/application/:email/document-reviews', (req, res) => {
                 editedFiles: metadata.editedFiles || {},
                 jobOffer: metadata.jobOffer || null,
                 contract: metadata.contract || null,
-                // NEW: Include job preferences in the response
                 jobPreferences: metadata.jobPreferences || {
                     preferredCountry: 'Not specified',
                     preferredJob: 'Not specified',
@@ -926,7 +1125,7 @@ router.get('/application/:email/document-reviews', (req, res) => {
     }
 });
 
-// NEW: Endpoint to update job preferences (if needed for admin editing)
+// Update job preferences
 router.post('/application/:email/job-preferences', (req, res) => {
     try {
         const { email } = req.params;
@@ -971,7 +1170,10 @@ router.post('/application/:email/job-preferences', (req, res) => {
     }
 });
 
-// NEW: Filter applications by job preferences (for admin filtering)
+// ============================================
+// FILTER APPLICATIONS BY JOB PREFERENCES
+// ============================================
+
 router.get('/applications/filter', (req, res) => {
     try {
         const { country, job } = req.query;
@@ -986,7 +1188,7 @@ router.get('/applications/filter', (req, res) => {
             return fs.statSync(filePath).isDirectory();
         });
 
-        const applications = [];
+        const filteredApplications = [];
 
         clients.forEach(client => {
             const metadataPath = path.join(uploadsDir, client, 'metadata.json');
@@ -1005,7 +1207,7 @@ router.get('/applications/filter', (req, res) => {
                 }
                 
                 if (include) {
-                    applications.push({
+                    filteredApplications.push({
                         email: client,
                         ...metadata,
                         folder: client
@@ -1014,9 +1216,9 @@ router.get('/applications/filter', (req, res) => {
             }
         });
 
-        applications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        filteredApplications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-        res.json({ success: true, applications });
+        res.json({ success: true, applications: filteredApplications });
     } catch (error) {
         console.error('Error filtering applications:', error);
         res.status(500).json({ error: 'Failed to filter applications' });
