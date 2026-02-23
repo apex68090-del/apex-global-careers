@@ -1872,6 +1872,13 @@
                 </div>
             </div>
 
+            <!-- Export Button - NEW -->
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+                <button class="action-btn success" onclick="exportToExcel()" style="padding: 12px 24px; font-size: 1em;">
+                    <i class="fas fa-file-excel"></i> Export All Applications to Excel
+                </button>
+            </div>
+
             <!-- Filter Tabs -->
             <div class="filter-tabs">
                 <div class="filter-tab active" onclick="filterApplications('all', event)">All</div>
@@ -2076,6 +2083,58 @@
 
         function showInfo(message, title = 'Information') {
             notificationManager.show(message, { type: 'info', title });
+        }
+
+        // ============================================
+        // EXPORT TO EXCEL FUNCTION - NEW
+        // ============================================
+        async function exportToExcel() {
+            try {
+                const exportBtn = document.querySelector('[onclick="exportToExcel()"]');
+                const originalText = exportBtn.innerHTML;
+                exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+                exportBtn.disabled = true;
+                
+                showInfo('Generating Excel file...');
+                
+                const response = await fetch('/api/admin/export/applications');
+                
+                if (!response.ok) {
+                    throw new Error('Export failed');
+                }
+                
+                // Get the filename from Content-Disposition header
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'apex_applications.xlsx';
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="(.+)"/);
+                    if (match) filename = match[1];
+                }
+                
+                // Create blob and download
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                showSuccess('Excel file downloaded successfully');
+                
+                exportBtn.innerHTML = originalText;
+                exportBtn.disabled = false;
+                
+            } catch (error) {
+                console.error('Export error:', error);
+                showError('Failed to export applications');
+                
+                const exportBtn = document.querySelector('[onclick="exportToExcel()"]');
+                exportBtn.innerHTML = '<i class="fas fa-file-excel"></i> Export All Applications to Excel';
+                exportBtn.disabled = false;
+            }
         }
 
         // ============================================
