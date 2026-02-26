@@ -80,7 +80,7 @@ const editedFileSchema = new mongoose.Schema({
   uploadedAt: Date
 }, { _id: false });
 
-// NEW: Job Preferences Schema
+// Job Preferences Schema
 const jobPreferencesSchema = new mongoose.Schema({
   preferredCountry: { 
     type: String,
@@ -102,6 +102,14 @@ const jobPreferencesSchema = new mongoose.Schema({
 }, { _id: false });
 
 const applicationSchema = new mongoose.Schema({
+  // Application ID for user-friendly reference
+  applicationId: { 
+    type: String, 
+    required: true, 
+    unique: true,
+    index: true 
+  },
+  
   personalInfo: {
     fullName: String,
     email: { type: String, required: true, unique: true },
@@ -113,7 +121,7 @@ const applicationSchema = new mongoose.Schema({
     visaType: String
   },
   
-  // NEW: Job Preferences Field
+  // Job Preferences Field
   jobPreferences: jobPreferencesSchema,
   
   status: { 
@@ -185,10 +193,11 @@ const applicationSchema = new mongoose.Schema({
 
 // Create indexes for better query performance
 applicationSchema.index({ 'personalInfo.email': 1 });
+applicationSchema.index({ applicationId: 1 });
 applicationSchema.index({ status: 1 });
 applicationSchema.index({ createdAt: -1 });
 applicationSchema.index({ mode: 1 });
-// NEW: Indexes for job preferences to enable filtering in admin panel
+// Indexes for job preferences to enable filtering in admin panel
 applicationSchema.index({ 'jobPreferences.preferredCountry': 1 });
 applicationSchema.index({ 'jobPreferences.preferredJob': 1 });
 

@@ -145,12 +145,13 @@
             border-radius: 8px;
             font-size: 1em;
             font-family: 'Inter', sans-serif;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         textarea {
@@ -158,36 +159,152 @@
             min-height: 100px;
         }
 
-        /* Phone input with country code hint */
+        /* Phone input with country code dropdown */
         .phone-input-wrapper {
-            position: relative;
             display: flex;
-            align-items: center;
+            gap: 10px;
+            position: relative;
         }
         
-        .country-code-hint {
-            position: absolute;
-            left: 12px;
-            color: #7f8c8d;
-            font-size: 0.9em;
-            pointer-events: none;
-            z-index: 1;
+        .country-code-select {
+            width: 120px;
+            flex-shrink: 0;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
         }
         
-        .country-code-hint.detected {
-            color: #27ae60;
-            font-weight: 500;
+        .country-code-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .country-code-select.error {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+        
+        .country-code-select.valid {
+            border-color: #27ae60;
+            background: #f0fff4;
         }
         
         #phone {
-            padding-left: 60px;
+            flex: 1;
+            transition: all 0.3s;
         }
         
-        /* Subtle highlight for auto-selected country */
-        #country.auto-selected {
+        #phone.error {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+        
+        #phone.valid {
             border-color: #27ae60;
-            background-color: #f0fff4;
-            transition: all 0.3s ease;
+            background: #f0fff4;
+        }
+
+        /* Phone Validation Status */
+        .phone-validation-status {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            min-height: 24px;
+        }
+
+        .phone-validation-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .phone-validation-icon.valid {
+            background: #27ae60;
+            color: white;
+        }
+
+        .phone-validation-icon.invalid {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .phone-validation-icon.pending {
+            background: #f39c12;
+            color: white;
+        }
+
+        .phone-validation-icon.warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .phone-validation-message {
+            color: #7f8c8d;
+            flex: 1;
+        }
+
+        .phone-validation-message.error {
+            color: #e74c3c;
+        }
+
+        .phone-validation-message.success {
+            color: #27ae60;
+        }
+
+        .phone-validation-message.warning {
+            color: #f39c12;
+        }
+
+        .phone-format-example {
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            color: #3498db;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .phone-format-example i {
+            margin-right: 5px;
+        }
+
+        /* Validation Styles */
+        .validation-hint {
+            font-size: 0.85em;
+            margin-top: 5px;
+            color: #7f8c8d;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .validation-hint i {
+            color: #3498db;
+        }
+
+        .validation-hint.error {
+            color: #e74c3c;
+        }
+
+        .validation-hint.success {
+            color: #27ae60;
+        }
+
+        .validation-hint.warning {
+            color: #f39c12;
         }
 
         /* Document Cards */
@@ -251,6 +368,19 @@
             margin-bottom: 15px;
         }
 
+        .file-size-hint {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .file-size-hint i {
+            color: #27ae60;
+        }
+
         /* File Upload */
         .file-upload-area {
             position: relative;
@@ -258,9 +388,12 @@
 
         .file-upload-area input[type="file"] {
             position: absolute;
-            width: 0;
-            height: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
             opacity: 0;
+            cursor: pointer;
         }
 
         .file-label {
@@ -291,6 +424,110 @@
             color: #27ae60;
         }
 
+        .file-error {
+            color: #e74c3c;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Drag & Drop Upload Area */
+        .file-upload-area.drag-over .file-label {
+            border-color: #667eea;
+            background: #e8f0fe;
+            transform: scale(1.02);
+        }
+
+        /* Image Preview */
+        .file-preview {
+            margin-top: 15px;
+            display: none;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+
+        .file-preview img {
+            width: 100%;
+            max-height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .file-preview .preview-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: #f8f9fa;
+        }
+
+        .file-preview .preview-name {
+            font-size: 0.9em;
+            color: #2c3e50;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .btn-remove-file {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-remove-file:hover {
+            background: #c0392b;
+        }
+
+        /* Progress Bar */
+        .upload-progress {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .progress-text i {
+            color: #667eea;
+        }
+
         /* Buttons */
         .form-actions {
             display: flex;
@@ -316,17 +553,35 @@
             color: white;
             flex: 1;
             max-width: 300px;
+            position: relative;
         }
 
-        .btn-primary:hover {
+        .btn-primary:not(:disabled) {
+            animation: pulse 2s infinite;
+        }
+
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
 
         .btn-primary:disabled {
-            opacity: 0.7;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+            }
         }
 
         /* Status Check Section */
@@ -435,6 +690,343 @@
             font-size: 0.9em;
         }
 
+        /* WhatsApp Contact Bar */
+        .whatsapp-contact-bar {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+            animation: slideIn 0.5s ease;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .whatsapp-contact-bar i {
+            font-size: 1.5em;
+        }
+
+        .whatsapp-contact-bar .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 40px;
+            transition: all 0.3s;
+        }
+
+        .whatsapp-contact-bar .contact-item:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .whatsapp-contact-bar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        /* WhatsApp Floating Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1000;
+            text-decoration: none;
+            animation: pulse 2s infinite;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(37, 211, 102, 0.5);
+        }
+
+        .whatsapp-tooltip {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 999;
+            white-space: nowrap;
+        }
+
+        .whatsapp-float:hover + .whatsapp-tooltip {
+            display: block;
+        }
+
+        /* PREMIUM SUCCESS DESIGN */
+        .status-guide-premium {
+            margin-top: 50px;
+            padding: 50px;
+            border-radius: 25px;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+            text-align: center;
+            color: white;
+            animation: fadeInUp 0.6s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-guide-premium::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-badge {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            margin: 0 auto 20px;
+            box-shadow: 0 15px 30px rgba(40,167,69,0.4);
+            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-subtext {
+            opacity: 0.9;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .application-info-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            color: #2c3e50;
+            margin: 30px auto;
+            max-width: 500px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            animation: slideInUp 0.6s ease 0.2s both;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 5px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item .label {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .info-item .value {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .timeline-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 40px 0;
+            animation: fadeIn 0.8s ease 0.4s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .timeline-step {
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .timeline-step .circle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 10px;
+            transition: all 0.3s;
+        }
+
+        .timeline-step.active .circle {
+            background: #28a745;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(40,167,69,0.5);
+        }
+
+        .timeline-step span {
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .line {
+            width: 40px;
+            height: 3px;
+            background: rgba(255,255,255,0.5);
+            margin: 0 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .success-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-track {
+            background: white;
+            color: #667eea;
+            padding: 15px 30px;
+            border-radius: 40px;
+            font-weight: 600;
+            border: none;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-track:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            margin: 10px;
+            display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(37,211,102,0.3);
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(37,211,102,0.4);
+        }
+
+        /* Confetti Animation */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            opacity: 0;
+            animation: confetti 5s ease-in-out infinite;
+        }
+
+        @keyframes confetti {
+            0% {
+                transform: translateY(-100%) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(1000%) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .form-grid {
@@ -468,6 +1060,50 @@
             .status-check-section h3 {
                 font-size: 1.5em;
             }
+            
+            .phone-input-wrapper {
+                flex-direction: column;
+            }
+            
+            .country-code-select {
+                width: 100%;
+            }
+
+            .timeline-steps {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .line {
+                width: 3px;
+                height: 20px;
+                margin: 5px 0;
+            }
+
+            .success-buttons {
+                flex-direction: column;
+            }
+
+            .info-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 5px;
+            }
+
+            .whatsapp-contact-bar {
+                flex-direction: column;
+                text-align: center;
+                border-radius: 20px;
+            }
+
+            .whatsapp-contact-bar .contact-item {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .file-preview img {
+                max-height: 100px;
+            }
         }
 
         /* Animation */
@@ -482,13 +1118,237 @@
             }
         }
 
-        .upload-form, .status-check-section {
+        .upload-form, .status-check-section, .status-guide-premium, .whatsapp-contact-bar {
             animation: slideIn 0.5s ease;
+        }
+        
+        /* Success highlight */
+        .success-marker {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        /* Age warning */
+        .age-warning {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 5px;
+            color: #856404;
+            display: none;
+        }
+
+        .age-warning i {
+            margin-right: 8px;
+        }
+
+        /* Country-specific phone format hints */
+        .country-format-hint {
+            background: #e8f4fd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #3498db;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .country-format-hint i {
+            color: #3498db;
+            margin-right: 8px;
+        }
+
+        .country-format-hint.show {
+            display: block;
+        }
+
+        /* Application ID Display */
+        .application-id-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .application-id-card .id-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .application-id-card .id-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+
+        .application-id-card .copy-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .application-id-card .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Notification System */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            max-width: 400px;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .notification.success {
+            border-left-color: #27ae60;
+        }
+
+        .notification.error {
+            border-left-color: #e74c3c;
+        }
+
+        .notification.warning {
+            border-left-color: #f39c12;
+        }
+
+        .notification.info {
+            border-left-color: #3498db;
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .notification.success .notification-icon {
+            background: #27ae60;
+            color: white;
+        }
+
+        .notification.error .notification-icon {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .notification.warning .notification-icon {
+            background: #f39c12;
+            color: white;
+        }
+
+        .notification.info .notification-icon {
+            background: #3498db;
+            color: white;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 1em;
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .notification-close {
+            cursor: pointer;
+            color: #95a5a6;
+            transition: color 0.3s;
+        }
+
+        .notification-close:hover {
+            color: #2c3e50;
+        }
+
+        .notification.hide {
+            animation: slideOut 0.3s forwards;
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/254736895385" target="_blank" class="whatsapp-float" id="whatsappFloat">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <div class="whatsapp-tooltip" id="whatsappTooltip">
+        <i class="fab fa-whatsapp"></i> Chat with us on WhatsApp
+    </div>
+
     <div class="container">
+        <!-- WhatsApp Contact Bar -->
+        <div class="whatsapp-contact-bar">
+            <i class="fab fa-whatsapp"></i>
+            <span><strong>Customer Support:</strong></span>
+            <div class="contact-item">
+                <i class="fas fa-phone-alt"></i>
+                <a href="https://wa.me/254736895385" target="_blank">+254 736 895385</a>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone-alt"></i>
+                <a href="https://wa.me/254104442704" target="_blank">+254 104 442704</a>
+            </div>
+        </div>
+
         <header class="header">
             <div class="logo">
                 <h1><i class="fas fa-globe-africa" style="margin-right: 10px;"></i>Apex Global Careers</h1>
@@ -503,6 +1363,17 @@
 
         <main>
             <form id="uploadForm" class="upload-form">
+                <!-- Application ID Display (shown after submission) -->
+                <div id="applicationIdCard" class="application-id-card">
+                    <div>
+                        <div class="id-label">Your Application ID</div>
+                        <div class="id-value" id="displayApplicationId"></div>
+                    </div>
+                    <button type="button" class="copy-btn" onclick="copyApplicationId()">
+                        <i class="fas fa-copy"></i> Copy ID
+                    </button>
+                </div>
+
                 <div class="form-section">
                     <h2><i class="fas fa-user" style="color: #667eea; margin-right: 10px;"></i>Personal Information</h2>
                     <div class="form-grid">
@@ -514,16 +1385,221 @@
                             <label for="email">Email Address *</label>
                             <input type="email" id="email" name="email" placeholder="your@email.com" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group full-width">
                             <label for="phone">Phone Number *</label>
                             <div class="phone-input-wrapper">
-                                <span class="country-code-hint" id="countryCodeHint">+</span>
-                                <input type="tel" id="phone" name="phone" placeholder="1234567890" required>
+                                <select id="countryCode" class="country-code-select" required>
+                                    <option value="">Code</option>
+                                    <optgroup label="Africa">
+                                        <option value="+213">Algeria (+213)</option>
+                                        <option value="+244">Angola (+244)</option>
+                                        <option value="+229">Benin (+229)</option>
+                                        <option value="+267">Botswana (+267)</option>
+                                        <option value="+226">Burkina Faso (+226)</option>
+                                        <option value="+257">Burundi (+257)</option>
+                                        <option value="+238">Cabo Verde (+238)</option>
+                                        <option value="+237">Cameroon (+237)</option>
+                                        <option value="+236">Central African Republic (+236)</option>
+                                        <option value="+235">Chad (+235)</option>
+                                        <option value="+269">Comoros (+269)</option>
+                                        <option value="+242">Congo (+242)</option>
+                                        <option value="+243">Congo, Democratic Republic (+243)</option>
+                                        <option value="+225">Côte d'Ivoire (+225)</option>
+                                        <option value="+253">Djibouti (+253)</option>
+                                        <option value="+20">Egypt (+20)</option>
+                                        <option value="+240">Equatorial Guinea (+240)</option>
+                                        <option value="+291">Eritrea (+291)</option>
+                                        <option value="+268">Eswatini (+268)</option>
+                                        <option value="+251">Ethiopia (+251)</option>
+                                        <option value="+241">Gabon (+241)</option>
+                                        <option value="+220">Gambia (+220)</option>
+                                        <option value="+233">Ghana (+233)</option>
+                                        <option value="+224">Guinea (+224)</option>
+                                        <option value="+245">Guinea-Bissau (+245)</option>
+                                        <option value="+254">Kenya (+254)</option>
+                                        <option value="+266">Lesotho (+266)</option>
+                                        <option value="+231">Liberia (+231)</option>
+                                        <option value="+218">Libya (+218)</option>
+                                        <option value="+261">Madagascar (+261)</option>
+                                        <option value="+265">Malawi (+265)</option>
+                                        <option value="+223">Mali (+223)</option>
+                                        <option value="+222">Mauritania (+222)</option>
+                                        <option value="+230">Mauritius (+230)</option>
+                                        <option value="+212">Morocco (+212)</option>
+                                        <option value="+258">Mozambique (+258)</option>
+                                        <option value="+264">Namibia (+264)</option>
+                                        <option value="+227">Niger (+227)</option>
+                                        <option value="+234">Nigeria (+234)</option>
+                                        <option value="+250">Rwanda (+250)</option>
+                                        <option value="+239">São Tomé and Príncipe (+239)</option>
+                                        <option value="+221">Senegal (+221)</option>
+                                        <option value="+248">Seychelles (+248)</option>
+                                        <option value="+232">Sierra Leone (+232)</option>
+                                        <option value="+252">Somalia (+252)</option>
+                                        <option value="+27">South Africa (+27)</option>
+                                        <option value="+211">South Sudan (+211)</option>
+                                        <option value="+249">Sudan (+249)</option>
+                                        <option value="+255">Tanzania (+255)</option>
+                                        <option value="+228">Togo (+228)</option>
+                                        <option value="+216">Tunisia (+216)</option>
+                                        <option value="+256">Uganda (+256)</option>
+                                        <option value="+260">Zambia (+260)</option>
+                                        <option value="+263">Zimbabwe (+263)</option>
+                                    </optgroup>
+                                    <optgroup label="Asia">
+                                        <option value="+93">Afghanistan (+93)</option>
+                                        <option value="+374">Armenia (+374)</option>
+                                        <option value="+994">Azerbaijan (+994)</option>
+                                        <option value="+973">Bahrain (+973)</option>
+                                        <option value="+880">Bangladesh (+880)</option>
+                                        <option value="+975">Bhutan (+975)</option>
+                                        <option value="+673">Brunei (+673)</option>
+                                        <option value="+855">Cambodia (+855)</option>
+                                        <option value="+86">China (+86)</option>
+                                        <option value="+995">Georgia (+995)</option>
+                                        <option value="+91">India (+91)</option>
+                                        <option value="+62">Indonesia (+62)</option>
+                                        <option value="+98">Iran (+98)</option>
+                                        <option value="+964">Iraq (+964)</option>
+                                        <option value="+972">Israel (+972)</option>
+                                        <option value="+81">Japan (+81)</option>
+                                        <option value="+962">Jordan (+962)</option>
+                                        <option value="+7">Kazakhstan (+7)</option>
+                                        <option value="+965">Kuwait (+965)</option>
+                                        <option value="+996">Kyrgyzstan (+996)</option>
+                                        <option value="+856">Laos (+856)</option>
+                                        <option value="+961">Lebanon (+961)</option>
+                                        <option value="+60">Malaysia (+60)</option>
+                                        <option value="+960">Maldives (+960)</option>
+                                        <option value="+976">Mongolia (+976)</option>
+                                        <option value="+95">Myanmar (+95)</option>
+                                        <option value="+977">Nepal (+977)</option>
+                                        <option value="+850">North Korea (+850)</option>
+                                        <option value="+968">Oman (+968)</option>
+                                        <option value="+92">Pakistan (+92)</option>
+                                        <option value="+970">Palestine (+970)</option>
+                                        <option value="+63">Philippines (+63)</option>
+                                        <option value="+974">Qatar (+974)</option>
+                                        <option value="+966">Saudi Arabia (+966)</option>
+                                        <option value="+65">Singapore (+65)</option>
+                                        <option value="+82">South Korea (+82)</option>
+                                        <option value="+94">Sri Lanka (+94)</option>
+                                        <option value="+963">Syria (+963)</option>
+                                        <option value="+886">Taiwan (+886)</option>
+                                        <option value="+992">Tajikistan (+992)</option>
+                                        <option value="+66">Thailand (+66)</option>
+                                        <option value="+670">Timor-Leste (+670)</option>
+                                        <option value="+90">Turkey (+90)</option>
+                                        <option value="+993">Turkmenistan (+993)</option>
+                                        <option value="+971">UAE (+971)</option>
+                                        <option value="+998">Uzbekistan (+998)</option>
+                                        <option value="+84">Vietnam (+84)</option>
+                                        <option value="+967">Yemen (+967)</option>
+                                    </optgroup>
+                                    <optgroup label="Europe">
+                                        <option value="+355">Albania (+355)</option>
+                                        <option value="+376">Andorra (+376)</option>
+                                        <option value="+43">Austria (+43)</option>
+                                        <option value="+375">Belarus (+375)</option>
+                                        <option value="+32">Belgium (+32)</option>
+                                        <option value="+387">Bosnia and Herzegovina (+387)</option>
+                                        <option value="+359">Bulgaria (+359)</option>
+                                        <option value="+385">Croatia (+385)</option>
+                                        <option value="+357">Cyprus (+357)</option>
+                                        <option value="+420">Czech Republic (+420)</option>
+                                        <option value="+45">Denmark (+45)</option>
+                                        <option value="+372">Estonia (+372)</option>
+                                        <option value="+358">Finland (+358)</option>
+                                        <option value="+33">France (+33)</option>
+                                        <option value="+49">Germany (+49)</option>
+                                        <option value="+30">Greece (+30)</option>
+                                        <option value="+36">Hungary (+36)</option>
+                                        <option value="+354">Iceland (+354)</option>
+                                        <option value="+353">Ireland (+353)</option>
+                                        <option value="+39">Italy (+39)</option>
+                                        <option value="+371">Latvia (+371)</option>
+                                        <option value="+423">Liechtenstein (+423)</option>
+                                        <option value="+370">Lithuania (+370)</option>
+                                        <option value="+352">Luxembourg (+352)</option>
+                                        <option value="+356">Malta (+356)</option>
+                                        <option value="+373">Moldova (+373)</option>
+                                        <option value="+377">Monaco (+377)</option>
+                                        <option value="+382">Montenegro (+382)</option>
+                                        <option value="+31">Netherlands (+31)</option>
+                                        <option value="+389">North Macedonia (+389)</option>
+                                        <option value="+47">Norway (+47)</option>
+                                        <option value="+48">Poland (+48)</option>
+                                        <option value="+351">Portugal (+351)</option>
+                                        <option value="+40">Romania (+40)</option>
+                                        <option value="+7">Russia (+7)</option>
+                                        <option value="+378">San Marino (+378)</option>
+                                        <option value="+381">Serbia (+381)</option>
+                                        <option value="+421">Slovakia (+421)</option>
+                                        <option value="+386">Slovenia (+386)</option>
+                                        <option value="+34">Spain (+34)</option>
+                                        <option value="+46">Sweden (+46)</option>
+                                        <option value="+41">Switzerland (+41)</option>
+                                        <option value="+380">Ukraine (+380)</option>
+                                        <option value="+44">United Kingdom (+44)</option>
+                                        <option value="+379">Vatican City (+379)</option>
+                                    </optgroup>
+                                    <optgroup label="North America">
+                                        <option value="+1">Canada/USA (+1)</option>
+                                        <option value="+52">Mexico (+52)</option>
+                                    </optgroup>
+                                    <optgroup label="South America">
+                                        <option value="+54">Argentina (+54)</option>
+                                        <option value="+591">Bolivia (+591)</option>
+                                        <option value="+55">Brazil (+55)</option>
+                                        <option value="+56">Chile (+56)</option>
+                                        <option value="+57">Colombia (+57)</option>
+                                        <option value="+593">Ecuador (+593)</option>
+                                        <option value="+592">Guyana (+592)</option>
+                                        <option value="+595">Paraguay (+595)</option>
+                                        <option value="+51">Peru (+51)</option>
+                                        <option value="+597">Suriname (+597)</option>
+                                        <option value="+598">Uruguay (+598)</option>
+                                        <option value="+58">Venezuela (+58)</option>
+                                    </optgroup>
+                                    <optgroup label="Oceania">
+                                        <option value="+61">Australia (+61)</option>
+                                        <option value="+679">Fiji (+679)</option>
+                                        <option value="+64">New Zealand (+64)</option>
+                                        <option value="+675">Papua New Guinea (+675)</option>
+                                    </optgroup>
+                                </select>
+                                <input type="tel" id="phone" name="phone" placeholder="712345678" required>
+                            </div>
+                            
+                            <!-- Phone Validation Status Display -->
+                            <div class="phone-validation-status" id="phoneValidationStatus">
+                                <span class="phone-validation-icon pending" id="phoneValidationIcon">⚪</span>
+                                <span class="phone-validation-message" id="phoneValidationMessage">Enter your phone number</span>
+                            </div>
+                            
+                            <!-- Country-specific format hint -->
+                            <div class="country-format-hint" id="countryFormatHint">
+                                <i class="fas fa-info-circle"></i>
+                                <span id="countryFormatText"></span>
+                            </div>
+                            
+                            <!-- Auto-formatted preview -->
+                            <div class="phone-format-example" id="phoneFormatPreview" style="display: none;">
+                                <i class="fas fa-check-circle"></i>
+                                <span>International format: <strong id="formattedPhone"></strong></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="age">Age *</label>
-                            <input type="number" id="age" name="age" min="18" max="100" placeholder="18-100" required>
+                            <input type="number" id="age" name="age" min="18" max="60" placeholder="18-60" required>
+                            <div class="validation-hint">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Must be between 18 and 60 years</span>
+                            </div>
+                            <div id="ageWarning" class="age-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Age must be between 18 and 60 years</span>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="gender">Gender *</label>
@@ -551,186 +1627,184 @@
                             <select id="country" name="country" required>
                                 <option value="">Select Country</option>
                                 <optgroup label="Africa">
-                                    <option value="DZ" data-code="213">Algeria (+213)</option>
-                                    <option value="AO" data-code="244">Angola (+244)</option>
-                                    <option value="BJ" data-code="229">Benin (+229)</option>
-                                    <option value="BW" data-code="267">Botswana (+267)</option>
-                                    <option value="BF" data-code="226">Burkina Faso (+226)</option>
-                                    <option value="BI" data-code="257">Burundi (+257)</option>
-                                    <option value="CV" data-code="238">Cabo Verde (+238)</option>
-                                    <option value="CM" data-code="237">Cameroon (+237)</option>
-                                    <option value="CF" data-code="236">Central African Republic (+236)</option>
-                                    <option value="TD" data-code="235">Chad (+235)</option>
-                                    <option value="KM" data-code="269">Comoros (+269)</option>
-                                    <option value="CG" data-code="242">Congo (+242)</option>
-                                    <option value="CD" data-code="243">Congo, Democratic Republic (+243)</option>
-                                    <option value="CI" data-code="225">Côte d'Ivoire (+225)</option>
-                                    <option value="DJ" data-code="253">Djibouti (+253)</option>
-                                    <option value="EG" data-code="20">Egypt (+20)</option>
-                                    <option value="GQ" data-code="240">Equatorial Guinea (+240)</option>
-                                    <option value="ER" data-code="291">Eritrea (+291)</option>
-                                    <option value="SZ" data-code="268">Eswatini (+268)</option>
-                                    <option value="ET" data-code="251">Ethiopia (+251)</option>
-                                    <option value="GA" data-code="241">Gabon (+241)</option>
-                                    <option value="GM" data-code="220">Gambia (+220)</option>
-                                    <option value="GH" data-code="233">Ghana (+233)</option>
-                                    <option value="GN" data-code="224">Guinea (+224)</option>
-                                    <option value="GW" data-code="245">Guinea-Bissau (+245)</option>
-                                    <option value="KE" data-code="254">Kenya (+254)</option>
-                                    <option value="LS" data-code="266">Lesotho (+266)</option>
-                                    <option value="LR" data-code="231">Liberia (+231)</option>
-                                    <option value="LY" data-code="218">Libya (+218)</option>
-                                    <option value="MG" data-code="261">Madagascar (+261)</option>
-                                    <option value="MW" data-code="265">Malawi (+265)</option>
-                                    <option value="ML" data-code="223">Mali (+223)</option>
-                                    <option value="MR" data-code="222">Mauritania (+222)</option>
-                                    <option value="MU" data-code="230">Mauritius (+230)</option>
-                                    <option value="MA" data-code="212">Morocco (+212)</option>
-                                    <option value="MZ" data-code="258">Mozambique (+258)</option>
-                                    <option value="NA" data-code="264">Namibia (+264)</option>
-                                    <option value="NE" data-code="227">Niger (+227)</option>
-                                    <option value="NG" data-code="234">Nigeria (+234)</option>
-                                    <option value="RW" data-code="250">Rwanda (+250)</option>
-                                    <option value="ST" data-code="239">São Tomé and Príncipe (+239)</option>
-                                    <option value="SN" data-code="221">Senegal (+221)</option>
-                                    <option value="SC" data-code="248">Seychelles (+248)</option>
-                                    <option value="SL" data-code="232">Sierra Leone (+232)</option>
-                                    <option value="SO" data-code="252">Somalia (+252)</option>
-                                    <option value="ZA" data-code="27">South Africa (+27)</option>
-                                    <option value="SS" data-code="211">South Sudan (+211)</option>
-                                    <option value="SD" data-code="249">Sudan (+249)</option>
-                                    <option value="TZ" data-code="255">Tanzania (+255)</option>
-                                    <option value="TG" data-code="228">Togo (+228)</option>
-                                    <option value="TN" data-code="216">Tunisia (+216)</option>
-                                    <option value="UG" data-code="256">Uganda (+256)</option>
-                                    <option value="ZM" data-code="260">Zambia (+260)</option>
-                                    <option value="ZW" data-code="263">Zimbabwe (+263)</option>
+                                    <option value="DZ">Algeria</option>
+                                    <option value="AO">Angola</option>
+                                    <option value="BJ">Benin</option>
+                                    <option value="BW">Botswana</option>
+                                    <option value="BF">Burkina Faso</option>
+                                    <option value="BI">Burundi</option>
+                                    <option value="CV">Cabo Verde</option>
+                                    <option value="CM">Cameroon</option>
+                                    <option value="CF">Central African Republic</option>
+                                    <option value="TD">Chad</option>
+                                    <option value="KM">Comoros</option>
+                                    <option value="CG">Congo</option>
+                                    <option value="CD">Congo, Democratic Republic</option>
+                                    <option value="CI">Côte d'Ivoire</option>
+                                    <option value="DJ">Djibouti</option>
+                                    <option value="EG">Egypt</option>
+                                    <option value="GQ">Equatorial Guinea</option>
+                                    <option value="ER">Eritrea</option>
+                                    <option value="SZ">Eswatini</option>
+                                    <option value="ET">Ethiopia</option>
+                                    <option value="GA">Gabon</option>
+                                    <option value="GM">Gambia</option>
+                                    <option value="GH">Ghana</option>
+                                    <option value="GN">Guinea</option>
+                                    <option value="GW">Guinea-Bissau</option>
+                                    <option value="KE">Kenya</option>
+                                    <option value="LS">Lesotho</option>
+                                    <option value="LR">Liberia</option>
+                                    <option value="LY">Libya</option>
+                                    <option value="MG">Madagascar</option>
+                                    <option value="MW">Malawi</option>
+                                    <option value="ML">Mali</option>
+                                    <option value="MR">Mauritania</option>
+                                    <option value="MU">Mauritius</option>
+                                    <option value="MA">Morocco</option>
+                                    <option value="MZ">Mozambique</option>
+                                    <option value="NA">Namibia</option>
+                                    <option value="NE">Niger</option>
+                                    <option value="NG">Nigeria</option>
+                                    <option value="RW">Rwanda</option>
+                                    <option value="ST">São Tomé and Príncipe</option>
+                                    <option value="SN">Senegal</option>
+                                    <option value="SC">Seychelles</option>
+                                    <option value="SL">Sierra Leone</option>
+                                    <option value="SO">Somalia</option>
+                                    <option value="ZA">South Africa</option>
+                                    <option value="SS">South Sudan</option>
+                                    <option value="SD">Sudan</option>
+                                    <option value="TZ">Tanzania</option>
+                                    <option value="TG">Togo</option>
+                                    <option value="TN">Tunisia</option>
+                                    <option value="UG">Uganda</option>
+                                    <option value="ZM">Zambia</option>
+                                    <option value="ZW">Zimbabwe</option>
                                 </optgroup>
                                 <optgroup label="Asia">
-                                    <option value="AF" data-code="93">Afghanistan (+93)</option>
-                                    <option value="AM" data-code="374">Armenia (+374)</option>
-                                    <option value="AZ" data-code="994">Azerbaijan (+994)</option>
-                                    <option value="BH" data-code="973">Bahrain (+973)</option>
-                                    <option value="BD" data-code="880">Bangladesh (+880)</option>
-                                    <option value="BT" data-code="975">Bhutan (+975)</option>
-                                    <option value="BN" data-code="673">Brunei (+673)</option>
-                                    <option value="KH" data-code="855">Cambodia (+855)</option>
-                                    <option value="CN" data-code="86">China (+86)</option>
-                                    <option value="GE" data-code="995">Georgia (+995)</option>
-                                    <option value="IN" data-code="91">India (+91)</option>
-                                    <option value="ID" data-code="62">Indonesia (+62)</option>
-                                    <option value="IR" data-code="98">Iran (+98)</option>
-                                    <option value="IQ" data-code="964">Iraq (+964)</option>
-                                    <option value="IL" data-code="972">Israel (+972)</option>
-                                    <option value="JP" data-code="81">Japan (+81)</option>
-                                    <option value="JO" data-code="962">Jordan (+962)</option>
-                                    <option value="KZ" data-code="7">Kazakhstan (+7)</option>
-                                    <option value="KW" data-code="965">Kuwait (+965)</option>
-                                    <option value="KG" data-code="996">Kyrgyzstan (+996)</option>
-                                    <option value="LA" data-code="856">Laos (+856)</option>
-                                    <option value="LB" data-code="961">Lebanon (+961)</option>
-                                    <option value="MY" data-code="60">Malaysia (+60)</option>
-                                    <option value="MV" data-code="960">Maldives (+960)</option>
-                                    <option value="MN" data-code="976">Mongolia (+976)</option>
-                                    <option value="MM" data-code="95">Myanmar (+95)</option>
-                                    <option value="NP" data-code="977">Nepal (+977)</option>
-                                    <option value="KP" data-code="850">North Korea (+850)</option>
-                                    <option value="OM" data-code="968">Oman (+968)</option>
-                                    <option value="PK" data-code="92">Pakistan (+92)</option>
-                                    <option value="PS" data-code="970">Palestine (+970)</option>
-                                    <option value="PH" data-code="63">Philippines (+63)</option>
-                                    <option value="QA" data-code="974">Qatar (+974)</option>
-                                    <option value="SA" data-code="966">Saudi Arabia (+966)</option>
-                                    <option value="SG" data-code="65">Singapore (+65)</option>
-                                    <option value="KR" data-code="82">South Korea (+82)</option>
-                                    <option value="LK" data-code="94">Sri Lanka (+94)</option>
-                                    <option value="SY" data-code="963">Syria (+963)</option>
-                                    <option value="TW" data-code="886">Taiwan (+886)</option>
-                                    <option value="TJ" data-code="992">Tajikistan (+992)</option>
-                                    <option value="TH" data-code="66">Thailand (+66)</option>
-                                    <option value="TL" data-code="670">Timor-Leste (+670)</option>
-                                    <option value="TR" data-code="90">Turkey (+90)</option>
-                                    <option value="TM" data-code="993">Turkmenistan (+993)</option>
-                                    <option value="AE" data-code="971">UAE (+971)</option>
-                                    <option value="UZ" data-code="998">Uzbekistan (+998)</option>
-                                    <option value="VN" data-code="84">Vietnam (+84)</option>
-                                    <option value="YE" data-code="967">Yemen (+967)</option>
+                                    <option value="AF">Afghanistan</option>
+                                    <option value="AM">Armenia</option>
+                                    <option value="AZ">Azerbaijan</option>
+                                    <option value="BH">Bahrain</option>
+                                    <option value="BD">Bangladesh</option>
+                                    <option value="BT">Bhutan</option>
+                                    <option value="BN">Brunei</option>
+                                    <option value="KH">Cambodia</option>
+                                    <option value="CN">China</option>
+                                    <option value="GE">Georgia</option>
+                                    <option value="IN">India</option>
+                                    <option value="ID">Indonesia</option>
+                                    <option value="IR">Iran</option>
+                                    <option value="IQ">Iraq</option>
+                                    <option value="IL">Israel</option>
+                                    <option value="JP">Japan</option>
+                                    <option value="JO">Jordan</option>
+                                    <option value="KZ">Kazakhstan</option>
+                                    <option value="KW">Kuwait</option>
+                                    <option value="KG">Kyrgyzstan</option>
+                                    <option value="LA">Laos</option>
+                                    <option value="LB">Lebanon</option>
+                                    <option value="MY">Malaysia</option>
+                                    <option value="MV">Maldives</option>
+                                    <option value="MN">Mongolia</option>
+                                    <option value="MM">Myanmar</option>
+                                    <option value="NP">Nepal</option>
+                                    <option value="KP">North Korea</option>
+                                    <option value="OM">Oman</option>
+                                    <option value="PK">Pakistan</option>
+                                    <option value="PS">Palestine</option>
+                                    <option value="PH">Philippines</option>
+                                    <option value="QA">Qatar</option>
+                                    <option value="SA">Saudi Arabia</option>
+                                    <option value="SG">Singapore</option>
+                                    <option value="KR">South Korea</option>
+                                    <option value="LK">Sri Lanka</option>
+                                    <option value="SY">Syria</option>
+                                    <option value="TW">Taiwan</option>
+                                    <option value="TJ">Tajikistan</option>
+                                    <option value="TH">Thailand</option>
+                                    <option value="TL">Timor-Leste</option>
+                                    <option value="TR">Turkey</option>
+                                    <option value="TM">Turkmenistan</option>
+                                    <option value="AE">UAE</option>
+                                    <option value="UZ">Uzbekistan</option>
+                                    <option value="VN">Vietnam</option>
+                                    <option value="YE">Yemen</option>
                                 </optgroup>
                                 <optgroup label="Europe">
-                                    <option value="AL" data-code="355">Albania (+355)</option>
-                                    <option value="AD" data-code="376">Andorra (+376)</option>
-                                    <option value="AT" data-code="43">Austria (+43)</option>
-                                    <option value="BY" data-code="375">Belarus (+375)</option>
-                                    <option value="BE" data-code="32">Belgium (+32)</option>
-                                    <option value="BA" data-code="387">Bosnia and Herzegovina (+387)</option>
-                                    <option value="BG" data-code="359">Bulgaria (+359)</option>
-                                    <option value="HR" data-code="385">Croatia (+385)</option>
-                                    <option value="CY" data-code="357">Cyprus (+357)</option>
-                                    <option value="CZ" data-code="420">Czech Republic (+420)</option>
-                                    <option value="DK" data-code="45">Denmark (+45)</option>
-                                    <option value="EE" data-code="372">Estonia (+372)</option>
-                                    <option value="FI" data-code="358">Finland (+358)</option>
-                                    <option value="FR" data-code="33">France (+33)</option>
-                                    <option value="DE" data-code="49">Germany (+49)</option>
-                                    <option value="GR" data-code="30">Greece (+30)</option>
-                                    <option value="HU" data-code="36">Hungary (+36)</option>
-                                    <option value="IS" data-code="354">Iceland (+354)</option>
-                                    <option value="IE" data-code="353">Ireland (+353)</option>
-                                    <option value="IT" data-code="39">Italy (+39)</option>
-                                    <option value="LV" data-code="371">Latvia (+371)</option>
-                                    <option value="LI" data-code="423">Liechtenstein (+423)</option>
-                                    <option value="LT" data-code="370">Lithuania (+370)</option>
-                                    <option value="LU" data-code="352">Luxembourg (+352)</option>
-                                    <option value="MT" data-code="356">Malta (+356)</option>
-                                    <option value="MD" data-code="373">Moldova (+373)</option>
-                                    <option value="MC" data-code="377">Monaco (+377)</option>
-                                    <option value="ME" data-code="382">Montenegro (+382)</option>
-                                    <option value="NL" data-code="31">Netherlands (+31)</option>
-                                    <option value="MK" data-code="389">North Macedonia (+389)</option>
-                                    <option value="NO" data-code="47">Norway (+47)</option>
-                                    <option value="PL" data-code="48">Poland (+48)</option>
-                                    <option value="PT" data-code="351">Portugal (+351)</option>
-                                    <option value="RO" data-code="40">Romania (+40)</option>
-                                    <option value="RU" data-code="7">Russia (+7)</option>
-                                    <option value="SM" data-code="378">San Marino (+378)</option>
-                                    <option value="RS" data-code="381">Serbia (+381)</option>
-                                    <option value="SK" data-code="421">Slovakia (+421)</option>
-                                    <option value="SI" data-code="386">Slovenia (+386)</option>
-                                    <option value="ES" data-code="34">Spain (+34)</option>
-                                    <option value="SE" data-code="46">Sweden (+46)</option>
-                                    <option value="CH" data-code="41">Switzerland (+41)</option>
-                                    <option value="UA" data-code="380">Ukraine (+380)</option>
-                                    <option value="GB" data-code="44">United Kingdom (+44)</option>
-                                    <option value="VA" data-code="379">Vatican City (+379)</option>
+                                    <option value="AL">Albania</option>
+                                    <option value="AD">Andorra</option>
+                                    <option value="AT">Austria</option>
+                                    <option value="BY">Belarus</option>
+                                    <option value="BE">Belgium</option>
+                                    <option value="BA">Bosnia and Herzegovina</option>
+                                    <option value="BG">Bulgaria</option>
+                                    <option value="HR">Croatia</option>
+                                    <option value="CY">Cyprus</option>
+                                    <option value="CZ">Czech Republic</option>
+                                    <option value="DK">Denmark</option>
+                                    <option value="EE">Estonia</option>
+                                    <option value="FI">Finland</option>
+                                    <option value="FR">France</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="GR">Greece</option>
+                                    <option value="HU">Hungary</option>
+                                    <option value="IS">Iceland</option>
+                                    <option value="IE">Ireland</option>
+                                    <option value="IT">Italy</option>
+                                    <option value="LV">Latvia</option>
+                                    <option value="LI">Liechtenstein</option>
+                                    <option value="LT">Lithuania</option>
+                                    <option value="LU">Luxembourg</option>
+                                    <option value="MT">Malta</option>
+                                    <option value="MD">Moldova</option>
+                                    <option value="MC">Monaco</option>
+                                    <option value="ME">Montenegro</option>
+                                    <option value="NL">Netherlands</option>
+                                    <option value="MK">North Macedonia</option>
+                                    <option value="NO">Norway</option>
+                                    <option value="PL">Poland</option>
+                                    <option value="PT">Portugal</option>
+                                    <option value="RO">Romania</option>
+                                    <option value="RU">Russia</option>
+                                    <option value="SM">San Marino</option>
+                                    <option value="RS">Serbia</option>
+                                    <option value="SK">Slovakia</option>
+                                    <option value="SI">Slovenia</option>
+                                    <option value="ES">Spain</option>
+                                    <option value="SE">Sweden</option>
+                                    <option value="CH">Switzerland</option>
+                                    <option value="UA">Ukraine</option>
+                                    <option value="GB">United Kingdom</option>
+                                    <option value="VA">Vatican City</option>
                                 </optgroup>
                                 <optgroup label="North America">
-                                    <option value="CA" data-code="1">Canada (+1)</option>
-                                    <option value="MX" data-code="52">Mexico (+52)</option>
-                                    <option value="US" data-code="1">United States (+1)</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="MX">Mexico</option>
+                                    <option value="US">United States</option>
                                 </optgroup>
                                 <optgroup label="South America">
-                                    <option value="AR" data-code="54">Argentina (+54)</option>
-                                    <option value="BO" data-code="591">Bolivia (+591)</option>
-                                    <option value="BR" data-code="55">Brazil (+55)</option>
-                                    <option value="CL" data-code="56">Chile (+56)</option>
-                                    <option value="CO" data-code="57">Colombia (+57)</option>
-                                    <option value="EC" data-code="593">Ecuador (+593)</option>
-                                    <option value="GY" data-code="592">Guyana (+592)</option>
-                                    <option value="PY" data-code="595">Paraguay (+595)</option>
-                                    <option value="PE" data-code="51">Peru (+51)</option>
-                                    <option value="SR" data-code="597">Suriname (+597)</option>
-                                    <option value="UY" data-code="598">Uruguay (+598)</option>
-                                    <option value="VE" data-code="58">Venezuela (+58)</option>
+                                    <option value="AR">Argentina</option>
+                                    <option value="BO">Bolivia</option>
+                                    <option value="BR">Brazil</option>
+                                    <option value="CL">Chile</option>
+                                    <option value="CO">Colombia</option>
+                                    <option value="EC">Ecuador</option>
+                                    <option value="GY">Guyana</option>
+                                    <option value="PY">Paraguay</option>
+                                    <option value="PE">Peru</option>
+                                    <option value="SR">Suriname</option>
+                                    <option value="UY">Uruguay</option>
+                                    <option value="VE">Venezuela</option>
                                 </optgroup>
                                 <optgroup label="Oceania">
-                                    <option value="AU" data-code="61">Australia (+61)</option>
-                                    <option value="FJ" data-code="679">Fiji (+679)</option>
-                                    <option value="NZ" data-code="64">New Zealand (+64)</option>
-                                    <option value="PG" data-code="675">Papua New Guinea (+675)</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="FJ">Fiji</option>
+                                    <option value="NZ">New Zealand</option>
+                                    <option value="PG">Papua New Guinea</option>
                                 </optgroup>
-                                <optgroup label="Other">
-                                    <option value="Other">Other (Not Listed)</option>
-                                </optgroup>
+                                <option value="Other">Other (Not Listed)</option>
                             </select>
                         </div>
                         <div class="form-group full-width">
@@ -748,7 +1822,7 @@
                     </div>
                 </div>
 
-                <!-- NEW SECTION: Job Preferences (Visible in Application Only) -->
+                <!-- Job Preferences Section -->
                 <div class="form-section">
                     <h2><i class="fas fa-briefcase" style="color: #667eea; margin-right: 10px;"></i>Job Preferences</h2>
                     <div class="form-grid">
@@ -806,7 +1880,7 @@
 
                 <div class="form-section">
                     <h2><i class="fas fa-file-alt" style="color: #667eea; margin-right: 10px;"></i>Required Documents</h2>
-                    <p class="section-note">Please upload clear, colored scans of all documents (PDF, JPG, PNG accepted, max 10MB each)</p>
+                    <p class="section-note">Please upload clear, colored scans of all documents (PDF, JPG, PNG accepted, max 50MB each)</p>
                     
                     <div class="documents-grid">
                         <div class="document-card">
@@ -824,6 +1898,10 @@
                                 </label>
                                 <span class="file-name"></span>
                             </div>
+                            <div class="file-size-hint">
+                                <i class="fas fa-database"></i> Max 50MB (PDF, JPG, PNG)
+                            </div>
+                            <div class="file-error" id="passport-error"></div>
                         </div>
 
                         <div class="document-card">
@@ -841,6 +1919,10 @@
                                 </label>
                                 <span class="file-name"></span>
                             </div>
+                            <div class="file-size-hint">
+                                <i class="fas fa-database"></i> Max 50MB (JPG, PNG)
+                            </div>
+                            <div class="file-error" id="photo-error"></div>
                         </div>
 
                         <div class="document-card">
@@ -858,6 +1940,10 @@
                                 </label>
                                 <span class="file-name"></span>
                             </div>
+                            <div class="file-size-hint">
+                                <i class="fas fa-database"></i> Max 50MB (PDF, DOC, DOCX)
+                            </div>
+                            <div class="file-error" id="cv-error"></div>
                         </div>
 
                         <div class="document-card">
@@ -875,6 +1961,10 @@
                                 </label>
                                 <span class="file-name"></span>
                             </div>
+                            <div class="file-size-hint">
+                                <i class="fas fa-database"></i> Max 50MB (PDF, DOC, DOCX)
+                            </div>
+                            <div class="file-error" id="coverLetter-error"></div>
                         </div>
 
                         <div class="document-card">
@@ -892,6 +1982,10 @@
                                 </label>
                                 <span class="file-name"></span>
                             </div>
+                            <div class="file-size-hint">
+                                <i class="fas fa-database"></i> Max 50MB per file (PDF, JPG, PNG)
+                            </div>
+                            <div class="file-error" id="qualifications-error"></div>
                         </div>
 
                         <div class="document-card">
@@ -909,19 +2003,96 @@
                                 </label>
                                 <span class="file-name"></span>
                             </div>
+                            <div class="file-size-hint">
+                                <i class="fas fa-database"></i> Max 50MB per file (PDF, JPG, PNG)
+                            </div>
+                            <div class="file-error" id="experience-error"></div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Upload Progress -->
+                <div class="upload-progress" id="uploadProgress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Uploading... 0%</span>
+                    </div>
+                </div>
+
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
                         <i class="fas fa-upload" style="margin-right: 8px;"></i>Submit New Application
                     </button>
                 </div>
             </form>
 
-            <!-- Status Check Section - Simplified with only email (NO job/country dropdowns) -->
-            <div class="status-check-section">
+            <!-- PREMIUM SUCCESS SECTION -->
+            <div id="statusGuide" class="status-guide-premium" style="display: none;">
+                
+                <div class="success-top">
+                    <div class="success-badge">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h2>Application Successfully Submitted 🎉</h2>
+                    <p class="success-subtext">
+                        Welcome to Apex Global Careers. Your international journey begins now.
+                    </p>
+                </div>
+
+                <div class="application-info-card">
+                    <div class="info-item">
+                        <span class="label">Submitted Email</span>
+                        <span class="value" id="submittedEmail"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Application ID</span>
+                        <span class="value" id="applicationId">AGC-2026-001</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Review Time</span>
+                        <span class="value">24 - 48 Hours</span>
+                    </div>
+                </div>
+
+                <div class="timeline-steps">
+                    <div class="timeline-step active">
+                        <div class="circle">1</div>
+                        <span>Application Received</span>
+                    </div>
+                    <div class="line"></div>
+                    <div class="timeline-step">
+                        <div class="circle">2</div>
+                        <span>Under Review</span>
+                    </div>
+                    <div class="line"></div>
+                    <div class="timeline-step">
+                        <div class="circle">3</div>
+                        <span>Employer Matching</span>
+                    </div>
+                    <div class="line"></div>
+                    <div class="timeline-step">
+                        <div class="circle">4</div>
+                        <span>Visa Processing</span>
+                    </div>
+                </div>
+
+                <div class="success-buttons">
+                    <button onclick="scrollToStatusChecker()" class="btn-track">
+                        <i class="fas fa-search"></i> Track My Application
+                    </button>
+
+                    <a href="https://wa.me/254736895385" target="_blank" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Contact Support
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Status Check Section -->
+            <div class="status-check-section" id="statusChecker">
                 <i class="fas fa-search" style="font-size: 3em; color: #667eea; margin-bottom: 15px;"></i>
                 <h3>Already Applied?</h3>
                 <p>Enter your email address to check your application status instantly</p>
@@ -932,6 +2103,9 @@
                     </button>
                 </div>
                 <div id="statusMessage"></div>
+                <div class="success-marker" id="statusReminder" style="display: none;">
+                    <i class="fas fa-info-circle"></i> Use the email you submitted with
+                </div>
             </div>
 
             <div id="uploadStatus" class="upload-status"></div>
@@ -939,82 +2113,425 @@
 
         <footer class="footer">
             <p>&copy; 2024 Apex Global Careers. All rights reserved. | No upfront payments - Pay after you earn</p>
+            <p style="margin-top: 10px; font-size: 0.8em;">
+                <i class="fab fa-whatsapp"></i> Customer Support: 
+                <a href="https://wa.me/254736895385" target="_blank" style="color: white; text-decoration: underline;">+254 736 895385</a> | 
+                <a href="https://wa.me/254104442704" target="_blank" style="color: white; text-decoration: underline;">+254 104 442704</a>
+            </p>
         </footer>
     </div>
 
     <script>
+        // Notification System
+        class NotificationManager {
+            constructor() {
+                this.container = document.getElementById('notificationContainer');
+            }
+
+            show(message, options = {}) {
+                const {
+                    type = 'success',
+                    title = 'Success',
+                    duration = 5000
+                } = options;
+
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+
+                let icon = '';
+                if (type === 'success') icon = '✓';
+                else if (type === 'error') icon = '✗';
+                else if (type === 'warning') icon = '⚠';
+                else if (type === 'info') icon = 'i';
+
+                notification.innerHTML = `
+                    <div class="notification-icon ${type}">${icon}</div>
+                    <div class="notification-content">
+                        <div class="notification-title">${title}</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
+                    <span class="notification-close" onclick="this.parentElement.classList.add('hide'); setTimeout(() => this.parentElement.remove(), 300);">×</span>
+                `;
+
+                this.container.appendChild(notification);
+
+                if (duration > 0) {
+                    setTimeout(() => {
+                        notification.classList.add('hide');
+                        setTimeout(() => {
+                            if (notification.parentElement) {
+                                notification.remove();
+                            }
+                        }, 300);
+                    }, duration);
+                }
+            }
+        }
+
+        const notifier = new NotificationManager();
+
+        // Generate Application ID
+        function generateApplicationId() {
+            const year = new Date().getFullYear();
+            const random = Math.floor(10000 + Math.random() * 90000);
+            return `AGC-${year}-${random}`;
+        }
+
+        // Copy Application ID
+        function copyApplicationId() {
+            const appId = document.getElementById('displayApplicationId').textContent;
+            navigator.clipboard.writeText(appId).then(() => {
+                notifier.show('Application ID copied to clipboard!', { type: 'success', title: 'Copied!' });
+            }).catch(() => {
+                alert('Application ID: ' + appId);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const uploadForm = document.getElementById('uploadForm');
             const phoneInput = document.getElementById('phone');
-            const countrySelect = document.getElementById('country');
-            const countryCodeHint = document.getElementById('countryCodeHint');
+            const countryCodeSelect = document.getElementById('countryCode');
             const submitBtn = document.getElementById('submitBtn');
-
-            // Create a map of country codes to country values
-            const countryCodeMap = new Map();
+            const statusGuide = document.getElementById('statusGuide');
+            const submittedEmailSpan = document.getElementById('submittedEmail');
+            const applicationIdSpan = document.getElementById('applicationId');
+            const applicationIdCard = document.getElementById('applicationIdCard');
+            const displayApplicationId = document.getElementById('displayApplicationId');
+            const statusReminder = document.getElementById('statusReminder');
+            const statusEmailInput = document.getElementById('statusEmail');
+            const ageInput = document.getElementById('age');
+            const ageWarning = document.getElementById('ageWarning');
             
-            // Populate the map from all options with data-code attribute
-            document.querySelectorAll('#country option[data-code]').forEach(option => {
-                const code = option.getAttribute('data-code');
-                const value = option.value;
+            // Progress elements
+            const uploadProgress = document.getElementById('uploadProgress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            // Phone validation elements
+            const phoneValidationIcon = document.getElementById('phoneValidationIcon');
+            const phoneValidationMessage = document.getElementById('phoneValidationMessage');
+            const countryFormatHint = document.getElementById('countryFormatHint');
+            const countryFormatText = document.getElementById('countryFormatText');
+            const phoneFormatPreview = document.getElementById('phoneFormatPreview');
+            const formattedPhoneSpan = document.getElementById('formattedPhone');
+            
+            // WhatsApp floating button tooltip
+            const whatsappFloat = document.getElementById('whatsappFloat');
+            const whatsappTooltip = document.getElementById('whatsappTooltip');
+            
+            if (whatsappFloat && whatsappTooltip) {
+                whatsappFloat.addEventListener('mouseenter', function() {
+                    whatsappTooltip.style.display = 'block';
+                });
                 
-                if (!countryCodeMap.has(code)) {
-                    countryCodeMap.set(code, []);
+                whatsappFloat.addEventListener('mouseleave', function() {
+                    whatsappTooltip.style.display = 'none';
+                });
+            }
+
+            // Country-specific phone format database
+            const countryPhoneFormats = {
+                '+254': { country: 'Kenya', example: '712345678', length: 9 },
+                '+27': { country: 'South Africa', example: '712345678', length: 9 },
+                '+234': { country: 'Nigeria', example: '8021234567', length: 10 },
+                '+20': { country: 'Egypt', example: '1001234567', length: 10 },
+                '+212': { country: 'Morocco', example: '612345678', length: 9 },
+                '+233': { country: 'Ghana', example: '201234567', length: 9 },
+                '+256': { country: 'Uganda', example: '712345678', length: 9 },
+                '+255': { country: 'Tanzania', example: '712345678', length: 9 },
+                '+1': { country: 'USA/Canada', example: '2125551234', length: 10 },
+                '+44': { country: 'UK', example: '7912345678', length: 10 },
+                '+91': { country: 'India', example: '9876543210', length: 10 },
+                '+61': { country: 'Australia', example: '412345678', length: 9 },
+                '+49': { country: 'Germany', example: '1512345678', length: 10 },
+                '+33': { country: 'France', example: '612345678', length: 9 },
+                '+39': { country: 'Italy', example: '3123456789', length: 10 },
+                '+34': { country: 'Spain', example: '612345678', length: 9 },
+                '+86': { country: 'China', example: '13912345678', length: 11 }
+            };
+
+            // Update country format hint when country code changes
+            function updateCountryFormatHint() {
+                const code = countryCodeSelect.value;
+                if (code && countryPhoneFormats[code]) {
+                    const format = countryPhoneFormats[code];
+                    countryFormatText.innerHTML = `${format.country}: Expected format <strong>${code} ${format.example}</strong> (${format.length} digits)`;
+                    countryFormatHint.classList.add('show');
+                } else {
+                    countryFormatHint.classList.remove('show');
                 }
-                countryCodeMap.get(code).push({
-                    value: value,
-                    element: option
+            }
+
+            // Advanced phone validation with visual feedback
+            function validatePhoneNumberWithFeedback() {
+                const countryCode = countryCodeSelect.value;
+                let rawPhone = phoneInput.value;
+                
+                // Remove leading zero automatically if present
+                if (rawPhone.startsWith('0')) {
+                    rawPhone = rawPhone.substring(1);
+                    phoneInput.value = rawPhone;
+                }
+                
+                // Remove all non-digits
+                const digitsOnly = rawPhone.replace(/\D/g, '');
+                
+                // Update input with cleaned value
+                if (rawPhone !== digitsOnly) {
+                    phoneInput.value = digitsOnly;
+                }
+                
+                let isValid = false;
+                let message = '';
+                let iconClass = 'pending';
+                
+                // Check if country code is selected
+                if (!countryCode) {
+                    message = 'Please select your country code';
+                    iconClass = 'invalid';
+                    updatePhoneValidationUI(iconClass, message);
+                    return false;
+                }
+                
+                // Check if phone is empty
+                if (digitsOnly.length === 0) {
+                    message = 'Enter your phone number';
+                    iconClass = 'pending';
+                    updatePhoneValidationUI(iconClass, message);
+                    return false;
+                }
+                
+                // Check length (8-12 digits)
+                if (digitsOnly.length < 8 || digitsOnly.length > 12) {
+                    message = `Phone number must be ${digitsOnly.length < 8 ? 'at least 8' : 'at most 12'} digits (currently ${digitsOnly.length})`;
+                    iconClass = 'invalid';
+                    updatePhoneValidationUI(iconClass, message);
+                    return false;
+                }
+                
+                // Check for leading zero (should already be removed)
+                if (digitsOnly.startsWith('0')) {
+                    message = 'Remove leading zero. Use country code format';
+                    iconClass = 'invalid';
+                    updatePhoneValidationUI(iconClass, message);
+                    return false;
+                }
+                
+                // Check country-specific format if available
+                if (countryPhoneFormats[countryCode]) {
+                    const expectedLength = countryPhoneFormats[countryCode].length;
+                    if (digitsOnly.length !== expectedLength) {
+                        message = `${countryPhoneFormats[countryCode].country} numbers typically have ${expectedLength} digits`;
+                        iconClass = 'warning';
+                        updatePhoneValidationUI(iconClass, message);
+                        return false;
+                    }
+                }
+                
+                // All validations passed
+                message = 'Valid phone number ✓';
+                iconClass = 'valid';
+                isValid = true;
+                
+                // Show formatted preview
+                const formattedNumber = countryCode + ' ' + digitsOnly.match(/.{1,3}/g).join(' ');
+                formattedPhoneSpan.textContent = formattedNumber;
+                phoneFormatPreview.style.display = 'block';
+                
+                updatePhoneValidationUI(iconClass, message);
+                return true;
+            }
+
+            // Update phone validation UI
+            function updatePhoneValidationUI(iconClass, message) {
+                // Update icon
+                phoneValidationIcon.className = `phone-validation-icon ${iconClass}`;
+                if (iconClass === 'valid') phoneValidationIcon.innerHTML = '✓';
+                else if (iconClass === 'invalid') phoneValidationIcon.innerHTML = '✗';
+                else if (iconClass === 'warning') phoneValidationIcon.innerHTML = '⚠';
+                else phoneValidationIcon.innerHTML = '⚪';
+                
+                // Update message
+                phoneValidationMessage.className = `phone-validation-message ${iconClass}`;
+                phoneValidationMessage.textContent = message;
+                
+                // Update input field styles
+                if (iconClass === 'valid') {
+                    phoneInput.classList.add('valid');
+                    phoneInput.classList.remove('error');
+                    countryCodeSelect.classList.add('valid');
+                    countryCodeSelect.classList.remove('error');
+                } else if (iconClass === 'invalid') {
+                    phoneInput.classList.add('error');
+                    phoneInput.classList.remove('valid');
+                    countryCodeSelect.classList.add('error');
+                    countryCodeSelect.classList.remove('valid');
+                } else {
+                    phoneInput.classList.remove('valid', 'error');
+                    countryCodeSelect.classList.remove('valid', 'error');
+                }
+            }
+
+            // Age validation with warning
+            if (ageInput) {
+                ageInput.addEventListener('input', function() {
+                    const age = parseInt(this.value);
+                    if (age < 18 || age > 60) {
+                        ageWarning.style.display = 'block';
+                    } else {
+                        ageWarning.style.display = 'none';
+                    }
+                    updateSubmitButton();
+                });
+            }
+
+            // Phone validation on input
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function() {
+                    validatePhoneNumberWithFeedback();
+                    updateSubmitButton();
+                });
+            }
+
+            // Country code change
+            if (countryCodeSelect) {
+                countryCodeSelect.addEventListener('change', function() {
+                    updateCountryFormatHint();
+                    validatePhoneNumberWithFeedback();
+                    updateSubmitButton();
+                });
+            }
+
+            // PHONE VALIDATION FUNCTION (for form submission)
+            function validatePhoneNumber(countryCode, phoneInputValue) {
+                if (!countryCode) {
+                    return { valid: false, message: "Please select your country code" };
+                }
+
+                // Remove spaces, dashes and non-digits
+                let phone = phoneInputValue.replace(/\D/g, '');
+
+                if (phone.length < 8 || phone.length > 12) {
+                    return { 
+                        valid: false, 
+                        message: "Phone number must be between 8 and 12 digits" 
+                    };
+                }
+
+                if (phone.startsWith("0")) {
+                    return { 
+                        valid: false, 
+                        message: "Remove leading zero. Example: 712345678" 
+                    };
+                }
+
+                return { 
+                    valid: true, 
+                    fullNumber: countryCode + phone 
+                };
+            }
+
+            // FILE SIZE VALIDATION (50MB)
+            function validateFileSizes() {
+                const maxSize = 50 * 1024 * 1024; // 50MB
+                const fileInputs = document.querySelectorAll('input[type="file"]');
+                let isValid = true;
+
+                // Clear previous errors
+                document.querySelectorAll('.file-error').forEach(el => {
+                    el.style.display = 'none';
+                    el.textContent = '';
+                });
+
+                for (let input of fileInputs) {
+                    const errorDiv = document.getElementById(`${input.id}-error`);
+                    if (errorDiv) {
+                        for (let file of input.files) {
+                            if (file.size > maxSize) {
+                                errorDiv.textContent = `${file.name} exceeds 50MB limit.`;
+                                errorDiv.style.display = 'block';
+                                isValid = false;
+                            }
+                        }
+                    }
+                }
+                
+                return isValid;
+            }
+
+            // File preview function
+            function createFilePreview(input, container) {
+                const file = input.files[0];
+                if (!file) return;
+
+                const previewContainer = document.createElement('div');
+                previewContainer.className = 'file-preview';
+                previewContainer.style.display = 'block';
+
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewContainer.innerHTML = `
+                            <img src="${e.target.result}" alt="Preview">
+                            <div class="preview-info">
+                                <span class="preview-name">${file.name}</span>
+                                <button type="button" class="btn-remove-file" onclick="this.closest('.file-preview').remove(); this.closest('.document-card').querySelector('input[type=file]').value = ''; window.updateSubmitButton();">
+                                    <i class="fas fa-times"></i> Remove
+                                </button>
+                            </div>
+                        `;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    previewContainer.innerHTML = `
+                        <div class="preview-info" style="border-top: 2px solid #e0e0e0;">
+                            <span class="preview-name"><i class="fas fa-file-pdf" style="color: #e74c3c;"></i> ${file.name}</span>
+                            <button type="button" class="btn-remove-file" onclick="this.closest('.file-preview').remove(); this.closest('.document-card').querySelector('input[type=file]').value = ''; window.updateSubmitButton();">
+                                <i class="fas fa-times"></i> Remove
+                            </button>
+                        </div>
+                    `;
+                }
+
+                // Remove existing preview if any
+                const existingPreview = input.closest('.document-card')?.querySelector('.file-preview');
+                if (existingPreview) {
+                    existingPreview.remove();
+                }
+
+                input.closest('.document-card')?.appendChild(previewContainer);
+            }
+
+            // Drag and drop effects
+            document.querySelectorAll('.file-upload-area').forEach(uploadArea => {
+                uploadArea.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('drag-over');
+                });
+
+                uploadArea.addEventListener('dragleave', function() {
+                    this.classList.remove('drag-over');
+                });
+
+                uploadArea.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    
+                    const input = this.querySelector('input[type="file"]');
+                    if (!input) return;
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        input.files = files;
+                        
+                        // Trigger change event
+                        const event = new Event('change', { bubbles: true });
+                        input.dispatchEvent(event);
+                    }
                 });
             });
 
-            // Handle phone input changes - silently auto-select country
-            phoneInput.addEventListener('input', function(e) {
-                let phoneNumber = this.value.replace(/\D/g, ''); // Remove non-digits
-                
-                // Try to detect country code from the beginning of the number
-                let detectedCountries = null;
-                let matchedCode = '';
-                
-                // Check for 1-4 digit country codes (most are 1-3 digits)
-                for (let i = 1; i <= 4; i++) {
-                    const potentialCode = phoneNumber.substring(0, i);
-                    if (countryCodeMap.has(potentialCode)) {
-                        detectedCountries = countryCodeMap.get(potentialCode);
-                        matchedCode = potentialCode;
-                        break;
-                    }
-                }
-                
-                // Update the country code hint color
-                if (matchedCode) {
-                    countryCodeHint.textContent = '+' + matchedCode;
-                    countryCodeHint.classList.add('detected');
-                } else {
-                    countryCodeHint.textContent = '+';
-                    countryCodeHint.classList.remove('detected');
-                }
-                
-                // If we detected a single country, silently auto-select it
-                if (detectedCountries && detectedCountries.length === 1) {
-                    // Remove any previous auto-selected styling
-                    countrySelect.classList.remove('auto-selected');
-                    
-                    // Set the value
-                    countrySelect.value = detectedCountries[0].value;
-                    
-                    // Add subtle highlight to show it was auto-selected
-                    if (countrySelect.value) {
-                        countrySelect.classList.add('auto-selected');
-                        
-                        // Remove the highlight after 2 seconds
-                        setTimeout(() => {
-                            countrySelect.classList.remove('auto-selected');
-                        }, 2000);
-                    }
-                }
-            });
-
-            // Handle file input display
+            // Add file validation and preview on change
             document.querySelectorAll('input[type="file"]').forEach(input => {
                 input.addEventListener('change', function(e) {
                     const fileName = this.files.length > 0 
@@ -1023,43 +2540,104 @@
                             : `${this.files.length} files selected`)
                         : '';
                     
-                    const fileNameSpan = this.closest('.file-upload-area').querySelector('.file-name');
+                    const fileNameSpan = this.closest('.file-upload-area')?.querySelector('.file-name');
                     if (fileNameSpan) {
                         fileNameSpan.textContent = fileName;
                     }
+                    
+                    // Create preview for single file uploads
+                    if (this.files.length === 1 && !this.multiple) {
+                        createFilePreview(this, this.closest('.document-card'));
+                    }
+                    
+                    // Validate file size on change
+                    validateFileSizes();
+                    updateSubmitButton();
                 });
             });
 
+            // Real-time form validation to enable/disable submit button
+            function updateSubmitButton() {
+                if (!uploadForm || !submitBtn) return;
+                
+                const isFormValid = uploadForm.checkValidity();
+                const filesValid = validateFileSizes();
+                const age = parseInt(ageInput?.value || '0');
+                const ageValid = age >= 18 && age <= 60;
+                const phoneValid = validatePhoneNumberWithFeedback();
+                
+                submitBtn.disabled = !(isFormValid && filesValid && ageValid && phoneValid);
+            }
+
+            // Add input event listeners for real-time validation
+            if (uploadForm) {
+                uploadForm.addEventListener('input', updateSubmitButton);
+                uploadForm.addEventListener('change', updateSubmitButton);
+            }
+
+            // Simulate upload progress
+            function simulateUploadProgress() {
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    if (progress <= 100) {
+                        if (progressFill) progressFill.style.width = progress + '%';
+                        if (progressText) progressText.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>Uploading... ${progress}%</span>`;
+                    }
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        if (progressText) progressText.innerHTML = `<i class="fas fa-check-circle" style="color: #27ae60;"></i> <span>Upload complete!</span>`;
+                        setTimeout(() => {
+                            if (uploadProgress) uploadProgress.style.display = 'none';
+                        }, 1000);
+                    }
+                }, 100);
+            }
+
             // Handle form submission
             if (uploadForm) {
+                // Flag to prevent double submission
+                let isSubmitting = false;
+                
                 uploadForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
                     
+                    if (isSubmitting) return;
+                    isSubmitting = true;
+                    
                     // Validate age
-                    const age = document.getElementById('age').value;
-                    if (age < 18 || age > 100) {
-                        alert('Please enter a valid age between 18 and 100');
+                    const age = ageInput?.value;
+                    if (age < 18 || age > 60) {
+                        notifier.show('Please enter a valid age between 18 and 60', { type: 'error', title: 'Invalid Age' });
+                        isSubmitting = false;
                         return;
                     }
 
-                    // Validate phone number has country code
-                    const phone = phoneInput.value.replace(/\D/g, '');
-                    if (phone.length < 8) {
-                        alert('Please enter a valid phone number with country code');
+                    // Validate phone number
+                    const countryCode = countryCodeSelect?.value;
+                    const phoneInputValue = phoneInput?.value || '';
+
+                    const phoneValidation = validatePhoneNumber(countryCode, phoneInputValue);
+
+                    if (!phoneValidation.valid) {
+                        notifier.show(phoneValidation.message, { type: 'error', title: 'Invalid Phone' });
+                        isSubmitting = false;
                         return;
                     }
 
                     // Validate job preferences
-                    const preferredCountry = document.getElementById('preferredCountry').value;
-                    const preferredJob = document.getElementById('preferredJob').value;
+                    const preferredCountry = document.getElementById('preferredCountry')?.value;
+                    const preferredJob = document.getElementById('preferredJob')?.value;
                     
                     if (!preferredCountry) {
-                        alert('Please select your preferred country');
+                        notifier.show('Please select your preferred country', { type: 'error', title: 'Missing Field' });
+                        isSubmitting = false;
                         return;
                     }
                     
                     if (!preferredJob) {
-                        alert('Please select your preferred job');
+                        notifier.show('Please select your preferred job', { type: 'error', title: 'Missing Field' });
+                        isSubmitting = false;
                         return;
                     }
 
@@ -1069,7 +2647,7 @@
                     
                     requiredFiles.forEach(fileName => {
                         const fileInput = document.getElementById(fileName);
-                        if (!fileInput.files || fileInput.files.length === 0) {
+                        if (!fileInput?.files || fileInput.files.length === 0) {
                             missingFiles.push(fileName);
                         }
                     });
@@ -1084,22 +2662,42 @@
                         };
                         
                         const missingNames = missingFiles.map(f => fileNames[f] || f).join(', ');
-                        alert(`Please upload all required documents: ${missingNames}`);
+                        notifier.show(`Please upload all required documents: ${missingNames}`, { type: 'error', title: 'Missing Documents' });
+                        isSubmitting = false;
                         return;
                     }
 
+                    // Validate file sizes
+                    if (!validateFileSizes()) {
+                        notifier.show('Some files exceed the 50MB size limit. Please compress them and try again.', { type: 'error', title: 'File Too Large' });
+                        isSubmitting = false;
+                        return;
+                    }
+
+                    // Create FormData with full phone number
                     const formData = new FormData(this);
+                    
+                    // Set full formatted number (using validation result)
+                    formData.set("phone", phoneValidation.fullNumber);
                     
                     const statusDiv = document.getElementById('uploadStatus');
                     
-                    // Disable submit button to prevent double submission
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+                    // Show progress bar
+                    if (uploadProgress) uploadProgress.style.display = 'block';
+                    simulateUploadProgress();
+                    
+                    // Disable submit button
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+                    }
                     
                     try {
-                        statusDiv.className = 'upload-status loading';
-                        statusDiv.textContent = 'Uploading your application...';
-                        statusDiv.style.display = 'block';
+                        if (statusDiv) {
+                            statusDiv.className = 'upload-status loading';
+                            statusDiv.textContent = 'Uploading your application...';
+                            statusDiv.style.display = 'block';
+                        }
 
                         console.log('📤 Submitting application...');
                         
@@ -1110,7 +2708,6 @@
 
                         console.log('📥 Response status:', response.status);
                         
-                        // Check if response is OK before parsing JSON
                         if (!response.ok) {
                             const text = await response.text();
                             console.error('❌ Error response:', text);
@@ -1121,78 +2718,193 @@
                         console.log('📦 Response:', result);
 
                         if (result.success) {
-                            statusDiv.className = 'upload-status success';
-                            statusDiv.textContent = '✅ New application submitted successfully! You can track your application status.';
+                            if (statusDiv) {
+                                statusDiv.className = 'upload-status success';
+                                statusDiv.textContent = '✅ New application submitted successfully!';
+                            }
+                            
+                            // Get the email that was submitted
+                            const submittedEmail = document.getElementById('email')?.value || '';
+                            
+                            // Generate a unique Application ID
+                            const appId = result.applicationId || generateApplicationId();
+                            
+                            // Show application ID card
+                            if (displayApplicationId) displayApplicationId.textContent = appId;
+                            if (applicationIdCard) applicationIdCard.style.display = 'flex';
+                            
+                            // Show the premium status guide with the email and app ID
+                            if (submittedEmailSpan) submittedEmailSpan.textContent = submittedEmail;
+                            if (applicationIdSpan) applicationIdSpan.textContent = appId;
+                            if (statusGuide) statusGuide.style.display = 'block';
+                            
+                            // Pre-fill the status checker with this email
+                            if (statusEmailInput) statusEmailInput.value = submittedEmail;
+                            if (statusReminder) statusReminder.style.display = 'block';
+                            
+                            // Smooth scroll to premium status guide
+                            if (statusGuide) statusGuide.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            
+                            // Add confetti effect
+                            createConfetti();
+                            
+                            // Show success notification
+                            notifier.show(`Application submitted successfully! Your ID: ${appId}`, { type: 'success', title: 'Success!', duration: 8000 });
+                            
+                            // Simulate email confirmation
+                            setTimeout(() => {
+                                notifier.show(`Confirmation email sent to ${submittedEmail}`, { type: 'info', title: 'Email Sent', duration: 5000 });
+                            }, 2000);
+                            
                             uploadForm.reset();
                             
-                            // Clear file names
+                            // Clear file names and previews
                             document.querySelectorAll('.file-name').forEach(span => {
                                 span.textContent = '';
                             });
-
-                            // Reset country code hint
-                            countryCodeHint.textContent = '+';
-                            countryCodeHint.classList.remove('detected');
-                            countrySelect.classList.remove('auto-selected');
-
-                            // Show success message and scroll to status check
-                            setTimeout(() => {
-                                document.getElementById('statusEmail').focus();
-                            }, 2000);
+                            
+                            document.querySelectorAll('.file-preview').forEach(preview => {
+                                preview.remove();
+                            });
+                            
+                            // Reset country code
+                            if (countryCodeSelect) countryCodeSelect.value = '';
+                            
+                            // Reset phone validation UI
+                            phoneValidationIcon.className = 'phone-validation-icon pending';
+                            phoneValidationIcon.innerHTML = '⚪';
+                            phoneValidationMessage.textContent = 'Enter your phone number';
+                            phoneValidationMessage.className = 'phone-validation-message';
+                            if (phoneFormatPreview) phoneFormatPreview.style.display = 'none';
+                            if (countryFormatHint) countryFormatHint.classList.remove('show');
+                            
+                            // Remove valid classes
+                            phoneInput?.classList.remove('valid', 'error');
+                            countryCodeSelect?.classList.remove('valid', 'error');
                         } else {
                             throw new Error(result.error || 'Upload failed');
                         }
                     } catch (error) {
                         console.error('❌ Upload error:', error);
-                        statusDiv.className = 'upload-status error';
-                        statusDiv.textContent = '❌ Error: ' + error.message;
+                        if (statusDiv) {
+                            statusDiv.className = 'upload-status error';
+                            statusDiv.textContent = '❌ Error: ' + error.message;
+                        }
+                        
+                        // Hide progress bar on error
+                        if (uploadProgress) uploadProgress.style.display = 'none';
+                        
+                        // Show error notification
+                        notifier.show(error.message, { type: 'error', title: 'Upload Failed' });
                     } finally {
-                        // Re-enable submit button
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fas fa-upload"></i> Submit New Application';
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<i class="fas fa-upload"></i> Submit New Application';
+                        }
+                        isSubmitting = false;
                     }
                 });
             }
 
-            // Add focus/blur effects for better UX
-            phoneInput.addEventListener('focus', function() {
-                if (!this.value) {
-                    this.placeholder = 'Enter number without +';
-                }
-            });
+            // Add focus effect
+            if (phoneInput) {
+                phoneInput.addEventListener('focus', function() {
+                    if (!this.value) {
+                        this.placeholder = '712345678';
+                    }
+                });
 
-            phoneInput.addEventListener('blur', function() {
-                if (!this.value) {
-                    this.placeholder = '1234567890';
-                }
-            });
+                phoneInput.addEventListener('blur', function() {
+                    if (!this.value) {
+                        this.placeholder = '712345678';
+                    }
+                });
+            }
 
-            // Remove auto-selected class when user manually changes country
-            countrySelect.addEventListener('change', function() {
-                this.classList.remove('auto-selected');
-            });
+            // Initialize button state
+            function initializeForm() {
+                validatePhoneNumberWithFeedback();
+                updateSubmitButton();
+            }
+            
+            initializeForm();
+
+            // Make updateSubmitButton available globally for remove button
+            window.updateSubmitButton = updateSubmitButton;
         });
 
-        // Status check function - simplified with only email
+        // Function to create confetti animation
+        function createConfetti() {
+            const statusGuide = document.querySelector('.status-guide-premium');
+            if (!statusGuide) return;
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                statusGuide.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Function to scroll to status checker with enhanced animation
+        function scrollToStatusChecker() {
+            const checker = document.getElementById('statusChecker');
+            if (!checker) return;
+            
+            checker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Highlight the status email input with enhanced animation
+            const statusEmail = document.getElementById('statusEmail');
+            if (statusEmail) {
+                statusEmail.style.borderColor = '#667eea';
+                statusEmail.style.boxShadow = '0 0 0 4px rgba(102, 126, 234, 0.3)';
+                statusEmail.style.transform = 'scale(1.02)';
+                statusEmail.focus();
+                
+                setTimeout(() => {
+                    statusEmail.style.borderColor = '#e0e0e0';
+                    statusEmail.style.boxShadow = 'none';
+                    statusEmail.style.transform = 'scale(1)';
+                }, 2000);
+            }
+        }
+
+        // Status check function
         function checkApplicationStatus() {
-            const email = document.getElementById('statusEmail').value.trim();
+            const email = document.getElementById('statusEmail')?.value.trim();
             const statusMessage = document.getElementById('statusMessage');
             
             if (!email) {
-                statusMessage.style.color = '#e74c3c';
-                statusMessage.textContent = '❌ Please enter your email address';
+                if (statusMessage) {
+                    statusMessage.style.color = '#e74c3c';
+                    statusMessage.textContent = '❌ Please enter your email address';
+                }
                 return;
             }
             
-            // Validate email format
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                statusMessage.style.color = '#e74c3c';
-                statusMessage.textContent = '❌ Please enter a valid email address';
+                if (statusMessage) {
+                    statusMessage.style.color = '#e74c3c';
+                    statusMessage.textContent = '❌ Please enter a valid email address';
+                }
                 return;
             }
             
-            // Redirect to progress page with email only
+            // Add loading effect
+            if (statusMessage) {
+                statusMessage.style.color = '#667eea';
+                statusMessage.textContent = '⏳ Checking status...';
+            }
+            
+            // Redirect to progress page
             window.location.href = '/progress?email=' + encodeURIComponent(email);
         }
 

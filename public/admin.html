@@ -97,6 +97,10 @@
             cursor: pointer;
         }
 
+        .login-form button:hover {
+            background: #2980b9;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -109,6 +113,11 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
 
         .stat-card h3 {
@@ -243,6 +252,7 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            text-decoration: none;
         }
 
         .action-btn:hover {
@@ -290,6 +300,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
+            overflow-y: auto;
         }
 
         .modal-content {
@@ -311,6 +322,10 @@
             font-size: 24px;
             cursor: pointer;
             color: #7f8c8d;
+        }
+
+        .close-btn:hover {
+            color: #2c3e50;
         }
 
         .service-badge {
@@ -393,6 +408,7 @@
             border: 2px solid #e0e0e0;
             border-radius: 5px;
             margin-bottom: 10px;
+            font-family: 'Inter', sans-serif;
         }
 
         .comment {
@@ -400,6 +416,7 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
+            border-left: 3px solid #3498db;
         }
 
         .comment small {
@@ -429,6 +446,10 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background: #2980b9;
         }
 
         .loading {
@@ -1333,6 +1354,7 @@
             border: 2px solid #e0e0e0;
             border-radius: 5px;
             margin-bottom: 15px;
+            font-family: 'Inter', sans-serif;
         }
 
         .payment-form label {
@@ -1870,9 +1892,13 @@
                     <h3>Contracts</h3>
                     <div class="stat-number" id="contractApps">0</div>
                 </div>
+                <div class="stat-card">
+                    <h3>Payments</h3>
+                    <div class="stat-number" id="paymentApps">0</div>
+                </div>
             </div>
 
-            <!-- Export Button - NEW -->
+            <!-- Export Button -->
             <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
                 <button class="action-btn success" onclick="exportToExcel()" style="padding: 12px 24px; font-size: 1em;">
                     <i class="fas fa-file-excel"></i> Export All Applications to Excel
@@ -1907,6 +1933,7 @@
                     <thead>
                         <tr>
                             <th>Date</th>
+                            <th>Application ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Type</th>
@@ -1920,7 +1947,7 @@
                     </thead>
                     <tbody id="tableBody">
                         <tr>
-                            <td colspan="10" class="loading">Loading...</td>
+                            <td colspan="11" class="loading">Loading...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1932,6 +1959,11 @@
             <div class="modal-content">
                 <span class="close-btn" onclick="closeModal()">&times;</span>
                 <h2 id="modalTitle">Client Request Details</h2>
+                
+                <!-- Application ID Display -->
+                <div id="applicationIdDisplay" style="background: #f8f9fa; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; font-family: monospace; font-size: 1.1em; border-left: 4px solid #3498db;">
+                    <strong>Application ID:</strong> <span id="modalApplicationId">Loading...</span>
+                </div>
                 
                 <!-- Service Badges -->
                 <div id="serviceBadges" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;"></div>
@@ -2086,7 +2118,7 @@
         }
 
         // ============================================
-        // EXPORT TO EXCEL FUNCTION - NEW
+        // EXPORT TO EXCEL FUNCTION
         // ============================================
         async function exportToExcel() {
             try {
@@ -2193,6 +2225,7 @@
                     if (appResult.success) {
                         const applications = appResult.applications.map(app => ({
                             ...app,
+                            applicationId: app.applicationId || 'N/A',
                             type: 'application',
                             serviceType: 'application',
                             email: app.personalInfo?.email,
@@ -2212,30 +2245,33 @@
                 // Load editing requests
                 try {
                     const editResponse = await fetch('/api/editing/admin/all');
-                    const editResult = await editResponse.json();
+                    if (editResponse.ok) {
+                        const editResult = await editResponse.json();
 
-                    if (editResult.success) {
-                        const editingRequests = editResult.requests.map(req => ({
-                            ...req,
-                            type: 'editing',
-                            mode: 'editing',
-                            serviceType: 'editing',
-                            email: req.personalInfo?.email,
-                            timestamp: req.createdAt,
-                            personalInfo: req.personalInfo,
-                            status: req.status,
-                            paymentStatus: req.paymentStatus,
-                            packageType: req.serviceType,
-                            amount: req.amount,
-                            originalFiles: req.originalFiles || {},
-                            editedFiles: req.editedFiles || {},
-                            jobOfferStatus: 'not_applicable',
-                            contractStatus: 'not_applicable',
-                            displayType: '✏️ Editing'
-                        }));
-                        
-                        allRequests = [...allRequests, ...editingRequests];
-                        console.log('✅ Loaded editing requests:', editingRequests.length);
+                        if (editResult.success) {
+                            const editingRequests = editResult.requests.map(req => ({
+                                ...req,
+                                applicationId: req.applicationId || 'EDT-' + Date.now().toString(36),
+                                type: 'editing',
+                                mode: 'editing',
+                                serviceType: 'editing',
+                                email: req.personalInfo?.email,
+                                timestamp: req.createdAt,
+                                personalInfo: req.personalInfo,
+                                status: req.status,
+                                paymentStatus: req.paymentStatus,
+                                packageType: req.serviceType,
+                                amount: req.amount,
+                                originalFiles: req.originalFiles || {},
+                                editedFiles: req.editedFiles || {},
+                                jobOfferStatus: 'not_applicable',
+                                contractStatus: 'not_applicable',
+                                displayType: '✏️ Editing'
+                            }));
+                            
+                            allRequests = [...allRequests, ...editingRequests];
+                            console.log('✅ Loaded editing requests:', editingRequests.length);
+                        }
                     }
                 } catch (error) {
                     console.error('Error loading editing requests:', error);
@@ -2247,7 +2283,12 @@
                 });
 
                 // Apply current filter
-                filterApplications('all', { target: document.querySelector('.filter-tab.active') });
+                const activeTab = document.querySelector('.filter-tab.active');
+                if (activeTab) {
+                    filterApplications(currentFilter, { target: activeTab });
+                } else {
+                    filterApplications('all', { target: document.querySelector('.filter-tab') });
+                }
                 updateStats();
 
             } catch (error) {
@@ -2358,7 +2399,7 @@
             const tbody = document.getElementById('tableBody');
             
             if (applications.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" style="text-align: center;">No requests found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align: center;">No requests found</td></tr>';
                 return;
             }
 
@@ -2457,6 +2498,7 @@
                 return `
                     <tr>
                         <td>${date}</td>
+                        <td><strong>${app.applicationId || 'N/A'}</strong></td>
                         <td>${app.personalInfo?.fullName || 'N/A'}</td>
                         <td>${app.personalInfo?.email || app.email || 'N/A'}</td>
                         <td>${app.displayType || (app.type === 'editing' ? '✏️ Editing' : '📄 Application')}</td>
@@ -2486,7 +2528,8 @@
 
             const searched = filteredApplications.filter(app => 
                 (app.personalInfo?.fullName?.toLowerCase() || '').includes(searchTerm) ||
-                (app.personalInfo?.email?.toLowerCase() || '').includes(searchTerm)
+                (app.personalInfo?.email?.toLowerCase() || '').includes(searchTerm) ||
+                (app.applicationId?.toLowerCase() || '').includes(searchTerm)
             );
             
             displayApplications(searched);
@@ -2499,7 +2542,7 @@
                 let editingData = null;
                 
                 if (type === 'application') {
-                    const response = await fetch(`/api/admin/application/${email}`);
+                    const response = await fetch(`/api/admin/application/${encodeURIComponent(email)}`);
                     const result = await response.json();
                     if (result.success) {
                         applicationData = { ...result.application, type: 'application' };
@@ -2515,13 +2558,13 @@
                                 mode: 'editing',
                                 originalFiles: result.status.originalFiles || {},
                                 editedFiles: result.status.editedFiles || {},
-                                paymentReceipts: result.status.paymentReceipts || [] // Include payment receipts
+                                paymentReceipts: result.status.paymentReceipts || []
                             };
                         }
                     }
                 } else {
                     try {
-                        const appResponse = await fetch(`/api/admin/application/${email}`);
+                        const appResponse = await fetch(`/api/admin/application/${encodeURIComponent(email)}`);
                         const appResult = await appResponse.json();
                         if (appResult.success) {
                             applicationData = { ...appResult.application, type: 'application' };
@@ -2552,6 +2595,7 @@
 
                 currentApplication = {
                     email: email,
+                    applicationId: applicationData?.applicationId || editingData?.applicationId || 'N/A',
                     personalInfo: applicationData?.personalInfo || editingData?.personalInfo || {},
                     hasApplication: !!applicationData,
                     hasEditing: !!editingData,
@@ -2684,7 +2728,13 @@
 
         // Update status
         async function updateStatus(email) {
-            const status = document.getElementById('statusSelect').value;
+            const statusSelect = document.getElementById('statusSelect');
+            if (!statusSelect) {
+                showError('Status select not found');
+                return;
+            }
+            
+            const status = statusSelect.value;
             
             try {
                 let response;
@@ -2698,7 +2748,7 @@
                     });
                     type = 'editing';
                 } else if (currentSection === 'review' && currentApplication.hasApplication) {
-                    response = await fetch(`/api/admin/application/${email}/status`, {
+                    response = await fetch(`/api/admin/application/${encodeURIComponent(email)}/status`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ status })
@@ -2725,7 +2775,7 @@
         // Update job offer status
         async function updateJobOfferStatus(email, status) {
             try {
-                const response = await fetch(`/api/admin/application/${email}/job-offer/status`, {
+                const response = await fetch(`/api/admin/application/${encodeURIComponent(email)}/job-offer/status`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status })
@@ -2748,7 +2798,7 @@
         // Update contract status
         async function updateContractStatus(email, status) {
             try {
-                const response = await fetch(`/api/admin/application/${email}/contract/status`, {
+                const response = await fetch(`/api/admin/application/${encodeURIComponent(email)}/contract/status`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status })
@@ -2770,7 +2820,13 @@
 
         // Add comment
         async function addComment(email) {
-            const comment = document.getElementById('newComment').value;
+            const commentBox = document.getElementById('newComment');
+            if (!commentBox) {
+                showError('Comment box not found');
+                return;
+            }
+            
+            const comment = commentBox.value;
             if (!comment.trim()) {
                 showWarning('Please enter a comment');
                 return;
@@ -2780,7 +2836,7 @@
                 let success = true;
                 
                 if (currentApplication.hasApplication) {
-                    const appResponse = await fetch(`/api/admin/application/${email}/comment`, {
+                    const appResponse = await fetch(`/api/admin/application/${encodeURIComponent(email)}/comment`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ comment })
@@ -2798,7 +2854,7 @@
                 }
 
                 if (success) {
-                    document.getElementById('newComment').value = '';
+                    commentBox.value = '';
                     showSuccess('✅ Comment added');
                     await viewApplication(email);
                 } else {
@@ -2819,7 +2875,7 @@
             }
 
             try {
-                const response = await fetch(`/api/admin/application/${email}/document/review`, {
+                const response = await fetch(`/api/admin/application/${encodeURIComponent(email)}/document/review`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ documentType, status, comments })
@@ -2834,6 +2890,7 @@
                     showError(error.error || 'Failed to update');
                 }
             } catch (error) {
+                console.error('Review error:', error);
                 showError('Failed to update');
             }
         }
@@ -2842,7 +2899,14 @@
         async function requestReupload(email) {
             const checkboxes = document.querySelectorAll('#reuploadCheckboxes input:checked');
             const documents = Array.from(checkboxes).map(cb => cb.value);
-            const message = document.getElementById('reuploadMessage').value;
+            const messageBox = document.getElementById('reuploadMessage');
+            
+            if (!messageBox) {
+                showError('Message box not found');
+                return;
+            }
+            
+            const message = messageBox.value;
 
             if (documents.length === 0) {
                 showWarning('Please select documents');
@@ -2855,7 +2919,7 @@
             }
 
             try {
-                const response = await fetch(`/api/admin/application/${email}/request-reupload`, {
+                const response = await fetch(`/api/admin/application/${encodeURIComponent(email)}/request-reupload`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ documents, message })
@@ -2870,6 +2934,7 @@
                     showError(error.error || 'Failed to request re-upload');
                 }
             } catch (error) {
+                console.error('Reupload error:', error);
                 showError('Failed to request re-upload');
             }
         }
@@ -2892,6 +2957,7 @@
                     showError(error.error || 'Failed to start editing');
                 }
             } catch (error) {
+                console.error('Start editing error:', error);
                 showError('Failed to start editing');
             }
         }
@@ -2988,11 +3054,12 @@
                     showError(error.error || 'Failed to update');
                 }
             } catch (error) {
+                console.error('Ready for payment error:', error);
                 showError('Failed to update');
             }
         }
 
-        // NEW: Verify payment receipt
+        // Verify payment receipt
         async function verifyPaymentReceipt(email, receiptIndex) {
             const verificationNotes = prompt('Add verification notes (optional):');
             
@@ -3027,6 +3094,9 @@
             const content = document.getElementById('modalContent');
             const personalInfo = app.personalInfo || {};
             const jobPreferences = app.application?.jobPreferences || {};
+            
+            // Set Application ID in modal
+            document.getElementById('modalApplicationId').textContent = app.applicationId || 'N/A';
 
             // Update service badges
             const badgesDiv = document.getElementById('serviceBadges');
@@ -3068,7 +3138,17 @@
             const uploadCount = applicationData?.uploadCount || 1;
             const remainingUploads = 3 - uploadCount;
             const totalDocs = Object.keys(applicationData?.uploadedFiles || {}).length;
-            const reviewedDocs = Object.values(applicationData?.documentReviews || {}).filter(r => r?.status !== 'pending').length;
+            
+            // Safely count reviewed documents
+            let reviewedDocs = 0;
+            if (applicationData?.documentReviews) {
+                const reviews = applicationData.documentReviews;
+                if (reviews instanceof Map) {
+                    reviewedDocs = Array.from(reviews.values()).filter(r => r?.status !== 'pending').length;
+                } else if (typeof reviews === 'object') {
+                    reviewedDocs = Object.values(reviews).filter(r => r?.status !== 'pending').length;
+                }
+            }
 
             // REVIEW SECTION - ONLY for visa applications
             const reviewSection = app.hasApplication ? `
@@ -3128,7 +3208,15 @@
                         <h3>Document Review</h3>
                         <div class="document-review-grid">
                             ${['passport', 'photo', 'cv', 'coverLetter', 'qualifications', 'experience'].map(key => {
-                                const review = applicationData?.documentReviews?.[key] || { status: 'pending' };
+                                let review = { status: 'pending' };
+                                if (applicationData?.documentReviews) {
+                                    if (applicationData.documentReviews instanceof Map) {
+                                        review = applicationData.documentReviews.get(key) || { status: 'pending' };
+                                    } else if (typeof applicationData.documentReviews === 'object') {
+                                        review = applicationData.documentReviews[key] || { status: 'pending' };
+                                    }
+                                }
+                                
                                 const label = key === 'coverLetter' ? 'Cover Letter' : 
                                             key === 'cv' ? 'CV/Resume' :
                                             key.charAt(0).toUpperCase() + key.slice(1);
@@ -3211,7 +3299,7 @@
                 </div>
             ` : '<div class="no-application-message"><i class="fas fa-info-circle"></i> No visa application found for this client.</div>';
 
-            // EDIT SECTION - UPDATED with payment receipts
+            // EDIT SECTION
             let editSection = '';
             
             if (app.hasEditing) {
@@ -3450,7 +3538,7 @@
                 `;
             }
 
-            // POST-APPLICATION SECTION - FIXED for job offer and contract tracking
+            // POST-APPLICATION SECTION
             const postSection = app.hasApplication ? `
                 <div class="post-application-section">
                     <div class="post-header">
@@ -3652,7 +3740,7 @@
                 </div>
             `;
 
-            // Comments Section (fixed syntax)
+            // Comments Section
             const commentsSection = `
                 <h3>Admin Comments</h3>
                 <div class="comment-section">
@@ -3717,6 +3805,11 @@
                 closeModal();
             }
         }
+
+        // Load initial data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if already logged in (you can add session check here)
+        });
     </script>
 </body>
 </html>

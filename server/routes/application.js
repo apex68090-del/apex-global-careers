@@ -5,8 +5,19 @@ const fs = require('fs');
 const multer = require('multer');
 const Application = require('../models/Application');
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 
 console.log('✅ Application router loaded with MongoDB');
+
+// ============================================
+// HELPER FUNCTION: Generate Application ID
+// ============================================
+function generateApplicationId() {
+    const prefix = 'AGC';
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const random = crypto.randomBytes(4).toString('hex').toUpperCase();
+    return `${prefix}-${timestamp}-${random}`;
+}
 
 // ============================================
 // CONNECTION CHECK MIDDLEWARE
@@ -268,8 +279,12 @@ router.post('/upload', upload.fields([
         }
 
         if (!existingApplication) {
+            // Generate Application ID for new application
+            const applicationId = generateApplicationId();
+            
             // Create new application in MongoDB with all required fields including job preferences
             const newApplication = new Application({
+                applicationId: applicationId, // NEW: Add application ID
                 personalInfo: { 
                     fullName, 
                     email, 
@@ -302,7 +317,20 @@ router.post('/upload', upload.fields([
 
             await newApplication.save();
             console.log(`✅ New application saved to MongoDB for: ${email} (Upload #${uploadCount})`);
+            console.log(`✅ Application ID: ${applicationId}`);
             console.log(`✅ Job preferences: ${preferredCountry} - ${preferredJob}`);
+            
+            // Return application ID in response
+            res.json({ 
+                success: true, 
+                message: 'Application submitted successfully',
+                applicationId: applicationId,
+                email: email,
+                uploadCount: uploadCount,
+                maxUploadsReached: uploadCount >= 3,
+                remainingUploads: 3 - uploadCount,
+                status: 'received'
+            });
         } else {
             // Update existing application in MongoDB
             existingApplication.uploadedFiles = {
@@ -343,17 +371,18 @@ router.post('/upload', upload.fields([
             
             await existingApplication.save();
             console.log(`✅ Re-upload saved to MongoDB for: ${email} (Upload #${uploadCount})`);
+            
+            res.json({ 
+                success: true, 
+                message: 'Documents re-uploaded successfully',
+                applicationId: existingApplication.applicationId || email,
+                email: email,
+                uploadCount: uploadCount,
+                maxUploadsReached: uploadCount >= 3,
+                remainingUploads: 3 - uploadCount,
+                status: 'received'
+            });
         }
-
-        res.json({ 
-            success: true, 
-            message: isReupload ? 'Documents re-uploaded successfully' : 'Application submitted successfully',
-            applicationId: email,
-            uploadCount: uploadCount,
-            maxUploadsReached: uploadCount >= 3,
-            remainingUploads: 3 - uploadCount,
-            status: 'received'
-        });
 
     } catch (error) {
         console.error('❌ Upload error:', error);
@@ -472,6 +501,7 @@ router.get('/status/:email', async (req, res) => {
         res.json({ 
             success: true, 
             status: {
+                applicationId: application.applicationId, // Include application ID
                 personalInfo: application.personalInfo,
                 // NEW: Include job preferences in status response
                 jobPreferences: application.jobPreferences || {
@@ -518,6 +548,46 @@ router.get('/status/:email', async (req, res) => {
 });
 
 // ============================================
+// GET APPLICATION BY APPLICATION ID
+// ============================================
+router.get('/id/:applicationId', async (req, res) => {
+    try {
+        const { applicationId } = req.params;
+        
+        console.log(`📊 Checking status for Application ID: ${applicationId}`);
+        
+        const application = await Application.findOne({ applicationId }).maxTimeMS(5000);
+        
+        if (!application) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Application not found' 
+            });
+        }
+        
+        res.json({ 
+            success: true, 
+            application: {
+                applicationId: application.applicationId,
+                personalInfo: application.personalInfo,
+                jobPreferences: application.jobPreferences,
+                status: application.status,
+                uploadCount: application.uploadCount,
+                createdAt: application.createdAt,
+                updatedAt: application.updatedAt
+            }
+        });
+        
+    } catch (error) {
+        console.error('❌ Application ID lookup error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Failed to find application' 
+        });
+    }
+});
+
+// ============================================
 // DOCUMENT REVIEW ENDPOINT
 // ============================================
 
@@ -546,11 +616,20 @@ router.post('/admin/application/:email/document/review', async (req, res) => {
             status: status,
             comments: comments || null,
             reviewedAt: new Date(),
-            reviewedBy: req.headers['x-admin-user'] || 'admin'
+            reviewedBy: req.headers['x-admin-user'] || 'admin',
+            rejectionCount: status === 'rejected' ? 
+                (application.documentRejectionCount.get(documentType) || 0) + 1 : 
+                (application.documentRejectionCount.get(documentType) || 0)
         });
         
         // Update document status (client view)
         application.documentStatus.set(documentType, status);
+        
+        // Update rejection count if rejected
+        if (status === 'rejected') {
+            const currentCount = application.documentRejectionCount.get(documentType) || 0;
+            application.documentRejectionCount.set(documentType, currentCount + 1);
+        }
         
         // Also update in uploadedFiles array
         if (application.uploadedFiles && application.uploadedFiles[documentType]) {
@@ -563,13 +642,11 @@ router.post('/admin/application/:email/document/review', async (req, res) => {
             }
         }
         
-        // Update rejection count if rejected
+        // Add comment about review
         if (status === 'rejected') {
             const currentCount = application.documentRejectionCount.get(documentType) || 0;
-            application.documentRejectionCount.set(documentType, currentCount + 1);
-            
             application.comments.push({
-                text: `❌ Document ${documentType} rejected: ${comments || 'No reason provided'} (Attempt ${currentCount + 1}/3)`,
+                text: `❌ Document ${documentType} rejected: ${comments || 'No reason provided'} (Attempt ${currentCount}/3)`,
                 timestamp: new Date(),
                 user: 'Admin',
                 type: 'system'
@@ -785,11 +862,12 @@ router.get('/admin/application/:email', async (req, res) => {
             }
         }
         
-        console.log(`✅ Found application for admin: ${email}`);
+        console.log(`✅ Found application for admin: ${email} (ID: ${application.applicationId})`);
         
         res.json({
             success: true,
             application: {
+                applicationId: application.applicationId, // Include application ID
                 personalInfo: application.personalInfo,
                 // NEW: Include job preferences in admin view
                 jobPreferences: application.jobPreferences || {
@@ -851,6 +929,7 @@ router.get('/admin/applications', async (req, res) => {
             }
             
             return {
+                applicationId: app.applicationId, // Include application ID
                 personalInfo: app.personalInfo,
                 // NEW: Include job preferences in admin list
                 jobPreferences: app.jobPreferences || {

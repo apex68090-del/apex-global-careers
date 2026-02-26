@@ -28,6 +28,95 @@
             padding: 20px;
         }
 
+        /* WhatsApp Contact Bar */
+        .whatsapp-contact-bar {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+            animation: slideIn 0.5s ease;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .whatsapp-contact-bar i {
+            font-size: 1.5em;
+        }
+
+        .whatsapp-contact-bar .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 40px;
+            transition: all 0.3s;
+        }
+
+        .whatsapp-contact-bar .contact-item:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .whatsapp-contact-bar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        /* WhatsApp Floating Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1000;
+            text-decoration: none;
+            animation: pulse 2s infinite;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(37, 211, 102, 0.5);
+        }
+
+        .whatsapp-tooltip {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 999;
+            white-space: nowrap;
+        }
+
+        .whatsapp-float:hover + .whatsapp-tooltip {
+            display: block;
+        }
+
         /* Header Styles */
         .header {
             background: white;
@@ -273,6 +362,37 @@
         .btn-contact:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: white;
+            background: transparent;
+            color: white;
+        }
+
+        /* WhatsApp Support Buttons */
+        .whatsapp-support {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-whatsapp-support {
+            background: #25D366;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .btn-whatsapp-support:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
             border-color: white;
             background: transparent;
             color: white;
@@ -753,6 +873,60 @@
             font-size: 1.1em;
         }
 
+        /* Customer Service Section */
+        .customer-service-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            border: 2px solid #25D366;
+            text-align: center;
+        }
+
+        .customer-service-section p {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .customer-service-section p i {
+            color: #25D366;
+            font-size: 1.2em;
+        }
+
+        .whatsapp-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .whatsapp-button {
+            background: #25D366;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .whatsapp-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+            border-color: #25D366;
+            background: transparent;
+            color: #25D366;
+        }
+
         .upload-limit-info {
             margin-top: 15px;
             padding: 10px;
@@ -980,6 +1154,11 @@
             font-size: 0.9em;
         }
 
+        .footer a {
+            color: white;
+            text-decoration: underline;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .status-info {
@@ -1032,11 +1211,53 @@
             .btn-next {
                 width: 100%;
             }
+
+            .whatsapp-contact-bar {
+                flex-direction: column;
+                text-align: center;
+                border-radius: 20px;
+            }
+
+            .whatsapp-contact-bar .contact-item {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .whatsapp-buttons {
+                flex-direction: column;
+            }
+
+            .whatsapp-button {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/254736895385" target="_blank" class="whatsapp-float" id="whatsappFloat">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <div class="whatsapp-tooltip" id="whatsappTooltip">
+        <i class="fab fa-whatsapp"></i> Chat with us on WhatsApp
+    </div>
+
     <div class="container">
+        <!-- WhatsApp Contact Bar -->
+        <div class="whatsapp-contact-bar">
+            <i class="fab fa-whatsapp"></i>
+            <span><strong>Customer Support:</strong></span>
+            <div class="contact-item">
+                <i class="fas fa-phone-alt"></i>
+                <a href="https://wa.me/254736895385" target="_blank">+254 736 895385</a>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone-alt"></i>
+                <a href="https://wa.me/254104442704" target="_blank">+254 104 442704</a>
+            </div>
+        </div>
+
         <header class="header">
             <div class="logo">
                 <h1><i class="fas fa-globe-africa" style="margin-right: 10px;"></i>Apex Global Careers</h1>
@@ -1101,8 +1322,19 @@
                             <i class="fas fa-exclamation-triangle"></i>
                             <h3>Maximum Upload Attempts Reached</h3>
                             <p>You have used all 3 upload attempts. Please wait 48 hours or contact our support team for assistance.</p>
-                            <a href="mailto:support@apexglobalcareers.com" class="btn-contact">
-                                <i class="fas fa-envelope"></i> Contact Support
+                            
+                            <!-- WhatsApp Support Buttons in Max Uploads -->
+                            <div class="whatsapp-support">
+                                <a href="https://wa.me/254736895385" target="_blank" class="btn-whatsapp-support">
+                                    <i class="fab fa-whatsapp"></i> +254 736 895385
+                                </a>
+                                <a href="https://wa.me/254104442704" target="_blank" class="btn-whatsapp-support">
+                                    <i class="fab fa-whatsapp"></i> +254 104 442704
+                                </a>
+                            </div>
+                            
+                            <a href="mailto:support@apexglobalcareers.com" class="btn-contact" style="margin-top: 15px;">
+                                <i class="fas fa-envelope"></i> Email Support
                             </a>
                         </div>
 
@@ -1190,6 +1422,19 @@
                                 </a>
                             </div>
                             
+                            <!-- Customer Service Section (Added below buttons) -->
+                            <div class="customer-service-section">
+                                <p><i class="fab fa-whatsapp"></i> Need help with re-upload? Contact our support team:</p>
+                                <div class="whatsapp-buttons">
+                                    <a href="https://wa.me/254736895385" target="_blank" class="whatsapp-button">
+                                        <i class="fab fa-whatsapp"></i> +254 736 895385
+                                    </a>
+                                    <a href="https://wa.me/254104442704" target="_blank" class="whatsapp-button">
+                                        <i class="fab fa-whatsapp"></i> +254 104 442704
+                                    </a>
+                                </div>
+                            </div>
+                            
                             <!-- Upload Limit Info -->
                             <div id="uploadLimitInfo" class="upload-limit-info" style="display: none;">
                                 <i class="fas fa-info-circle"></i>
@@ -1248,12 +1493,29 @@
 
         <footer class="footer">
             <p>&copy; 2024 Apex Global Careers. All rights reserved. | No upfront payments - Pay after you earn</p>
+            <p style="margin-top: 10px; font-size: 0.8em;">
+                <i class="fab fa-whatsapp"></i> Customer Support: 
+                <a href="https://wa.me/254736895385" target="_blank">+254 736 895385</a> | 
+                <a href="https://wa.me/254104442704" target="_blank">+254 104 442704</a>
+            </p>
         </footer>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const checkStatusBtn = document.getElementById('checkStatusBtn');
+            
+            // WhatsApp floating button tooltip
+            const whatsappFloat = document.getElementById('whatsappFloat');
+            const whatsappTooltip = document.getElementById('whatsappTooltip');
+            
+            whatsappFloat.addEventListener('mouseenter', function() {
+                whatsappTooltip.style.display = 'block';
+            });
+            
+            whatsappFloat.addEventListener('mouseleave', function() {
+                whatsappTooltip.style.display = 'none';
+            });
             
             // Get email from URL if present
             const urlParams = new URLSearchParams(window.location.search);
