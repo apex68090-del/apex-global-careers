@@ -6,8 +6,11 @@ const multer = require('multer');
 const Application = require('../models/Application');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+// NEW: Import Email Service
+const EmailService = require('../utils/emailService');
 
 console.log('✅ Application router loaded with MongoDB');
+console.log('✅ Email notification service loaded');
 
 // ============================================
 // HELPER FUNCTION: Generate Application ID
@@ -319,6 +322,15 @@ router.post('/upload', upload.fields([
             console.log(`✅ New application saved to MongoDB for: ${email} (Upload #${uploadCount})`);
             console.log(`✅ Application ID: ${applicationId}`);
             console.log(`✅ Job preferences: ${preferredCountry} - ${preferredJob}`);
+            
+            // ========== NEW: Send confirmation email ==========
+            try {
+                await EmailService.sendApplicationReceived(newApplication);
+                console.log(`📧 Confirmation email sent to ${email}`);
+            } catch (emailError) {
+                console.error(`❌ Failed to send confirmation email to ${email}:`, emailError.message);
+                // Don't fail the request if email fails
+            }
             
             // Return application ID in response
             res.json({ 
@@ -1011,6 +1023,46 @@ router.post('/admin/application/:email/status', async (req, res) => {
         
         console.log(`✅ Status updated for ${email}: ${oldStatus} -> ${status}`);
         
+        // ========== NEW: Send email notifications based on status ==========
+        try {
+            if (status === 'review') {
+                await EmailService.sendUnderReview(application);
+                console.log(`📧 Under review email sent to ${email}`);
+            } else if (status === 'documents-approved') {
+                await EmailService.sendDocumentsApproved(application);
+                console.log(`📧 Documents approved email sent to ${email}`);
+            } else if (status === 'reupload-requested') {
+                // Get rejected documents from request or from documentReviews
+                const rejectedDocs = [];
+                if (application.documentReviews) {
+                    for (const [docType, review] of application.documentReviews.entries()) {
+                        if (review.status === 'rejected') {
+                            rejectedDocs.push(docType);
+                        }
+                    }
+                }
+                await EmailService.sendReuploadRequested(application, 'Please upload new versions of the rejected documents.', rejectedDocs);
+                console.log(`📧 Re-upload request email sent to ${email}`);
+            } else if (status === 'changes-required') {
+                const rejectedDocs = [];
+                if (application.documentReviews) {
+                    for (const [docType, review] of application.documentReviews.entries()) {
+                        if (review.status === 'rejected') {
+                            rejectedDocs.push(docType);
+                        }
+                    }
+                }
+                await EmailService.sendChangesRequired(application, 'Some documents need modifications.', rejectedDocs);
+                console.log(`📧 Changes required email sent to ${email}`);
+            } else if (status === 'processed') {
+                await EmailService.sendApplicationProcessed(application);
+                console.log(`📧 Application processed email sent to ${email}`);
+            }
+        } catch (emailError) {
+            console.error(`❌ Failed to send status email to ${email}:`, emailError.message);
+            // Don't fail the request if email fails
+        }
+        
         res.json({ 
             success: true, 
             message: 'Status updated successfully',
@@ -1125,6 +1177,14 @@ router.post('/admin/application/:email/request-reupload', async (req, res) => {
         
         console.log(`✅ Re-upload requested for ${email}`);
         
+        // ========== NEW: Send re-upload request email ==========
+        try {
+            await EmailService.sendReuploadRequested(application, message, documents);
+            console.log(`📧 Re-upload request email sent to ${email}`);
+        } catch (emailError) {
+            console.error(`❌ Failed to send re-upload email to ${email}:`, emailError.message);
+        }
+        
         res.json({ 
             success: true, 
             message: 'Re-upload requested successfully'
@@ -1188,6 +1248,14 @@ router.post('/upload-job-offer/:email', upload.single('jobOffer'), async (req, r
         await application.save();
 
         console.log(`✅ Job offer saved to MongoDB for: ${email}`);
+
+        // ========== NEW: Send job offer email ==========
+        try {
+            await EmailService.sendJobOfferUploaded(application);
+            console.log(`📧 Job offer email sent to ${email}`);
+        } catch (emailError) {
+            console.error(`❌ Failed to send job offer email to ${email}:`, emailError.message);
+        }
 
         res.json({ 
             success: true, 
@@ -1261,6 +1329,14 @@ router.post('/upload-contract/:email', upload.single('contract'), async (req, re
         await application.save();
 
         console.log(`✅ Contract saved to MongoDB for: ${email}`);
+
+        // ========== NEW: Send contract email ==========
+        try {
+            await EmailService.sendContractUploaded(application);
+            console.log(`📧 Contract email sent to ${email}`);
+        } catch (emailError) {
+            console.error(`❌ Failed to send contract email to ${email}:`, emailError.message);
+        }
 
         res.json({ 
             success: true, 
