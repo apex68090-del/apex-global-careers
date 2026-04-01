@@ -29,7 +29,10 @@ transporter.verify((error, success) => {
     }
 });
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+// ✅ FIXED: Base URL should be the root domain, NOT including /progress
+const BASE_URL = process.env.BASE_URL || 'https://apex-global-careers.onrender.com';
+
+console.log('📧 Email links will point to:', BASE_URL);
 
 // Send email function
 async function sendEmail(to, subject, html) {
@@ -53,6 +56,7 @@ async function sendEmail(to, subject, html) {
 // Application Received Email
 async function sendApplicationReceived(application) {
     const { personalInfo, applicationId, jobPreferences } = application;
+    // ✅ This will now create correct URL: https://apex-global-careers.onrender.com/progress?email=...
     const trackLink = `${BASE_URL}/progress?email=${encodeURIComponent(personalInfo.email)}`;
     
     const html = `
